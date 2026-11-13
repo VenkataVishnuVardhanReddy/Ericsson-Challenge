@@ -34,15 +34,23 @@ def _text_sim(a: str, b: str) -> float:
 
 
 def _popcount64(x: np.ndarray) -> np.ndarray:
+    if hasattr(np, "bitwise_count"):
+        return np.bitwise_count(x)
     x = x.astype(np.uint64)
+    if x.ndim >= 2 and x.shape[0] > 256:
+        out = np.empty(x.shape, dtype=np.uint8)
+        for i in range(0, x.shape[0], 256):
+            chunk = x[i:i + 256]
+            out[i:i + 256] = np.unpackbits(chunk.view(np.uint8).reshape(*chunk.shape, 8), axis=-1).sum(-1)
+        return out
     return np.unpackbits(x.view(np.uint8).reshape(*x.shape, 8), axis=-1).sum(-1)
 
 
 def slide_relation(a: dict, b: dict) -> str | None:
     """'identical' | 'modified' | None between two slide rows."""
-    if a["content_id"] == b["content_id"]:
-        return "identical"
     ham = hamming_hex(a["phash"], b["phash"])
+    if a["content_id"] == b["content_id"] and ham <= C.IDENTICAL_HAMMING:
+        return "identical"
     ts = _text_sim(a.get("text", ""), b.get("text", ""))
     if ham <= C.IDENTICAL_HAMMING and ts > 0.97:
         return "identical"
@@ -268,16 +276,26 @@ def text_diff(a: str, b: str) -> list[dict]:
 
 
 # --------------------------------------------------------------------------- video fingerprints
-def video_similarity(fa: list[str], fb: list[str], max_ham: int = 10) -> float:
+def video_similarity(fa: list[str], fb: list[str], max_ham: int = 10,
+                     text_a: str | None = None, text_b: str | None = None) -> float:
     """Share of A's timeline found in B in the same temporal order (robust to re-encode & trimming)."""
     if not fa or not fb:
         return 0.0
+    if text_a and text_b and text_a.strip() and text_b.strip():
+        if _text_sim(text_a, text_b) < 0.8:
+            return 0.0
     a = np.array([int(h, 16) for h in fa], dtype=np.uint64)
     b = np.array([int(h, 16) for h in fb], dtype=np.uint64)
     if len(a) * len(b) > 4e7:   # keep memory bounded for very long videos
         step = int(np.ceil(np.sqrt(len(a) * len(b) / 4e7)))
         a, b = a[::step], b[::step]
-    ham = _popcount64(a[:, None] ^ b[None, :])
+    if hasattr(np, "bitwise_count"):
+        ham = np.bitwise_count(a[:, None] ^ b[None, :])
+    else:
+        ham = np.empty((len(a), len(b)), dtype=np.uint8)
+        for i in range(0, len(a), 256):
+            chunk = a[i:i + 256, None] ^ b[None, :]
+            ham[i:i + 256] = np.unpackbits(chunk.view(np.uint8).reshape(*chunk.shape, 8), axis=-1).sum(-1)
     ii, jj = np.nonzero(ham <= max_ham)
     if len(ii) == 0:
         return 0.0
@@ -287,34 +305,40 @@ def video_similarity(fa: list[str], fb: list[str], max_ham: int = 10) -> float:
     best = vals[np.argmax(cnts)]
     ok = np.abs(offs - best) <= 2
     matched = len(np.unique(ii[ok]))
-    # static videos (one slide) match everything -> require content variety
-    variety = len(np.unique(a)) / len(a)
     sim = matched / len(a)
-    return float(sim if variety > 0.02 else sim * 0.5)
+    return float(sim)
 
 
 def video_groups(threshold: float = 0.6) -> list[dict]:
     vids = db.q("""SELECT f.*, r.fingerprint, r.duration, s.name source_name, s.governed FROM files f
                    JOIN recordings r ON r.file_id=f.id LEFT JOIN sources s ON s.id=f.source_id""")
     fps = {v["id"]: json.loads(v["fingerprint"] or "[]") for v in vids}
+    transcripts = {}
+    for row in db.q("SELECT file_id, text FROM segments ORDER BY file_id, start"):
+        transcripts.setdefault(row["file_id"], []).append(row["text"] or "")
+    transcripts = {fid: " ".join(texts) for fid, texts in transcripts.items()}
+
     groups, assigned = [], set()
     for i, v in enumerate(vids):
         if v["id"] in assigned:
             continue
         members = [dict(v, similarity=1.0)]
+        txt_v = transcripts.get(v["id"], "")
         for w in vids[i + 1:]:
             if w["id"] in assigned:
                 continue
             if v["sha256"] == w["sha256"]:
                 sim = 1.0
             else:
-                sim = max(video_similarity(fps[v["id"]], fps[w["id"]]), video_similarity(fps[w["id"]], fps[v["id"]]))
+                txt_w = transcripts.get(w["id"], "")
+                sim = max(video_similarity(fps[v["id"]], fps[w["id"]], text_a=txt_v, text_b=txt_w),
+                          video_similarity(fps[w["id"]], fps[v["id"]], text_a=txt_w, text_b=txt_v))
             if sim >= threshold:
                 members.append(dict(w, similarity=round(sim, 3)))
                 assigned.add(w["id"])
         if len(members) > 1:
             assigned.add(v["id"])
-            members.sort(key=lambda m: (-(m["governed"] or 0), -m["size"]))
+            members.sort(key=lambda m: (-(m.get("duration") or 0), -(m.get("governed") or 0), -(m.get("size") or 0)))
             for m in members:
                 m.pop("fingerprint", None)
             groups.append({"files": members, "keep": members[0]["id"],

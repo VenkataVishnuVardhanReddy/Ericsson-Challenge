@@ -221,10 +221,13 @@ def process_pptx(path: str) -> dict:
 
 # --------------------------------------------------------------------------- DOCX & MSG (chat / notes)
 def process_docx(path: str) -> dict:
-    import xml.etree.ElementTree as ET
+    import defusedxml.ElementTree as ET
     import zipfile
 
     with zipfile.ZipFile(path) as z:
+        total_size = sum(info.file_size for info in z.infolist())
+        if total_size > 500 * 1024 * 1024:
+            raise ValueError("ZIP bomb guard triggered: uncompressed size exceeds 500 MB limit")
         root = ET.fromstring(z.read("word/document.xml"))
     paras = []
     for p in root.iter():

@@ -5,6 +5,7 @@ AND meaning ("how do we save power at night?") both work, in English and Swedish
 """
 from __future__ import annotations
 
+from pathlib import Path
 import re
 import threading
 
@@ -132,10 +133,23 @@ def search(query: str, k: int = 20, kind: str | None = None, file_id: int | None
             kf = db.q1("SELECT object_hash, slide_id FROM keyframes WHERE id=?", (row["ref_id"],)) if row["ref_id"] else None
             row["image"] = kf["object_hash"] if kf else None
             row["slide_id"] = kf["slide_id"] if kf else None
+        elif row["kind"] == "document":
+            p = Path(row["path"]) if row.get("path") else None
+            if p and p.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp"):
+                row["image"] = f"/api/files/{row['file_id']}/raw"
+            else:
+                row["image"] = None
+            row["page_no"] = None
         else:
             sl = db.q1("SELECT object_hash, page_no FROM slides WHERE id=?", (row["ref_id"],))
             row["image"] = sl["object_hash"] if sl else None
             row["page_no"] = sl["page_no"] if sl else None
+        if row.get("path"):
+            try:
+                row["rel_path"] = str(Path(row["path"]).resolve().relative_to(C.ROOT.resolve())).replace("\\", "/")
+            except Exception:
+                row["rel_path"] = Path(row["path"]).name
+            row.pop("path", None)
         row.pop("text", None)
         out.append(row)
         if len(out) >= k:

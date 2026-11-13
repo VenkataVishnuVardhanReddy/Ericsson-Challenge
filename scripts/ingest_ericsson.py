@@ -15,7 +15,7 @@ from distill.app import app
 
 
 def main() -> None:
-    reset_db = "--no-reset" not in sys.argv
+    reset_db = "--reset" in sys.argv
     if reset_db:
         print("Resetting Distill database for clean official dataset run...")
         db.reset()
@@ -52,6 +52,9 @@ def main() -> None:
             print(f"  [{time.time()-t0:>5.1f}s] Progress: {done}/{total} done | Active: {active_name} [{stage}]", flush=True)
             last_stage = stage
 
+        if total == 0:
+            print("  No jobs queued.")
+            break
         if total > 0 and done == total:
             break
         time.sleep(2)

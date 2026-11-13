@@ -7,9 +7,15 @@ __pycache__/
 # Local data, models and generated output (large / machine-specific)
 data/
 scratch_tts/
+.quarantine/
 
-# Ericsson's sample material: not ours to publish, and videos exceed GitHub's 100 MB limit
-sample_data/ericsson_official/
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Ericsson sample material & large binaries
+sample_data/
 ericsson.pdf
 *.mp4
 *.msg

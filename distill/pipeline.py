@@ -64,13 +64,23 @@ def add_source(root: str, name: str | None = None, kind: str | None = None, owne
 
 def scan_source(source_id: int) -> list[int]:
     src = db.q1("SELECT * FROM sources WHERE id=?", (source_id,))
+    if not src:
+        return []
+    if not C.is_allowed_path(src["root_path"]):
+        raise PermissionError(f"Source path {src['root_path']} is not inside allowed roots")
     ids = []
     for p in sorted(Path(src["root_path"]).rglob("*")):
         if not p.is_file() or p.name.startswith((".", "~$", "_")):
             continue
         st = p.stat()
         if p.suffix.lower() in C.VIDEO_EXT and (time.time() - st.st_mtime < 8 or probe_video(p)["duration"] <= 0):
-            continue  # skip video file that is still actively downloading
+            with db.tx() as c:
+                c.execute("""INSERT INTO files(source_id, path, name, ext, kind, size, mtime, status, error)
+                             VALUES (?,?,?,?,?,?,?, 'skipped', 'Still copying or unreadable')
+                             ON CONFLICT(path) DO UPDATE SET size=excluded.size, mtime=excluded.mtime,
+                             status='skipped', error='Still copying or unreadable'""",
+                          (source_id, str(p), p.name, p.suffix.lower(), "video", st.st_size, st.st_mtime))
+            continue  # registered as skipped so UI can show them
         existing = db.q1("SELECT id, size, mtime, status FROM files WHERE path=?", (str(p),))
         if existing and existing["size"] == st.st_size and abs((existing["mtime"] or 0) - st.st_mtime) < 1 \
                 and existing["status"] == "done":
@@ -647,12 +657,13 @@ def _process_aux(file_id: int) -> None:
             with db.tx() as c:
                 c.execute("UPDATE files SET title=?, text_hash=?, doc_number=?, revision=? WHERE id=?",
                           (res.get("title"), res.get("text_hash"), res.get("doc_number"), res.get("revision"), file_id))
-            search.add_chunks([{"kind": "slide", "file_id": file_id, "ref_id": file_id,
+            search.add_chunks([{"kind": "document", "file_id": file_id, "ref_id": None,
                                 "title": f"{res.get('title') or f['name']} ({f['name']})", "text": res["text"]}])
-    except Exception:
-        pass
-    with db.tx() as c:
-        c.execute("UPDATE files SET status='done' WHERE id=?", (file_id,))
+        with db.tx() as c:
+            c.execute("UPDATE files SET status='done', error=NULL WHERE id=?", (file_id,))
+    except Exception as e:
+        with db.tx() as c:
+            c.execute("UPDATE files SET status='error', error=? WHERE id=?", (str(e)[:500], file_id))
 
 
 def ingest(root: str, **kw) -> dict:
@@ -663,11 +674,11 @@ def ingest(root: str, **kw) -> dict:
     queued = 0
     for kind in ("pdf", "pptx", "video"):
         for f in files:
-            if f["kind"] == kind and f["status"] != "done":
+            if f["kind"] == kind and f["status"] not in ("done", "skipped"):
                 jobs().submit(f["id"])
                 queued += 1
     for f in files:
-        if f["kind"] in ("transcript", "other") and f["status"] != "done":
+        if f["kind"] in ("transcript", "other") and f["status"] not in ("done", "skipped"):
             _process_aux(f["id"])
     return {"source_id": sid, "files": len(ids), "queued": queued}
 
@@ -682,9 +693,9 @@ def ingest_many(roots: list[str]) -> list[dict]:
     files = db.q(f"SELECT id, kind, status FROM files WHERE id IN ({','.join('?' * len(all_ids))})", all_ids) if all_ids else []
     for kind in ("pdf", "pptx", "video"):
         for f in files:
-            if f["kind"] == kind and f["status"] != "done":
+            if f["kind"] == kind and f["status"] not in ("done", "skipped"):
                 jobs().submit(f["id"])
     for f in files:
-        if f["kind"] in ("transcript", "other") and f["status"] != "done":
+        if f["kind"] in ("transcript", "other") and f["status"] not in ("done", "skipped"):
             _process_aux(f["id"])
     return [{"source_id": s} for s in sids]

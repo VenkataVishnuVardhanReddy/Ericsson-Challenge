@@ -21,6 +21,21 @@ DB_PATH = DATA_DIR / "distill.db"
 for _d in (DATA_DIR, STORE_DIR, PACKETS_DIR, RECREATED_DIR, RESCUE_DIR, MODELS_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
+# ---- Security: Allowed roots ----------------------------------------------
+_allowed_env = os.environ.get("DISTILL_ALLOWED_ROOTS")
+if _allowed_env:
+    ALLOWED_ROOTS = [Path(p.strip()).resolve() for p in _allowed_env.split(";") if p.strip()]
+else:
+    ALLOWED_ROOTS = [(ROOT / "sample_data").resolve(), (DATA_DIR / "uploads").resolve()]
+
+
+def is_allowed_path(path: Path | str) -> bool:
+    try:
+        resolved = Path(path).resolve()
+        return any(resolved == root or root in resolved.parents for root in ALLOWED_ROOTS)
+    except Exception:
+        return False
+
 
 def _f(name: str, default: float) -> float:
     return float(os.environ.get(name, default))

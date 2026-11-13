@@ -14,9 +14,14 @@ pymupdf
 python-pptx
 soundfile
 
+# Documents & safe parsing
+olefile
+defusedxml
+
 # AI models (all run offline on CPU)
 faster-whisper
 sherpa-onnx
 rapidocr-onnxruntime
 sentence-transformers
+
 

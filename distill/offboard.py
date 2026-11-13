@@ -19,11 +19,14 @@ from __future__ import annotations
 import json
 import shutil
 import time
+from collections import defaultdict
 from pathlib import Path
 
 from . import config as C
 from . import db
+from . import dedup
 from .dedup import video_similarity
+from .util import hamming_hex
 
 
 def _governed_copy_check(copies: list[dict]) -> tuple[bool, list[dict]]:
@@ -38,14 +41,21 @@ def analyse_leaver(source_id: int) -> dict:
         raise ValueError(f"Source {source_id} not found")
 
     own_files = db.q("SELECT * FROM files WHERE source_id=? ORDER BY size DESC", (source_id,))
-    other_files = db.q("""SELECT f.*, s.name AS source_name, s.kind AS source_kind, s.governed
-                          FROM files f JOIN sources s ON s.id=f.source_id
-                          WHERE f.source_id<>?""", (source_id,))
-    single_source_mode = len(other_files) == 0
-    if single_source_mode:
-        other_files = db.q("""SELECT f.*, s.name AS source_name, s.kind AS source_kind, s.governed
+    raw_other_files = db.q("""SELECT f.*, s.name AS source_name, s.kind AS source_kind, s.governed
                               FROM files f JOIN sources s ON s.id=f.source_id
-                              WHERE f.source_id=?""", (source_id,))
+                              WHERE f.source_id<>?""", (source_id,))
+    single_source_mode = len(raw_other_files) == 0
+    if single_source_mode:
+        raw_other_files = db.q("""SELECT f.*, s.name AS source_name, s.kind AS source_kind, s.governed
+                                  FROM files f JOIN sources s ON s.id=f.source_id
+                                  WHERE f.source_id=?""", (source_id,))
+
+    # Skip other files whose meta.quarantined is true
+    other_files = []
+    for o in raw_other_files:
+        meta_o = json.loads(o["meta"] or "{}")
+        if not meta_o.get("quarantined"):
+            other_files.append(o)
 
     by_sha: dict[str, list[dict]] = {}
     by_text: dict[str, list[dict]] = {}
@@ -59,24 +69,49 @@ def analyse_leaver(source_id: int) -> dict:
             other_videos.append(o)
 
     other_fps = {}
+    other_transcripts = {}
     if other_videos:
         ids = [v["id"] for v in other_videos]
         rows = db.q(f"SELECT file_id, fingerprint FROM recordings WHERE file_id IN ({','.join('?' * len(ids))})", ids)
         for r in rows:
             other_fps[r["file_id"]] = json.loads(r["fingerprint"] or "[]")
+        t_rows = db.q(f"SELECT file_id, text FROM segments WHERE file_id IN ({','.join('?' * len(ids))}) ORDER BY file_id, start", ids)
+        for r in t_rows:
+            other_transcripts.setdefault(r["file_id"], []).append(r["text"] or "")
+        other_transcripts = {fid: " ".join(texts) for fid, texts in other_transcripts.items()}
 
-    # All slide content_ids present outside this leaver's source
-    ext_slide_map: dict[str, dict] = {}
+    # All slide content_ids present outside this leaver's source (excluding quarantined files)
+    ext_slides_by_cid: dict[str, list[dict]] = defaultdict(list)
     if not single_source_mode:
-        for s in db.q("""SELECT s.content_id, s.page_no, f.id AS file_id, f.name, src.name AS source_name, src.governed
+        for s in db.q("""SELECT s.id, s.content_id, s.phash, s.page_no, f.id AS file_id, f.name, f.meta,
+                                src.name AS source_name, src.governed
                          FROM slides s JOIN files f ON f.id=s.file_id JOIN sources src ON src.id=f.source_id
                          WHERE f.source_id<>?""", (source_id,)):
-            cur = ext_slide_map.get(s["content_id"])
-            if cur is None or (s["governed"] and not cur["governed"]):
-                ext_slide_map[s["content_id"]] = s
-    all_slides_single = db.q("""SELECT s.content_id, s.page_no, f.id AS file_id, f.name, f.revision, src.name AS source_name, src.governed
-                                FROM slides s JOIN files f ON f.id=s.file_id JOIN sources src ON src.id=f.source_id
-                                WHERE f.source_id=?""", (source_id,)) if single_source_mode else []
+            fmeta = json.loads(s.get("meta") or "{}")
+            if fmeta.get("quarantined"):
+                continue
+            ext_slides_by_cid[s["content_id"]].append(s)
+
+    chains = dedup.version_chains()
+    newer_than: dict[int, set[int]] = {}
+    for chain in chains:
+        v_ids = [v["id"] for v in chain["versions"]]
+        for idx_v, fid in enumerate(v_ids):
+            newer_than.setdefault(fid, set()).update(v_ids[idx_v + 1:])
+
+    all_slides_single = db.q("""SELECT s.id, s.content_id, s.phash, s.page_no, f.id AS file_id, f.name, f.revision,
+                                        f.meta, src.name AS source_name, src.governed
+                                 FROM slides s JOIN files f ON f.id=s.file_id JOIN sources src ON src.id=f.source_id
+                                 WHERE f.source_id=?""", (source_id,)) if single_source_mode else []
+
+    def _find_slide_match(slide, candidates_by_cid):
+        matches = candidates_by_cid.get(slide["content_id"], [])
+        best = None
+        for cand in matches:
+            if hamming_hex(slide["phash"], cand["phash"]) <= C.IDENTICAL_HAMMING:
+                if best is None or (cand["governed"] and not best["governed"]):
+                    best = cand
+        return best
 
     results = []
     totals = {
@@ -84,6 +119,8 @@ def analyse_leaver(source_id: int) -> dict:
         "total_bytes": sum(f["size"] or 0 for f in own_files),
         "safe_delete_files": 0,
         "safe_delete_bytes": 0,
+        "review_files": 0,
+        "review_bytes": 0,
         "partial_files": 0,
         "partial_bytes": 0,
         "partial_reclaimable_bytes": 0,
@@ -109,23 +146,34 @@ def analyse_leaver(source_id: int) -> dict:
             exact = [x for x in all_sha if x["id"] != f["id"]]
         if exact:
             has_gov, ordered = _governed_copy_check(exact)
-            totals["safe_delete_files"] += 1
-            totals["safe_delete_bytes"] += size
             if has_gov:
+                totals["safe_delete_files"] += 1
+                totals["safe_delete_bytes"] += size
                 totals["governed_backed"] += 1
+                status = "safe_delete"
+                reclaim = size
+                reason = f"Exact byte-identical copy exists in {ordered[0]['source_name']} ({ordered[0]['name']})"
+                action = "Delete leaver copy (duplicate already stored elsewhere)"
+            else:
+                totals["review_files"] += 1
+                totals["review_bytes"] += size
+                status = "review"
+                reclaim = 0
+                reason = "Only copy elsewhere is in another personal drive"
+                action = "Review: Keep or migrate to governed source (only exists in personal drive)"
             results.append({
                 "file": f,
-                "status": "safe_delete",
+                "status": status,
                 "match_type": "exact_sha256",
                 "governed_copy": has_gov,
-                "reclaimable_bytes": size,
-                "reason": f"Exact byte-identical copy exists in {ordered[0]['source_name']} ({ordered[0]['name']})",
+                "reclaimable_bytes": reclaim,
+                "reason": reason,
                 "matches": [{"file_id": m["id"], "name": m["name"], "source": m["source_name"],
                              "governed": bool(m["governed"]), "path": m["path"]} for m in ordered[:5]],
                 "unique_slides": [],
                 "shared_slides": [],
                 "quarantined": quarantined,
-                "recommended_action": "Delete leaver copy (duplicate already stored elsewhere)",
+                "recommended_action": action,
             })
             continue
 
@@ -138,23 +186,34 @@ def analyse_leaver(source_id: int) -> dict:
             content = [x for x in all_content if x["id"] != f["id"]]
         if content:
             has_gov, ordered = _governed_copy_check(content)
-            totals["safe_delete_files"] += 1
-            totals["safe_delete_bytes"] += size
             if has_gov:
+                totals["safe_delete_files"] += 1
+                totals["safe_delete_bytes"] += size
                 totals["governed_backed"] += 1
+                status = "safe_delete"
+                reclaim = size
+                reason = f"100% identical text & slide content exists in {ordered[0]['source_name']} ({ordered[0]['name']})"
+                action = "Delete leaver copy (identical content stored elsewhere)"
+            else:
+                totals["review_files"] += 1
+                totals["review_bytes"] += size
+                status = "review"
+                reclaim = 0
+                reason = "Only copy elsewhere is in another personal drive"
+                action = "Review: Keep or migrate to governed source (only exists in personal drive)"
             results.append({
                 "file": f,
-                "status": "safe_delete",
+                "status": status,
                 "match_type": "identical_content",
                 "governed_copy": has_gov,
-                "reclaimable_bytes": size,
-                "reason": f"100% identical text & slide content exists in {ordered[0]['source_name']} ({ordered[0]['name']})",
+                "reclaimable_bytes": reclaim,
+                "reason": reason,
                 "matches": [{"file_id": m["id"], "name": m["name"], "source": m["source_name"],
                              "governed": bool(m["governed"]), "path": m["path"]} for m in ordered[:5]],
                 "unique_slides": [],
                 "shared_slides": [],
                 "quarantined": quarantined,
-                "recommended_action": "Delete leaver copy (identical content stored elsewhere)",
+                "recommended_action": action,
             })
             continue
 
@@ -164,6 +223,8 @@ def analyse_leaver(source_id: int) -> dict:
             fp = json.loads(rec["fingerprint"] or "[]") if rec else []
             v_matches = []
             if fp:
+                f_segs = db.q("SELECT text FROM segments WHERE file_id=? ORDER BY start", (f["id"],))
+                f_txt = " ".join(s["text"] or "" for s in f_segs)
                 for ov in other_videos:
                     if ov["id"] == f["id"]:
                         continue
@@ -172,54 +233,66 @@ def analyse_leaver(source_id: int) -> dict:
                     ofp = other_fps.get(ov["id"], [])
                     if not ofp:
                         continue
-                    sim = max(video_similarity(fp, ofp), video_similarity(ofp, fp))
+                    ov_txt = other_transcripts.get(ov["id"], "")
+                    sim = video_similarity(fp, ofp, text_a=f_txt, text_b=ov_txt)
                     if sim >= 0.6:
                         v_matches.append((sim, ov))
             if v_matches:
                 v_matches.sort(key=lambda x: (-(x[1]["governed"] or 0), -x[0]))
                 best_sim, best_v = v_matches[0]
                 has_gov = any(m[1]["governed"] for m in v_matches)
-                totals["safe_delete_files"] += 1
-                totals["safe_delete_bytes"] += size
                 if has_gov:
+                    totals["safe_delete_files"] += 1
+                    totals["safe_delete_bytes"] += size
                     totals["governed_backed"] += 1
+                    status = "safe_delete"
+                    reclaim = size
+                    reason = f"Perceptually matching recording ({round(best_sim * 100)}% overlap) exists in {best_v['source_name']} ({best_v['name']})"
+                    action = "Delete leaver recording (duplicate recording exists)"
+                else:
+                    totals["review_files"] += 1
+                    totals["review_bytes"] += size
+                    status = "review"
+                    reclaim = 0
+                    reason = "Only copy elsewhere is in another personal drive"
+                    action = "Review: Keep or migrate to governed source (only exists in personal drive)"
                 results.append({
                     "file": f,
-                    "status": "safe_delete",
+                    "status": status,
                     "match_type": "video_perceptual",
                     "governed_copy": has_gov,
-                    "reclaimable_bytes": size,
-                    "reason": f"Perceptually matching recording ({round(best_sim * 100)}% overlap) exists in {best_v['source_name']} ({best_v['name']})",
+                    "reclaimable_bytes": reclaim,
+                    "reason": reason,
                     "matches": [{"file_id": m["id"], "name": m["name"], "source": m["source_name"],
                                  "governed": bool(m["governed"]), "similarity": round(sim, 3)}
                                 for sim, m in v_matches[:5]],
                     "unique_slides": [],
                     "shared_slides": [],
                     "quarantined": quarantined,
-                    "recommended_action": "Delete leaver recording (duplicate recording exists)",
+                    "recommended_action": action,
                 })
                 continue
 
         # 4. Slide-level overlap in PDF/PPTX -> partial vs unique
         if f["kind"] in ("pdf", "pptx"):
-            own_slides = db.q("SELECT id, page_no, content_id, title, bytes, object_hash FROM slides WHERE file_id=? ORDER BY page_no",
+            own_slides = db.q("SELECT id, page_no, content_id, phash, title, bytes, object_hash FROM slides WHERE file_id=? ORDER BY page_no",
                               (f["id"],))
-            local_ext = ext_slide_map
             if single_source_mode:
-                # Compare older revision or smaller deck against newer/larger deck in same source
-                local_ext = {}
+                local_cands = defaultdict(list)
+                newer_ids = newer_than.get(f["id"], set())
                 for s in all_slides_single:
-                    if s["file_id"] == f["id"]:
-                        continue
-                    if (s["revision"] or "") > (f.get("revision") or "") or len(own_slides) < 28:
-                        local_ext.setdefault(s["content_id"], s)
+                    if s["file_id"] in newer_ids:
+                        local_cands[s["content_id"]].append(s)
+            else:
+                local_cands = ext_slides_by_cid
+
             shared, unique = [], []
             for s in own_slides:
-                ext = local_ext.get(s["content_id"])
+                ext = _find_slide_match(s, local_cands)
                 if ext:
                     shared.append({"slide_id": s["id"], "page_no": s["page_no"], "title": s["title"],
                                    "matched_deck": ext["name"], "matched_source": ext["source_name"],
-                                   "matched_page": ext["page_no"]})
+                                   "matched_page": ext["page_no"], "matched_governed": bool(ext.get("governed"))})
                 else:
                     unique.append({"slide_id": s["id"], "page_no": s["page_no"], "title": s["title"],
                                    "object_hash": s["object_hash"], "bytes": s["bytes"]})
@@ -233,7 +306,7 @@ def analyse_leaver(source_id: int) -> dict:
                     "file": f,
                     "status": "partial",
                     "match_type": "shared_slides",
-                    "governed_copy": False,
+                    "governed_copy": any(s.get("matched_governed") for s in shared),
                     "reclaimable_bytes": reclaim,
                     "reason": f"{len(shared)} of {len(own_slides)} slides already exist elsewhere; {len(unique)} unique slides must be rescued before deleting",
                     "matches": [],
@@ -244,20 +317,34 @@ def analyse_leaver(source_id: int) -> dict:
                 })
                 continue
             elif shared and not unique:
-                totals["safe_delete_files"] += 1
-                totals["safe_delete_bytes"] += size
+                has_gov = any(s.get("matched_governed") for s in shared)
+                if has_gov:
+                    totals["safe_delete_files"] += 1
+                    totals["safe_delete_bytes"] += size
+                    totals["governed_backed"] += 1
+                    status = "safe_delete"
+                    reclaim = size
+                    reason = f"All {len(own_slides)} slides already exist across other indexed decks"
+                    action = "Delete leaver deck (100% of slides exist elsewhere)"
+                else:
+                    totals["review_files"] += 1
+                    totals["review_bytes"] += size
+                    status = "review"
+                    reclaim = 0
+                    reason = "Only copy elsewhere is in another personal drive"
+                    action = "Review: Keep or migrate to governed source (only exists in personal drive)"
                 results.append({
                     "file": f,
-                    "status": "safe_delete",
+                    "status": status,
                     "match_type": "all_slides_elsewhere",
-                    "governed_copy": False,
-                    "reclaimable_bytes": size,
-                    "reason": f"All {len(own_slides)} slides already exist across other indexed decks",
+                    "governed_copy": has_gov,
+                    "reclaimable_bytes": reclaim,
+                    "reason": reason,
                     "matches": [],
                     "unique_slides": [],
                     "shared_slides": shared,
                     "quarantined": quarantined,
-                    "recommended_action": "Delete leaver deck (100% of slides exist elsewhere)",
+                    "recommended_action": action,
                 })
                 continue
 
@@ -355,10 +442,9 @@ def rescue_unique_slides(file_id: int) -> dict:
     }
 
 
-def apply_offboarding(source_id: int, file_ids: list[int], mode: str = "dry_run") -> dict:
+def apply_offboarding(source_id: int, file_ids: list[int], mode: str = "dry_run", delete_original: bool = False) -> dict:
     """Dry-run or quarantine-stage selected files (NEVER permanently deletes without quarantine).
-    In 'quarantine' mode, files are moved to data/rescued/quarantine_<source_id>/ (reversible!)
-    and partial files have their unique slides rescued first.
+    In 'quarantine' mode, files are copied to data/rescued/quarantine_<source_id>/ (originals are NEVER deleted; delete_original=False).
     """
     report = analyse_leaver(source_id)
     by_id = {r["file"]["id"]: r for r in report["files"]}
@@ -369,9 +455,9 @@ def apply_offboarding(source_id: int, file_ids: list[int], mode: str = "dry_run"
         if not item:
             continue
         f = item["file"]
-        if item["status"] == "unique":
-            actions.append({"file_id": fid, "name": f["name"], "action": "skipped_unique",
-                            "reason": "Blocked by safety rule: file is unique and has no duplicate elsewhere"})
+        if item["status"] in ("unique", "review"):
+            actions.append({"file_id": fid, "name": f["name"], "action": f"skipped_{item['status']}",
+                            "reason": f"Blocked by safety rule: {item['reason']}"})
             continue
         rescued = None
         if item["status"] == "partial" and mode == "quarantine":
@@ -393,9 +479,6 @@ def apply_offboarding(source_id: int, file_ids: list[int], mode: str = "dry_run"
             if src_p.exists() and not dst_p.exists():
                 shutil.copy2(src_p, dst_p)
                 moved = True
-                # Keep original in sample_data untouched if DISTILL_SAFE_DEMO=1? No, we store a restore manifest
-                # and only mark quarantined in DB + write manifest unless explicit delete requested;
-                # wait: for demo safety AND realism, allow optional delete_original=False or reversible move.
             meta = json.loads(f["meta"] or "{}")
             meta["quarantined"] = True
             meta["quarantine_path"] = str(dst_p)
@@ -404,6 +487,11 @@ def apply_offboarding(source_id: int, file_ids: list[int], mode: str = "dry_run"
                 meta["rescued_pdf"] = rescued["out_pdf"]
             with db.tx() as c:
                 c.execute("UPDATE files SET meta=? WHERE id=?", (json.dumps(meta), fid))
+            db.audit("quarantine_file", {
+                "file_id": fid, "name": f["name"], "source_id": source_id,
+                "quarantine_copy": str(dst_p), "reclaimable_bytes": item["reclaimable_bytes"],
+                "deleted_original": False,
+            })
             actions.append({
                 "file_id": fid, "name": f["name"], "action": "quarantined_staged",
                 "quarantine_copy": str(dst_p), "rescued": rescued,
