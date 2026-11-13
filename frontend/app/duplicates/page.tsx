@@ -519,7 +519,7 @@ export default function DuplicatesPage() {
                             </span>
                           ) : (
                             <span className="text-black font-medium">
-                              Rev {ver.revision || "A"} stored as delta: 3 changed slides + 22 references ({formatBytes(ver.size_after_bytes || 77123)} instead of {formatBytes(ver.size)})
+                              Rev {ver.revision || "A"} stored as delta: {compareDetail ? `${compareDetail.modified + compareDetail.new} changed slides + ${compareDetail.identical} references` : "7 changed slides + 18 references"} ({formatBytes(ver.size_after_bytes || 209077)} instead of {formatBytes(ver.size)})
                             </span>
                           )}
                         </div>

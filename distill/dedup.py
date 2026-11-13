@@ -48,13 +48,10 @@ def _popcount64(x: np.ndarray) -> np.ndarray:
 
 def slide_relation(a: dict, b: dict) -> str | None:
     """'identical' | 'modified' | None between two slide rows."""
-    ham = hamming_hex(a["phash"], b["phash"])
-    if a["content_id"] == b["content_id"] and ham <= C.IDENTICAL_HAMMING:
+    if a.get("content_id") and b.get("content_id") and a["content_id"] == b["content_id"]:
         return "identical"
-    ts = _text_sim(a.get("text", ""), b.get("text", ""))
-    if ham <= C.IDENTICAL_HAMMING and ts > 0.97:
-        return "identical"
-    if ts >= C.NEAR_TEXT_SIM or (ham <= C.NEAR_HAMMING and ts >= 0.5):
+    ham = hamming_hex(a.get("phash", ""), b.get("phash", ""))
+    if ham <= 20:
         return "modified"
     return None
 
@@ -113,13 +110,23 @@ def deck_comparison(a_id: int, b_id: int, sa=None, sb=None) -> dict:
     pairs = []
     for s in sb:
         best, rel_best = None, None
+        # 1. Search for identical content_id
         for t in sa:
-            rel = slide_relation(t, s)
-            if rel == "identical":
-                best, rel_best = t, rel
+            if t["id"] in used:
+                continue
+            if s.get("content_id") and t.get("content_id") and s["content_id"] == t["content_id"]:
+                best, rel_best = t, "identical"
                 break
-            if rel == "modified" and rel_best is None:
-                best, rel_best = t, rel
+        # 2. If no identical slide, search for modified by phash
+        if best is None:
+            best_ham = 999
+            for t in sa:
+                if t["id"] in used:
+                    continue
+                ham = hamming_hex(s.get("phash", ""), t.get("phash", ""))
+                if ham <= 20 and ham < best_ham:
+                    best_ham = ham
+                    best, rel_best = t, "modified"
         if best is not None:
             used.add(best["id"])
         pairs.append({"b": s, "a": best, "relation": rel_best or "new"})

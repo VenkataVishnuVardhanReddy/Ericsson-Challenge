@@ -133,11 +133,13 @@ def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
 
     # 2. Older revisions delta calculation
     # In this dataset, File 11 (SD-WAN final2.pptx, Rev A) is an older revision of File 5 (Rev B).
-    # Its delta is only the slides that do not exist in the newest revision + compressed text.
-    s11 = db.q("SELECT page_no, bytes, text FROM slides WHERE file_id=11")
-    changed_pages_11 = {9, 23, 24}
-    changed_slides_bytes_11 = sum(s["bytes"] or 0 for s in s11 if s["page_no"] in changed_pages_11)
-    f11_text = "\n".join(s["text"] or "" for s in s11 if s["page_no"] in changed_pages_11)
+    # Unified rule: identical if content_id matches!
+    s5_cids = {s["content_id"] for s in db.q("SELECT content_id FROM slides WHERE file_id=5")}
+    s11 = db.q("SELECT page_no, bytes, text, content_id FROM slides WHERE file_id=11")
+    changed_11 = [s for s in s11 if s["content_id"] not in s5_cids]
+    shared_11 = [s for s in s11 if s["content_id"] in s5_cids]
+    changed_slides_bytes_11 = sum(s["bytes"] or 0 for s in changed_11)
+    f11_text = "\n".join(s["text"] or "" for s in changed_11)
     gzip_f11_text = len(gzip.compress(f11_text.encode("utf-8"))) if f11_text else 512
     delta_bytes_11 = changed_slides_bytes_11 + gzip_f11_text
 
@@ -160,13 +162,13 @@ def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
             t3 = next((t["bytes"] for t in ts if t["name"].startswith("T3")), None)
             size_after = t3 if t3 is not None else orig_size
             saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
-            policy = "audio + slides"
-            reason = "Audio + slides + transcript"
+            policy = "slides + text"
+            reason = "Slides + transcript + speakers (Level 4, no audio)"
         elif fid == 11:
             size_after = delta_bytes_11
             saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
             policy = "revision → delta"
-            reason = "Stored as delta: 3 changed slides + 22 references"
+            reason = f"Stored as delta: {len(changed_11)} changed slides + {len(shared_11)} references"
         elif f.get("governed"):
             # Official copy of document (governed source; for version chain, newest revision)
             # keeps its ORIGINAL file size (editable, nothing lost)
@@ -232,14 +234,19 @@ def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
     waterfall_total = total_original - video_reduction_bytes - duplicate_file_bytes - slide_dedup_bytes
     is_measured = (waterfall_total == final_bytes)
 
+    video_orig_bytes = sum(f["size"] or 0 for f in files if f["kind"] == "video")
+    video_after_bytes = sum(file_results[f["id"]]["size_after_bytes"] for f in files if f["kind"] == "video")
+
     waterfall = {
         "original_bytes": total_original,
+        "video_original_bytes": video_orig_bytes,
+        "video_after_bytes": video_after_bytes,
         "video_reduction_bytes": video_reduction_bytes,
         "duplicate_file_bytes": duplicate_file_bytes,
         "slide_dedup_bytes": slide_dedup_bytes,
         "final_bytes": final_bytes,
         "savings_pct": round((1 - final_bytes / total_original) * 100, 1) if total_original else 0.0,
-        "formula": f"Original ({fmt_waterfall_bytes(total_original)}) − Videos turned into slides + text ({fmt_waterfall_bytes(video_reduction_bytes)}) − Duplicate files ({fmt_waterfall_bytes(duplicate_file_bytes)}) − Slides stored once across decks ({fmt_waterfall_bytes(slide_dedup_bytes)}) = Final size ({fmt_waterfall_bytes(final_bytes)})",
+        "formula": f"Original ({fmt_waterfall_bytes(total_original)}) − Videos turned into slides + text ({fmt_waterfall_bytes(video_reduction_bytes)}) − Duplicate files ({fmt_waterfall_bytes(duplicate_file_bytes)}) − Older revisions stored as changes only ({fmt_waterfall_bytes(slide_dedup_bytes)}) = Final size ({fmt_waterfall_bytes(final_bytes)})",
         "measured": is_measured,
     }
 
@@ -585,6 +592,7 @@ def api_files(kind: str | None = None, source_id: int | None = None):
             r["size_after_bytes"] = file_opts[fid]["size_after_bytes"]
             r["saved_pct"] = file_opts[fid]["saved_pct"]
             r["reason"] = file_opts[fid]["reason"]
+            r["policy"] = file_opts[fid]["policy"]
         for jk in ("tiers", "retention", "meta"):
             if r.get(jk) and isinstance(r[jk], str):
                 try:
@@ -1412,16 +1420,14 @@ def api_file_manifest(file_id: int):
 
     if file_id == 11:
         # Older revision of File 5 (SD-WAN Rev A -> Rev B)
-        cmp_ = dedup.deck_comparison(11, 5)
-        shared_map = {}
-        for p in cmp_.get("pairs", []):
-            if p.get("a") and p.get("b") and p.get("relation") == "identical":
-                shared_map[p["a"]["page_no"]] = p["b"]["page_no"]
+        # Unified rule: identical if content_id matches!
+        s5_slides = db.q("SELECT page_no, content_id FROM slides WHERE file_id=5")
+        s5_by_cid = {s["content_id"]: s["page_no"] for s in s5_slides if s.get("content_id")}
 
         for s in slides:
             p_no = s["page_no"]
-            if p_no in shared_map:
-                target_page = shared_map[p_no]
+            if s.get("content_id") and s["content_id"] in s5_by_cid:
+                target_page = s5_by_cid[s["content_id"]]
                 status = f"shared with SD-WAN Orchestration_commercial presentation_final.pptx, page {target_page}"
                 stored_here = False
                 shared_deck = "SD-WAN Orchestration_commercial presentation_final.pptx"

@@ -106,12 +106,9 @@ def analyse_leaver(source_id: int) -> dict:
 
     def _find_slide_match(slide, candidates_by_cid):
         matches = candidates_by_cid.get(slide["content_id"], [])
-        best = None
-        for cand in matches:
-            if hamming_hex(slide["phash"], cand["phash"]) <= C.IDENTICAL_HAMMING:
-                if best is None or (cand["governed"] and not best["governed"]):
-                    best = cand
-        return best
+        if not matches:
+            return None
+        return sorted(matches, key=lambda c: (not c.get("governed"), c["id"]))[0]
 
     results = []
     totals = {

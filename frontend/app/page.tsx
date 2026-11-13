@@ -71,10 +71,10 @@ export default function OverviewPage() {
     );
   }
 
-  // Projection calculations based on measured savings
-  const videoSavingRate = waterfall.original_bytes > 0
-    ? waterfall.video_reduction_bytes / (waterfall.video_reduction_bytes + 14288259)
-    : 0.9907;
+  // Projection calculations based on measured savings directly from the API
+  const videoSavingRate = (waterfall.video_original_bytes && waterfall.video_original_bytes > 0)
+    ? (waterfall.video_reduction_bytes / waterfall.video_original_bytes)
+    : (waterfall.savings_pct ? waterfall.savings_pct / 100 : 0.9907);
   const eligibleTb = tbRecordings * (pctOlderThanOneYear / 100);
   const tbFreed = eligibleTb * videoSavingRate;
   const eurosSavedPerYear = tbFreed * costPerTbMonth * 12;
@@ -122,7 +122,7 @@ export default function OverviewPage() {
             <div
               style={{ width: `${(waterfall.slide_dedup_bytes / waterfall.original_bytes) * 100}%` }}
               className="bg-[#6b6b6b]"
-              title={`Slides stored once across decks: ${formatBytes(waterfall.slide_dedup_bytes)}`}
+              title={`Older revisions stored as changes only: ${formatBytes(waterfall.slide_dedup_bytes)}`}
             />
             <div
               style={{ width: `${(waterfall.duplicate_file_bytes / waterfall.original_bytes) * 100}%` }}
@@ -143,7 +143,7 @@ export default function OverviewPage() {
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#6b6b6b] inline-block"></span>
-              <span>Slides stored once across decks ({((waterfall.slide_dedup_bytes / waterfall.original_bytes) * 100).toFixed(1)}%)</span>
+              <span>Older revisions stored as changes only ({((waterfall.slide_dedup_bytes / waterfall.original_bytes) * 100).toFixed(1)}%)</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#a3a3a3] inline-block"></span>
@@ -185,13 +185,13 @@ export default function OverviewPage() {
             <span className="text-xs text-[#6b6b6b] mt-1 block">Already in official storage</span>
           </div>
 
-          {/* 4. Slides once */}
+          {/* 4. Older revisions */}
           <div className="p-4 rounded-lg border border-[#e5e5e5] bg-white">
-            <span className="text-xs text-[#6b6b6b] block font-medium">Minus: shared slides</span>
+            <span className="text-xs text-[#6b6b6b] block font-medium">Minus: older revisions</span>
             <div className="text-xl font-bold text-black font-mono mt-1">
               −{formatBytes(waterfall.slide_dedup_bytes)}
             </div>
-            <span className="text-xs text-[#6b6b6b] mt-1 block">Stored once across decks</span>
+            <span className="text-xs text-[#6b6b6b] mt-1 block">Stored as changes only</span>
           </div>
 
           {/* 5. Final */}

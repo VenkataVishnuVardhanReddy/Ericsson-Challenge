@@ -239,7 +239,10 @@ def recompute_video(file_id: int):
 
         found = 0
         for w in off_words:
-            if w in ocr_words_set or w in ocr_compact:
+            if w in ocr_words_set:
+                found += 1
+                continue
+            if len(w) >= 5 and w in ocr_compact:
                 found += 1
                 continue
             w_len = len(w)

@@ -43,6 +43,8 @@ export interface FileItem {
 
 export interface WaterfallData {
   original_bytes: number;
+  video_original_bytes?: number;
+  video_after_bytes?: number;
   video_reduction_bytes: number;
   duplicate_file_bytes: number;
   slide_dedup_bytes: number;

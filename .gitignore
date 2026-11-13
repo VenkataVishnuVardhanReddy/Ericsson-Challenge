@@ -6,6 +6,7 @@ __pycache__/
 
 # Local data, models and generated output (large / machine-specific)
 data/
+scratch/
 scratch_tts/
 .quarantine/
 
