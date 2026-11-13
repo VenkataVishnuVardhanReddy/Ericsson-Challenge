@@ -120,6 +120,8 @@ export const api = {
 
   diffImageUrl: (slideA: number, slideB: number) => `${API_BASE}/api/diff-image/${slideA}/${slideB}`,
 
+  getJobs: () => fetchJson<{ jobs: any[] }>("/api/jobs"),
+
   recreatedVideoUrl: (id: number, mode = "audio_slides") =>
     `${API_BASE}/api/recordings/${id}/recreated?mode=${mode}`,
 

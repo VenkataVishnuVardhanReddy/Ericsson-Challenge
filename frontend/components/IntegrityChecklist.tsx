@@ -37,7 +37,7 @@ export default function IntegrityChecklist({ fileId }: Props) {
             </h3>
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            Mathematical proof of information preservation across storage compression stages.
+            Verification of information preservation across storage compression levels.
           </p>
         </div>
 

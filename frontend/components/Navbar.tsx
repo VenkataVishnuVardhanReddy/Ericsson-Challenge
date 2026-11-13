@@ -1,41 +1,72 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Loader2, Check } from "lucide-react";
+import { api } from "@/lib/api";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [backendStatus, setBackendStatus] = useState<"running" | "offline" | "processing">("running");
+  const [activeJobsCount, setActiveJobsCount] = useState<number>(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    async function checkStatus() {
+      try {
+        const res = await api.getJobs();
+        const running = res?.jobs?.filter((j: any) => j.status === "processing" || j.status === "running") || [];
+        if (running.length > 0) {
+          setBackendStatus("processing");
+          setActiveJobsCount(running.length);
+        } else {
+          setBackendStatus("running");
+          setActiveJobsCount(0);
+        }
+      } catch (err) {
+        setBackendStatus("offline");
+        setActiveJobsCount(0);
+      }
+    }
+
+    checkStatus();
+    timer = setInterval(checkStatus, activeJobsCount > 0 ? 3000 : 8000);
+    return () => clearInterval(timer);
+  }, [activeJobsCount]);
 
   const navItems = [
-    { label: "Optimize", href: "/" },
-    { label: "Duplicates & Revisions", href: "/duplicates" },
-    { label: "Hybrid Search & QA", href: "/search" },
-    { label: "Offboarding", href: "/offboarding" },
-    { label: "How It Works", href: "/how-it-works" },
+    { label: "Overview", href: "/" },
+    { label: "Files", href: "/files" },
+    { label: "Duplicates", href: "/duplicates" },
+    { label: "Search", href: "/search" },
+    { label: "Employee leaving", href: "/offboarding" },
+    { label: "How it works", href: "/how-it-works" },
   ];
 
   return (
-    <header className="border-b border-[#e5e5e5] bg-[#ffffff] sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-        <div className="flex items-center space-x-6">
+    <header className="border-b border-[#e5e5e5] bg-white sticky top-0 z-50">
+      <div className="max-w-[1120px] mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="flex items-center space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-mono font-bold tracking-wider text-black text-sm">DISTILL</span>
-            <span className="text-xs font-mono text-gray-500 border-l border-gray-300 pl-2">
-              ERICSSON BUILD 2026
+            <span className="font-semibold tracking-tight text-black text-base">Distill</span>
+            <span className="text-xs text-[#6b6b6b] border-l border-[#e5e5e5] pl-2 font-mono">
+              Ericsson Build 2026
             </span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
-              const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+              const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-1.5 text-xs font-mono transition-colors border ${
+                  className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                     active
-                      ? "border-black bg-black text-white"
-                      : "border-transparent text-gray-600 hover:text-black hover:border-gray-200"
+                      ? "bg-black text-white font-medium"
+                      : "text-[#6b6b6b] hover:text-black hover:bg-gray-100"
                   }`}
                 >
                   {item.label}
@@ -45,12 +76,23 @@ export default function Navbar() {
           </nav>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2 text-xs font-mono">
-            <span className="w-2 h-2 rounded-full bg-green-600 inline-block animate-pulse"></span>
-            <span className="text-gray-500">ENGINE ONLINE</span>
-          </div>
-          <span className="text-xs font-mono text-gray-400">CPU INT8</span>
+        <div className="flex items-center space-x-3 text-xs">
+          {backendStatus === "processing" ? (
+            <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full border border-black bg-white text-black font-medium">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <span>Processing {activeJobsCount} file{activeJobsCount > 1 ? "s" : ""}...</span>
+            </div>
+          ) : backendStatus === "running" ? (
+            <div className="flex items-center space-x-1.5 text-[#6b6b6b]">
+              <span className="w-2 h-2 rounded-full bg-black inline-block"></span>
+              <span>Backend running</span>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-1.5 text-[#6b6b6b]">
+              <span className="w-2 h-2 rounded-full border border-black inline-block"></span>
+              <span>Backend offline</span>
+            </div>
+          )}
         </div>
       </div>
     </header>

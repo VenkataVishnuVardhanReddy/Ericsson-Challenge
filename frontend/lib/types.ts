@@ -16,6 +16,7 @@ export interface FileItem {
   id: number;
   source_id: number;
   source_name?: string;
+  source_kind?: string;
   governed?: boolean;
   name: string;
   rel_path: string;
@@ -31,6 +32,17 @@ export interface FileItem {
   doc_date?: string;
   doc_number?: string;
   revision?: string;
+}
+
+export interface WaterfallData {
+  original_bytes: number;
+  video_reduction_bytes: number;
+  duplicate_file_bytes: number;
+  slide_dedup_bytes: number;
+  final_bytes: number;
+  savings_pct: number;
+  formula: string;
+  measured: boolean;
 }
 
 export interface OverviewData {
@@ -56,12 +68,14 @@ export interface OverviewData {
   };
   total_reclaimable_bytes: number;
   duplicate_groups: number;
+  waterfall?: WaterfallData;
   storage: {
     total_bytes: number;
     video_bytes: number;
     doc_bytes: number;
     optimized_total_bytes: number;
     total_saving_pct: number;
+    waterfall?: WaterfallData;
     tier_totals: {
       T0: number;
       T1: number;
@@ -82,8 +96,11 @@ export interface OverviewData {
   };
   slide_stats: {
     total_slides: number;
-    unique_content_ids: number;
-    shared_content_ids: number;
+    unique_content_ids?: number;
+    shared_content_ids?: number;
+    unique_slides?: number;
+    shared_slides?: number;
+    dedup_ratio?: number;
   };
   revision_chains: number;
   sources: SourceInfo[];
@@ -97,9 +114,28 @@ export interface StageItem {
   detail?: string | null;
 }
 
+export interface StorageLevelMethod {
+  label: string;
+  type: "ai_model" | "algorithm";
+}
+
+export interface StorageLevel {
+  level: number;
+  name: string;
+  plain_description: string;
+  bytes: number;
+  measured: boolean;
+  keep: string[];
+  removed: string[];
+  stored_files: { name: string; bytes: number }[];
+  methods: StorageLevelMethod[];
+}
+
 export interface FileStages {
   file_id: number;
   status: string;
+  levels?: StorageLevel[];
+  progress?: StageItem[];
   stages: StageItem[];
 }
 
@@ -109,6 +145,15 @@ export interface IntegrityCheck {
   detail: string;
 }
 
+export interface CheckedMoment {
+  t: number;
+  original_words: string[];
+  found_words: string[];
+  missing_words: string[];
+  kept_slide_object: string | null;
+  spoken_text: string;
+}
+
 export interface FileIntegrity {
   file_id: number;
   name: string;
@@ -116,6 +161,14 @@ export interface FileIntegrity {
   distilled_size: number;
   compression_ratio: string;
   retention_score: number;
+  frames_checked?: number;
+  moments?: CheckedMoment[];
+  main_speakers?: number;
+  transcript_words?: number;
+  speech_confidence?: number;
+  slides_kept?: number;
+  slides_linked?: number;
+  note?: string | null;
   checks: IntegrityCheck[];
   cas_hashes: {
     raw_sha256?: string;
@@ -130,7 +183,7 @@ export interface Keyframe {
   idx: number;
   start: number;
   end: number;
-  intervals?: string;
+  intervals?: any;
   object_hash: string;
   bytes: number;
   phash: string;
@@ -139,6 +192,7 @@ export interface Keyframe {
   description: string;
   image_key?: string;
   matched_slide_id?: number | null;
+  linked_slide?: any;
 }
 
 export interface Segment {
@@ -147,6 +201,7 @@ export interface Segment {
   end: number;
   speaker: string;
   text: string;
+  deictic?: string | null;
 }
 
 export interface RecordingDetail {
@@ -156,11 +211,12 @@ export interface RecordingDetail {
     width: number;
     height: number;
     fps: number;
-    screen_retention: number;
-    tiers: string;
+    screen_retention?: number;
+    tiers: any;
     notes_md?: string;
     slide_prompts_md?: string;
     summary?: string;
+    retention?: any;
   };
   keyframes: Keyframe[];
   segments: Segment[];
@@ -185,7 +241,6 @@ export interface SlideItem {
 
 export interface ChunkItem {
   id: number;
-  file_id: number;
   kind: string;
   title: string;
   text: string;
@@ -197,35 +252,33 @@ export interface DocumentDetail {
   chunks: ChunkItem[];
 }
 
+export interface DuplicateGroup {
+  level: "exact" | "content" | "video";
+  sha256?: string;
+  text_hash?: string;
+  reclaimable: number;
+  keep: number;
+  files: FileItem[];
+  similarity?: number;
+}
+
 export interface DeckRelation {
   a: FileItem;
   b: FileItem;
-  exact_match: boolean;
+  score: number;
+  common_slides: number;
   identical_slides: number;
   modified_slides: number;
-  a_only_slides: number;
-  b_only_slides: number;
-  diff_pairs: {
-    page_a: number;
-    page_b: number;
-    relation: "identical" | "modified" | "added" | "deleted";
-    hamming?: number;
-  }[];
+  unique_to_a: number;
+  unique_to_b: number;
 }
 
-export interface VersionChain {
-  doc_number: string;
+export interface RevisionChain {
+  chain_id: number;
+  doc_number: string | null;
+  title: string;
   versions: FileItem[];
-  revisions: string[];
-}
-
-export interface DuplicateGroup {
-  hash?: string;
-  keep: number;
-  reclaimable: number;
-  files: FileItem[];
-  similarity?: number;
-  byte_identical?: boolean;
+  relations: DeckRelation[];
 }
 
 export interface DuplicatesData {
@@ -233,23 +286,61 @@ export interface DuplicatesData {
   content: DuplicateGroup[];
   video: DuplicateGroup[];
   relations: DeckRelation[];
-  chains: VersionChain[];
-  shared_slides: { content_id: string; count: number; slide_ids: number[] }[];
-  slide_stats: {
-    total_slides: number;
-    unique_content_ids: number;
-  };
+  chains: RevisionChain[];
+  shared_slides: any[];
+  slide_stats: any;
   name_hints: any[];
 }
 
+export interface ComparePair {
+  page_a?: number;
+  page_b?: number;
+  slide_a_id?: number;
+  slide_b_id?: number;
+  relation: "identical" | "modified" | "unique_a" | "unique_b";
+  hamming: number;
+  text_similarity: number;
+  a?: SlideItem;
+  b?: SlideItem;
+  text_diff?: string;
+}
+
+export interface CompareDetail {
+  a: FileItem;
+  b: FileItem;
+  summary: {
+    identical: number;
+    modified: number;
+    unique_to_a: number;
+    unique_to_b: number;
+    score: number;
+  };
+  pairs: ComparePair[];
+}
+
+export interface SearchResult {
+  id: number;
+  file_id: number;
+  kind: string;
+  name: string;
+  source: string;
+  start: number | null;
+  end: number | null;
+  title: string;
+  snippet: string;
+  image: string | null;
+  score: number;
+  ref_id?: number | null;
+  page_no?: number | null;
+}
+
 export interface LeaverFileMatch {
+  file_id: number;
+  name: string;
+  rel_path?: string;
   source_name: string;
   governed: boolean;
-  rel_path?: string;
-  name?: string;
-  similarity?: number;
-  identical_slides?: number;
-  total_slides?: number;
+  match_type: "exact" | "content" | "slides";
 }
 
 export interface LeaverFileItem {
@@ -260,6 +351,7 @@ export interface LeaverFileItem {
   reclaimable_bytes: number;
   matches: LeaverFileMatch[];
   unique_slides_count?: number;
+  shared_slides_count?: number;
 }
 
 export interface OffboardReport {
@@ -279,43 +371,10 @@ export interface OffboardReport {
   };
 }
 
-export interface SearchResult {
-  id: number;
-  file_id: number;
-  file_name: string;
-  file_rel_path: string;
-  source_name: string;
-  kind: string;
-  title: string;
-  text: string;
-  snippet: string;
-  score: number;
-  timestamp?: number;
-  slide_id?: number;
-  image_key?: string;
-  speaker?: string;
-}
-
 export interface PipelineInfo {
-  models: {
-    transcription: string;
-    diarization: string;
-    ocr: string;
-    embeddings: string;
-    llm: string;
-  };
-  versions: {
-    python: string;
-    torch: string;
-    ffmpeg: string;
-    opencv: string;
-  };
-  thresholds: {
-    identical_hamming: number;
-    modified_hamming: number;
-    video_similarity: number;
-    transcript_similarity: number;
-  };
+  models: Record<string, string>;
+  versions: Record<string, string>;
+  thresholds: Record<string, number>;
   allowed_roots: string[];
   environment: string;
 }

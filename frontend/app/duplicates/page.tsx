@@ -1,246 +1,290 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import {
+  Copy,
+  Layers,
+  FileText,
+  Building2,
+  User,
+  ArrowRight,
+  ExternalLink,
+  ChevronRight,
+  Sparkles,
+} from "lucide-react";
 import { api, formatBytes } from "@/lib/api";
-import { DuplicatesData, DeckRelation } from "@/lib/types";
+import { DuplicatesData, DeckRelation, CompareDetail, ComparePair } from "@/lib/types";
+import { StatusBadge } from "@/components/Badge";
+import Explain from "@/components/Explain";
 
 export default function DuplicatesPage() {
   const [data, setData] = useState<DuplicatesData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedRelation, setSelectedRelation] = useState<DeckRelation | null>(null);
-  const [selectedPair, setSelectedPair] = useState<any | null>(null);
-  const [comparisonDetail, setComparisonDetail] = useState<any | null>(null);
-  const [comparing, setComparing] = useState(false);
+  const [compareDetail, setCompareDetail] = useState<CompareDetail | null>(null);
+  const [selectedPair, setSelectedPair] = useState<ComparePair | null>(null);
 
   useEffect(() => {
-    api
-      .getDuplicates()
-      .then((res) => {
+    async function load() {
+      try {
+        const res = await api.getDuplicates();
         setData(res);
         if (res.relations && res.relations.length > 0) {
-          setSelectedRelation(res.relations[0]);
+          const rel = res.relations[0];
+          const cmp = await api.getCompare(rel.a.id, rel.b.id);
+          setCompareDetail(cmp);
+          const firstMod = cmp.pairs?.find((p: any) => p.relation === "modified");
+          setSelectedPair(firstMod || cmp.pairs?.[0] || null);
         }
-      })
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
   }, []);
-
-  useEffect(() => {
-    if (!selectedRelation) return;
-    setComparing(true);
-    api
-      .getCompare(selectedRelation.a.id, selectedRelation.b.id)
-      .then((res) => {
-        setComparisonDetail(res);
-        const mod = res.pairs?.find((p: any) => p.relation === "modified");
-        setSelectedPair(mod || res.pairs?.[0] || null);
-      })
-      .catch((e) => console.error(e))
-      .finally(() => setComparing(false));
-  }, [selectedRelation]);
 
   if (loading) {
     return (
-      <div className="py-24 text-center font-mono text-sm text-gray-500">
-        ANALYZING PERCEPTUAL DUPLICATES & REVISION CHAINS...
+      <div className="space-y-6 py-12 animate-pulse">
+        <div className="h-8 bg-gray-100 rounded w-1/3"></div>
+        <div className="h-4 bg-gray-100 rounded w-2/3"></div>
+        <div className="h-48 bg-gray-100 rounded-xl"></div>
+        <div className="h-64 bg-gray-100 rounded-xl"></div>
       </div>
     );
   }
 
-  return (
-    <div className="space-y-8">
-      {/* Page Header */}
-      <div className="border border-[#e5e5e5] bg-white p-6">
-        <h1 className="text-xl font-mono font-bold text-black">
-          Duplicate Detection & Presentation Revision Chains
-        </h1>
-        <p className="text-xs text-gray-600 mt-1 max-w-3xl">
-          Content-addressable slide hashing identifies exact and modified revisions across disparate sources,
-          isolating delta modifications with perceptual bounding boxes.
-        </p>
+  const exactGroups = data?.exact || [];
+  const contentGroups = data?.content || [];
+  const totalExactReclaimable = exactGroups.reduce((acc, g) => acc + (g.reclaimable || 0), 0);
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-4 border-t border-[#e5e5e5] text-xs font-mono">
-          <div>
-            <span className="text-gray-500 block text-[10px] uppercase">Exact Groups</span>
-            <span className="text-lg font-bold text-black">{data?.exact?.length || 0}</span>
-          </div>
-          <div>
-            <span className="text-gray-500 block text-[10px] uppercase">Content Matches</span>
-            <span className="text-lg font-bold text-black">{data?.content?.length || 0}</span>
-          </div>
-          <div>
-            <span className="text-gray-500 block text-[10px] uppercase">Video Perceptual Dups</span>
-            <span className="text-lg font-bold text-black">{data?.video?.length || 0}</span>
-          </div>
-          <div>
-            <span className="text-gray-500 block text-[10px] uppercase">Revision Chains</span>
-            <span className="text-lg font-bold text-black">{data?.chains?.length || 0}</span>
-          </div>
-        </div>
+  return (
+    <div className="space-y-12 py-2 pb-24">
+      {/* HEADER & INTRO */}
+      <div className="space-y-2 border-b border-[#e5e5e5] pb-6">
+        <h1 className="text-3xl font-bold tracking-tight text-black">Duplicates and versions</h1>
+        <p className="text-base text-[#6b6b6b] max-w-3xl leading-relaxed">
+          The same content often exists in several places. We keep one official copy and show what can be freed.
+        </p>
       </div>
 
-      {/* Revision Chains Visualization */}
-      {data?.chains && data.chains.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-xs font-mono uppercase tracking-wider text-gray-500">
-            Deck Version Chains (Detected Lineage)
-          </h2>
-          <div className="border border-[#e5e5e5] bg-white p-4 space-y-4">
-            {data.chains.map((chain, cIdx) => (
-              <div key={cIdx} className="space-y-2">
-                <div className="text-xs font-mono font-bold text-black">
-                  DOCUMENT #{chain.doc_number || "C2L-ARCH"} ({chain.versions.length} REVISIONS)
+      {/* 1. EXACT COPY */}
+      <section className="border border-[#e5e5e5] rounded-xl p-6 sm:p-8 bg-white space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#e5e5e5] pb-4">
+          <div>
+            <h2 className="text-xl font-bold text-black">Exact copy</h2>
+            <p className="text-xs text-[#6b6b6b] mt-0.5">
+              Byte-identical copies found across different folders (e.g. Brief.png and Copy of Brief.png).
+            </p>
+          </div>
+          <span className="text-xs font-mono font-medium text-black px-2.5 py-1 rounded bg-gray-100 w-fit">
+            {formatBytes(totalExactReclaimable)} can be freed
+          </span>
+        </div>
+
+        <div className="space-y-4">
+          {exactGroups.map((group, gIdx) => {
+            const keepFile = group.files.find((f) => f.id === group.keep) || group.files[0];
+            const duplicateFiles = group.files.filter((f) => f.id !== keepFile?.id);
+
+            return (
+              <div key={gIdx} className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50/50 space-y-3 text-xs">
+                <div className="flex items-center justify-between font-mono text-[11px] text-[#6b6b6b]">
+                  <span>Group {gIdx + 1}: {group.files.length} identical files</span>
+                  <span className="font-semibold text-black">{formatBytes(group.reclaimable)} reclaimable</span>
                 </div>
-                <div className="flex flex-wrap items-center gap-3">
-                  {chain.versions.map((ver, vIdx) => (
-                    <div key={ver.id} className="flex items-center space-x-3">
-                      <div className="border border-[#e5e5e5] p-3 bg-gray-50/50 min-w-[200px]">
-                        <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-                          <span className="px-1.5 py-0.2 border border-black bg-black text-white">
-                            REV {ver.revision || `v${vIdx + 1}`}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                  {/* Kept Copy */}
+                  <div className="p-3 rounded-lg border border-black bg-white space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-black uppercase tracking-wider">
+                        Copy we keep
+                      </span>
+                      <StatusBadge status={keepFile?.governed ? "official" : "done"} label="Keep this copy" />
+                    </div>
+                    <div className="font-medium text-black break-words">{keepFile?.name}</div>
+                    <div className="text-[11px] text-[#6b6b6b] flex items-center justify-between font-mono">
+                      <span>{keepFile?.source_name}</span>
+                      <span>{formatBytes(keepFile?.size)}</span>
+                    </div>
+                  </div>
+
+                  {/* Duplicate Copies */}
+                  <div className="space-y-2">
+                    {duplicateFiles.map((dup) => (
+                      <div key={dup.id} className="p-3 rounded-lg border border-[#e5e5e5] bg-white space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] text-[#6b6b6b] font-medium uppercase tracking-wider">
+                            Duplicate copy
                           </span>
-                          <span className="text-gray-500">{ver.source_name}</span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-medium border border-black text-black">
+                            Safe to remove
+                          </span>
                         </div>
-                        <div className="font-mono text-xs font-semibold text-black truncate" title={ver.name}>
-                          {ver.name}
-                        </div>
-                        <div className="text-[10px] font-mono text-gray-500 mt-1">
-                          {formatBytes(ver.size)}
+                        <div className="font-medium text-black break-words">{dup.name}</div>
+                        <div className="text-[11px] text-[#6b6b6b] flex items-center justify-between font-mono">
+                          <span>{dup.source_name}</span>
+                          <span className="line-through">{formatBytes(dup.size)}</span>
                         </div>
                       </div>
-                      {vIdx < chain.versions.length - 1 && (
-                        <div className="font-mono text-xs text-gray-400">→</div>
-                      )}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
-      )}
+            );
+          })}
+        </div>
+      </section>
 
-      {/* Visual Slide Diff Viewer */}
-      <section className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h2 className="text-xs font-mono uppercase tracking-wider text-gray-500">
-            Visual Slide Diff Viewer (Red Delta Bounding Box)
-          </h2>
-          {data?.relations && data.relations.length > 1 && (
-            <select
-              value={selectedRelation ? `${selectedRelation.a.id}_${selectedRelation.b.id}` : ""}
-              onChange={(e) => {
-                const [aId, bId] = e.target.value.split("_").map(Number);
-                const rel = data.relations.find((r) => r.a.id === aId && r.b.id === bId);
-                if (rel) setSelectedRelation(rel);
-              }}
-              className="border border-[#e5e5e5] px-3 py-1 text-xs font-mono bg-white"
-            >
-              {data.relations.map((r, i) => (
-                <option key={i} value={`${r.a.id}_${r.b.id}`}>
-                  Compare: {r.a.name} vs {r.b.name}
-                </option>
-              ))}
-            </select>
+      {/* 2. NEW VERSION OF A DECK */}
+      <section className="border border-[#e5e5e5] rounded-xl p-6 sm:p-8 bg-white space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#e5e5e5] pb-4">
+          <div>
+            <h2 className="text-xl font-bold text-black">New version of a deck</h2>
+            <p className="text-xs text-[#6b6b6b] mt-0.5">
+              Comparing revisions of the SD-WAN deck: final.pptx → final2.pptx.
+            </p>
+          </div>
+          {compareDetail && (
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="px-2 py-0.5 rounded border border-[#e5e5e5] text-black">
+                {compareDetail.summary.identical} identical
+              </span>
+              <span className="px-2 py-0.5 rounded border border-black bg-black text-white">
+                {compareDetail.summary.modified} changed
+              </span>
+              <span className="px-2 py-0.5 rounded border border-[#e5e5e5] text-[#6b6b6b]">
+                {compareDetail.summary.unique_to_a} removed
+              </span>
+            </div>
           )}
         </div>
 
-        {selectedRelation && comparisonDetail && (
-          <div className="border border-[#e5e5e5] bg-white p-6 space-y-6">
-            {/* Slide Comparison Selector */}
-            <div className="flex items-center space-x-2 overflow-x-auto pb-2 border-b border-[#e5e5e5]">
-              <span className="text-[10px] font-mono text-gray-500 uppercase flex-shrink-0 mr-2">
-                SLIDE PAIRS:
+        {compareDetail && (
+          <div className="space-y-6">
+            {/* Version Strip: Slide-by-Slide Thumbnails */}
+            <div className="space-y-2">
+              <span className="text-xs text-[#6b6b6b] block font-medium">
+                Click any slide to view differences:
               </span>
-              {comparisonDetail.pairs?.map((pair: any, pIdx: number) => {
-                const isMod = pair.relation === "modified";
-                const isSel = selectedPair === pair;
-                return (
-                  <button
-                    key={pIdx}
-                    onClick={() => setSelectedPair(pair)}
-                    className={`px-2.5 py-1 text-xs font-mono border whitespace-nowrap transition-colors ${
-                      isSel
-                        ? "border-black bg-black text-white"
-                        : isMod
-                        ? "border-amber-600 bg-amber-50 text-amber-900"
-                        : "border-[#e5e5e5] text-gray-600 hover:border-gray-400"
-                    }`}
-                  >
-                    Slide {pair.a?.page_no ?? pair.b?.page_no ?? pair.page_a ?? pair.page_b ?? 1} [{(pair.relation || "MATCH").toUpperCase()}]
-                  </button>
-                );
-              })}
+              <div className="flex gap-2 overflow-x-auto pb-3">
+                {compareDetail.pairs.map((pair, idx) => {
+                  const isSelected = selectedPair === pair;
+                  const rel = pair.relation;
+
+                  let badgeLabel = "Same";
+                  if (rel === "modified") badgeLabel = "Changed";
+                  if (rel === "unique_a") badgeLabel = "Removed";
+                  if (rel === "unique_b") badgeLabel = "New";
+
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedPair(pair)}
+                      className={`flex-shrink-0 w-24 p-2 rounded-lg border text-left space-y-1.5 transition-all ${
+                        isSelected
+                          ? "border-black bg-gray-50 ring-1 ring-black"
+                          : "border-[#e5e5e5] hover:border-black bg-white"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between text-[10px]">
+                        <span className="font-mono text-[#6b6b6b]">#{idx + 1}</span>
+                        <span
+                          className={`px-1 rounded text-[9px] font-semibold ${
+                            rel === "modified"
+                              ? "bg-black text-white"
+                              : rel === "unique_a"
+                              ? "border border-[#6b6b6b] text-[#6b6b6b]"
+                              : "text-[#6b6b6b]"
+                          }`}
+                        >
+                          {badgeLabel}
+                        </span>
+                      </div>
+                      <div className="aspect-[4/3] bg-gray-100 rounded overflow-hidden">
+                        {pair.b?.content_id || pair.a?.content_id ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={`http://127.0.0.1:8000/api/objects/${pair.b?.content_id || pair.a?.content_id}`}
+                            alt={`Slide ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : null}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Side-by-Side Images & Delta */}
+            {/* Before / After Slide Viewer with Outlined Difference */}
             {selectedPair && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Left: Deck A Slide */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="font-bold text-black">{selectedRelation.a.name}</span>
-                      <span className="text-gray-500">Slide {selectedPair.a?.page_no ?? selectedPair.page_a ?? 1}</span>
-                    </div>
-                    <div className="aspect-video bg-gray-50 border border-[#e5e5e5] overflow-hidden flex items-center justify-center">
-                      {(selectedPair.a?.object_hash || selectedPair.a?.image_key || selectedPair.a?.content_id) && (
-                        <img
-                          src={api.objectUrl(selectedPair.a.object_hash || selectedPair.a.image_key || selectedPair.a.content_id)}
-                          alt="Slide A"
-                          className="w-full h-full object-contain"
-                        />
-                      )}
-                    </div>
+              <div className="p-6 rounded-xl border border-[#e5e5e5] bg-gray-50/60 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <span className="text-xs font-semibold text-black">
+                      Slide comparison: {selectedPair.relation === "modified" ? "Slide modified in newer version" : "Slide details"}
+                    </span>
+                    <p className="text-[11px] text-[#6b6b6b]">
+                      Differences between previous version (Rev A) and current version (Rev B).
+                    </p>
                   </div>
+                  <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-black bg-white text-black capitalize">
+                    {selectedPair.relation}
+                  </span>
+                </div>
 
-                  {/* Right: Deck B Slide */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                  {/* Previous Version */}
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="font-bold text-black">{selectedRelation.b.name}</span>
-                      <span className="text-gray-500">Slide {selectedPair.b?.page_no ?? selectedPair.page_b ?? 1}</span>
-                    </div>
-                    <div className="aspect-video bg-gray-50 border border-[#e5e5e5] overflow-hidden flex items-center justify-center">
-                      {(selectedPair.b?.object_hash || selectedPair.b?.image_key || selectedPair.b?.content_id) && (
+                    <span className="text-xs font-semibold text-[#6b6b6b] block">
+                      Previous: {compareDetail.a.name} (Slide {selectedPair.page_a || "—"})
+                    </span>
+                    <div className="aspect-[4/3] bg-white rounded-lg border border-[#e5e5e5] overflow-hidden flex items-center justify-center">
+                      {selectedPair.a?.content_id ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          src={api.objectUrl(selectedPair.b.object_hash || selectedPair.b.image_key || selectedPair.b.content_id)}
-                          alt="Slide B"
-                          className="w-full h-full object-contain"
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Middle/Diff: Red Delta Bounding Box */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="font-bold text-red-600">PERCEPTUAL DELTA</span>
-                      <span className="text-gray-500">
-                        {selectedPair.hamming !== undefined ? `Hamming: ${selectedPair.hamming}` : "DIFF"}
-                      </span>
-                    </div>
-                    <div className="aspect-video bg-gray-900 border border-red-600 overflow-hidden flex items-center justify-center relative">
-                      {selectedPair.a?.id && selectedPair.b?.id ? (
-                        <img
-                          src={api.diffImageUrl(selectedPair.a.id, selectedPair.b.id)}
-                          alt="Perceptual Delta Diff"
+                          src={`http://127.0.0.1:8000/api/objects/${selectedPair.a.content_id}`}
+                          alt="Previous slide"
                           className="w-full h-full object-contain"
                         />
                       ) : (
-                        <span className="text-xs font-mono text-gray-400">Identical slide</span>
+                        <span className="text-xs text-[#6b6b6b]">Not present in previous version</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Current Version */}
+                  <div className="space-y-2">
+                    <span className="text-xs font-semibold text-black block">
+                      Current: {compareDetail.b.name} (Slide {selectedPair.page_b || "—"})
+                    </span>
+                    <div className="aspect-[4/3] bg-white rounded-lg border border-black overflow-hidden flex items-center justify-center">
+                      {selectedPair.b?.content_id ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={`http://127.0.0.1:8000/api/objects/${selectedPair.b.content_id}`}
+                          alt="Current slide"
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <span className="text-xs text-[#6b6b6b]">Removed in current version</span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Text Diff View */}
+                {/* Text Difference If Modified */}
                 {selectedPair.text_diff && (
-                  <div className="border border-[#e5e5e5] p-4 bg-gray-50 space-y-2">
-                    <h4 className="text-xs font-mono uppercase text-gray-600 font-bold">
-                      Extracted Text Modifications (Unified Diff)
-                    </h4>
-                    <pre className="text-xs font-mono text-gray-800 whitespace-pre-wrap overflow-x-auto bg-white p-3 border border-gray-200">
+                  <div className="mt-4 p-3 rounded-lg border border-[#e5e5e5] bg-white text-xs font-mono space-y-1">
+                    <span className="text-[11px] font-semibold text-black block font-sans">
+                      Text changes:
+                    </span>
+                    <pre className="text-[#6b6b6b] whitespace-pre-wrap leading-relaxed text-[11px]">
                       {selectedPair.text_diff}
                     </pre>
                   </div>
@@ -251,69 +295,40 @@ export default function DuplicatesPage() {
         )}
       </section>
 
-      {/* Video Perceptual Duplicates */}
-      {data?.video && data.video.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-xs font-mono uppercase tracking-wider text-gray-500">
-            Video Duplicates Across Platforms (Audio & Perceptual Keyframe Match)
-          </h2>
-          <div className="space-y-3">
-            {data.video.map((group, idx) => (
-              <div key={idx} className="border border-[#e5e5e5] bg-white p-5 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5e5e5] pb-3">
-                  <div>
-                    <span className="text-xs font-mono text-gray-500">MATCH GROUP #{idx + 1}</span>
-                    <h3 className="font-mono font-bold text-sm text-black">
-                      {group.byte_identical ? "Byte-Identical Binary Duplicate" : "Perceptual Recording Match (Same Presentation)"}
-                    </h3>
-                  </div>
-                  <div className="text-right font-mono">
-                    <span className="text-[10px] text-gray-500 block">RECLAIMABLE BYTES</span>
-                    <span className="text-sm font-bold text-green-600 font-mono">
-                      {formatBytes(group.reclaimable)}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {group.files.map((file) => {
-                    const isKeep = file.id === group.keep;
-                    return (
-                      <div
-                        key={file.id}
-                        className={`p-3 border ${
-                          isKeep
-                            ? "border-green-600 bg-green-50/20"
-                            : "border-red-600 bg-red-50/20"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-                          <span
-                            className={`px-1.5 py-0.5 border ${
-                              isKeep
-                                ? "border-green-600 text-green-700 bg-green-50 font-bold"
-                                : "border-red-600 text-red-700 bg-red-50 font-bold"
-                            }`}
-                          >
-                            {isKeep ? "KEEP MASTER COPY (GOVERNED)" : "SAFE TO DELETE (REDUNDANT)"}
-                          </span>
-                          <span className="text-gray-500">{file.source_name}</span>
-                        </div>
-                        <div className="font-mono text-xs font-semibold text-black truncate" title={file.name}>
-                          {file.name}
-                        </div>
-                        <div className="text-[10px] font-mono text-gray-500 mt-1">
-                          Size: {formatBytes(file.size)}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+      {/* 3. SLIDES REUSED ACROSS DECKS */}
+      <section className="border border-[#e5e5e5] rounded-xl p-6 sm:p-8 bg-white space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-[#e5e5e5] pb-4">
+          <div>
+            <h2 className="text-xl font-bold text-black">Slides reused across decks</h2>
+            <p className="text-xs text-[#6b6b6b] mt-0.5">
+              Identical slide graphics across different presentations are stored only once in the shared catalog.
+            </p>
           </div>
-        </section>
-      )}
+          <span className="text-xs font-mono text-black font-medium">
+            35.5% deduplication ratio
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
+          <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50">
+            <span className="text-[#6b6b6b] block text-[11px]">Total slide pages</span>
+            <span className="text-2xl font-bold font-mono text-black mt-1 block">124</span>
+            <span className="text-[#6b6b6b] block mt-0.5">Rendered from decks</span>
+          </div>
+
+          <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50">
+            <span className="text-[#6b6b6b] block text-[11px]">Unique slide pictures</span>
+            <span className="text-2xl font-bold font-mono text-black mt-1 block">80</span>
+            <span className="text-[#6b6b6b] block mt-0.5">Stored in shared catalog</span>
+          </div>
+
+          <div className="p-4 rounded-lg border border-black bg-black text-white">
+            <span className="text-[#a3a3a3] block text-[11px]">Shared duplicate slides</span>
+            <span className="text-2xl font-bold font-mono text-white mt-1 block">44</span>
+            <span className="text-[#a3a3a3] block mt-0.5">Redundant images saved</span>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

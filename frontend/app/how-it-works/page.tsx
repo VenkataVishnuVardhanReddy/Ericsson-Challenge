@@ -1,239 +1,240 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  Laptop,
+  ArrowRight,
+  ShieldCheck,
+  Check,
+  HelpCircle,
+} from "lucide-react";
 import { api } from "@/lib/api";
 import { PipelineInfo } from "@/lib/types";
+import { GLOSSARY } from "@/lib/glossary";
 
 export default function HowItWorksPage() {
   const [info, setInfo] = useState<PipelineInfo | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api
-      .getPipelineInfo()
-      .then(setInfo)
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
+    async function load() {
+      try {
+        const res = await api.getPipelineInfo();
+        setInfo(res);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
   }, []);
 
+  const pipelineSteps = [
+    {
+      step: "Scan & verify",
+      does: "Finds files in SharePoint, Ericsson Play and OneDrive, computing unique fingerprints",
+      tool: "SHA-256 cryptographic hashing",
+      type: "Simple algorithm",
+      offline: "Yes",
+    },
+    {
+      step: "Speech to text",
+      does: "Transcribes every spoken sentence with word-level timestamps",
+      tool: info?.models?.transcription || "Whisper base (runs offline on the laptop CPU)",
+      type: "AI model",
+      offline: "Yes",
+    },
+    {
+      step: "Who spoke",
+      does: "Identifies and groups who was speaking throughout the audio",
+      tool: info?.models?.diarization || "pyannote + WeSpeaker speaker detection (offline)",
+      type: "AI model",
+      offline: "Yes",
+    },
+    {
+      step: "Read slide text",
+      does: "Extracts letters, numbers, and titles visible on screen or in deck pages",
+      tool: info?.models?.ocr || "RapidOCR (offline)",
+      type: "AI model",
+      offline: "Yes",
+    },
+    {
+      step: "Slide pictures",
+      does: "Saves visual slide moments at high resolution with minimal file size",
+      tool: info?.models?.slides || "WebP images, quality 70",
+      type: "Simple algorithm",
+      offline: "Yes",
+    },
+    {
+      step: "Speech audio",
+      does: "Extracts and compresses human speech audio into a lightweight stream",
+      tool: info?.models?.audio || "Opus speech audio, 16 kbps",
+      type: "Simple algorithm",
+      offline: "Yes",
+    },
+    {
+      step: "Summary",
+      does: "Selects 3 to 5 key representative sentences from the talk",
+      tool: info?.models?.summary || "Picks key sentences (no AI)",
+      type: "Simple algorithm",
+      offline: "Yes",
+    },
+    {
+      step: "Search by exact words",
+      does: "Indexes every word for instant keyword search",
+      tool: info?.models?.exact_search || "SQLite full-text search",
+      type: "Simple algorithm",
+      offline: "Yes",
+    },
+    {
+      step: "Search by meaning",
+      does: "Enables natural language semantic search across spoken ideas",
+      tool: info?.models?.embeddings || "all-MiniLM-L6-v2 (offline)",
+      type: "AI model",
+      offline: "Yes",
+    },
+  ];
+
   return (
-    <div className="space-y-10">
-      {/* Page Header */}
-      <div className="border border-[#e5e5e5] bg-white p-6">
-        <span className="text-[10px] font-mono uppercase tracking-widest text-gray-500 block mb-1">
-          Technical Whitepaper & Pitch Strategy
-        </span>
-        <h1 className="text-2xl font-mono font-bold text-black">
-          Distill: Enterprise Data Storage Optimization
-        </h1>
-        <p className="text-xs text-gray-600 mt-2 max-w-3xl leading-relaxed">
-          Comprehensive architecture, mathematical guarantees, scenario-based storage savings projections,
-          and AI data strategy designed for Ericsson internal operations.
+    <div className="space-y-12 py-2 max-w-[1120px] mx-auto pb-24">
+      {/* HEADER & CORE STATEMENT */}
+      <div className="space-y-3 border-b border-[#e5e5e5] pb-6">
+        <h1 className="text-3xl font-bold tracking-tight text-black">How it works</h1>
+        <p className="text-lg font-medium text-black">
+          Everything runs offline on a normal laptop. No data leaves the machine.
+        </p>
+        <p className="text-sm text-[#6b6b6b] leading-relaxed max-w-3xl">
+          Distill reduces storage footprint by separating moving video into slide pictures and clear speech audio, deduplicating identical slides across decks, and verifying that nothing was lost.
         </p>
       </div>
 
-      {/* 4 Core Pillars Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* The Problem */}
-        <div className="border border-[#e5e5e5] bg-white p-6 space-y-3">
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 bg-red-600 inline-block"></span>
-            <h2 className="font-mono font-bold text-sm text-black uppercase tracking-wider">
-              1. The Enterprise Problem
-            </h2>
-          </div>
-          <ul className="text-xs text-gray-700 font-sans space-y-2 leading-relaxed list-disc pl-4">
-            <li>
-              <strong>Storage Bloat:</strong> Hundreds of gigabytes of recurring multi-hour meeting recordings
-              and duplicated presentation revisions consume massive quota across SharePoint, OneDrive, and EricssonPlay.
-            </li>
-            <li>
-              <strong>Permanent Data Loss:</strong> Under quota pressure, admins permanently delete older files.
-              Valuable domain knowledge, decisions, and future AI training data are permanently destroyed.
-            </li>
-            <li>
-              <strong>Orphan Leaver Files:</strong> Departing employees download central files to personal laptops
-              and re-upload to personal OneDrives, creating unmonitored duplicates and dark storage silos.
-            </li>
-          </ul>
+      {/* SECTION 1: BLACK AND WHITE FLOWCHART DIAGRAM */}
+      <section className="border border-[#e5e5e5] rounded-xl p-6 sm:p-8 bg-white space-y-6">
+        <div>
+          <h2 className="text-xl font-bold text-black">Architecture diagram</h2>
+          <p className="text-xs text-[#6b6b6b] mt-0.5">
+            The end-to-end pipeline from source scanning to verification and clean-up.
+          </p>
         </div>
 
-        {/* The Solution */}
-        <div className="border border-[#e5e5e5] bg-white p-6 space-y-3">
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 bg-green-600 inline-block"></span>
-            <h2 className="font-mono font-bold text-sm text-black uppercase tracking-wider">
-              2. The Distill Solution
-            </h2>
-          </div>
-          <ul className="text-xs text-gray-700 font-sans space-y-2 leading-relaxed list-disc pl-4">
-            <li>
-              <strong>5-Tier Storage Cascade:</strong> Replaces heavy raw video (1 GB+) with time-linked text,
-              lossless slide keyframes, and Opus speech audio (20 MB), slashing footprint by 98%+.
-            </li>
-            <li>
-              <strong>Lossless "Nothing Was Lost" Protocol:</strong> Mathematical proof verifying 100% speech transcript
-              coverage, OCR text retention, speaker attribution, and on-demand video recreation.
-            </li>
-            <li>
-              <strong>Content-Addressable Deduplication:</strong> Slide-level perceptual hashing (pHash) indexes
-              individual pages, sharing identical slide vectors across revision decks.
-            </li>
-          </ul>
-        </div>
-
-        {/* Scenario-Based Percentage Savings */}
-        <div className="border border-[#e5e5e5] bg-white p-6 space-y-3">
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 bg-black inline-block"></span>
-            <h2 className="font-mono font-bold text-sm text-black uppercase tracking-wider">
-              3. Scenario-Based Volume Savings
-            </h2>
-          </div>
-          <div className="text-xs text-gray-700 font-sans space-y-2 leading-relaxed">
-            <p>
-              In an Ericsson department generating <strong>100 meetings/month</strong> (~12 TB raw/year):
-            </p>
-            <div className="border border-gray-200 p-3 bg-gray-50 font-mono text-[11px] space-y-1">
-              <div className="flex justify-between">
-                <span>Raw Uncompressed Volume:</span>
-                <span className="font-bold">12,000 GB / year</span>
-              </div>
-              <div className="flex justify-between text-green-700">
-                <span>Distilled T3 Packet Volume:</span>
-                <span className="font-bold">240 GB / year (98.0% SAVING)</span>
-              </div>
-              <div className="flex justify-between text-black font-semibold pt-1 border-t border-gray-200">
-                <span>Net Enterprise Storage Freed:</span>
-                <span>11,760 GB / year</span>
-              </div>
-            </div>
-            <p className="text-[11px] text-gray-500">
-              When someone leaves, 94%+ of their personal OneDrive volume is safely reclaimed by pruning verified
-              duplicates while preserving unique unpublished drafts.
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 pt-2 text-xs">
+          {/* Step 1 */}
+          <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50/50 space-y-2">
+            <span className="font-mono text-[#6b6b6b] block text-[11px]">Step 1</span>
+            <span className="font-semibold text-black text-sm block">Find files</span>
+            <p className="text-[#6b6b6b] leading-relaxed">
+              Scans SharePoint, Ericsson Play, and personal OneDrive folders. Computes SHA-256 fingerprints.
             </p>
           </div>
-        </div>
 
-        {/* Future-Proof AI Strategy */}
-        <div className="border border-[#e5e5e5] bg-white p-6 space-y-3">
-          <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 bg-black inline-block"></span>
-            <h2 className="font-mono font-bold text-sm text-black uppercase tracking-wider">
-              4. Future-Proof AI Strategy
-            </h2>
+          {/* Step 2 */}
+          <div className="p-4 rounded-lg border border-black bg-white space-y-2">
+            <span className="font-mono text-[#6b6b6b] block text-[11px]">Step 2</span>
+            <span className="font-semibold text-black text-sm block">Make smaller</span>
+            <p className="text-[#6b6b6b] leading-relaxed">
+              <strong>Videos:</strong> slides + Opus audio.<br />
+              <strong>Documents:</strong> pages to WebP + extracted text.
+            </p>
           </div>
-          <ul className="text-xs text-gray-700 font-sans space-y-2 leading-relaxed list-disc pl-4">
-            <li>
-              <strong>AI Training Flywheel:</strong> Raw videos cannot be ingested by LLMs. Distill converts them into
-              clean, tokenized JSONL datasets with PII redaction, ready for internal model fine-tuning.
-            </li>
-            <li>
-              <strong>RAG Grounding:</strong> FTS5 full-text + vector embeddings enable enterprise AI agents to answer
-              employee queries with exact second-by-second video citations and slide numbers.
-            </li>
-            <li>
-              <strong>Regulatory Compliance:</strong> Automated PII anonymization and audit trails guarantee compliance
-              with EU GDPR and enterprise data governance policies.
-            </li>
-          </ul>
+
+          {/* Step 3 */}
+          <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50/50 space-y-2">
+            <span className="font-mono text-[#6b6b6b] block text-[11px]">Step 3</span>
+            <span className="font-semibold text-black text-sm block">Link official decks</span>
+            <p className="text-[#6b6b6b] leading-relaxed">
+              Slides identical to official master decks become references, freeing duplicate image storage.
+            </p>
+          </div>
+
+          {/* Step 4 */}
+          <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50/50 space-y-2">
+            <span className="font-mono text-[#6b6b6b] block text-[11px]">Step 4</span>
+            <span className="font-semibold text-black text-sm block">Check nothing lost</span>
+            <p className="text-[#6b6b6b] leading-relaxed">
+              Picks 20 random moments in original videos and checks that screen text matches kept slides.
+            </p>
+          </div>
+
+          {/* Step 5 */}
+          <div className="p-4 rounded-lg border border-black bg-black text-white space-y-2">
+            <span className="font-mono text-[#a3a3a3] block text-[11px]">Step 5</span>
+            <span className="font-semibold text-white text-sm block">Search & clean-up</span>
+            <p className="text-[#a3a3a3] leading-relaxed">
+              Instant search across all spoken words and safe leaver folder offboarding with zero data loss.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* System Architecture & Live Engine Specs */}
-      <section className="border border-[#e5e5e5] bg-white p-6 space-y-4">
-        <h2 className="text-xs font-mono uppercase tracking-wider text-gray-500">
-          Engine Runtime Architecture & Model Registry
-        </h2>
+      {/* SECTION 2: TOOLS & PIPELINE TABLE */}
+      <section className="border border-[#e5e5e5] rounded-xl p-6 sm:p-8 bg-white space-y-6">
+        <div>
+          <h2 className="text-xl font-bold text-black">Pipeline steps & honest tools</h2>
+          <p className="text-xs text-[#6b6b6b] mt-0.5">
+            Every step is implemented with standard open-source tools running CPU-only on your laptop.
+          </p>
+        </div>
 
-        {loading ? (
-          <div className="text-xs font-mono text-gray-500">Loading system pipeline information...</div>
-        ) : info ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
-            {/* Models */}
-            <div className="border border-[#e5e5e5] p-4 bg-gray-50/50 space-y-2">
-              <span className="text-[10px] text-gray-500 uppercase font-bold block mb-2">
-                ACTIVE AI & ML MODELS
-              </span>
-              <div>
-                <span className="text-gray-500 block text-[10px]">SPEECH TRANSCRIPTION:</span>
-                <span className="text-black font-semibold">{info.models.transcription}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">SPEAKER DIARIZATION:</span>
-                <span className="text-black font-semibold">{info.models.diarization}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">OPTICAL CHARACTER RECOGNITION:</span>
-                <span className="text-black font-semibold">{info.models.ocr}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">SEMANTIC EMBEDDINGS:</span>
-                <span className="text-black font-semibold">{info.models.embeddings}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">LOCAL LLM:</span>
-                <span className="text-black font-semibold">{info.models.llm}</span>
-              </div>
-            </div>
+        <div className="border border-[#e5e5e5] rounded-lg overflow-hidden">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-[#e5e5e5] bg-gray-50 text-[#6b6b6b] uppercase text-[11px]">
+                <th className="py-3 px-4">Step</th>
+                <th className="py-3 px-4">What it does</th>
+                <th className="py-3 px-4">Tool</th>
+                <th className="py-3 px-4">Type</th>
+                <th className="py-3 px-4 text-center">Runs offline?</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#e5e5e5]">
+              {pipelineSteps.map((row, idx) => (
+                <tr key={idx} className="hover:bg-gray-50/60 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-black whitespace-nowrap">
+                    {row.step}
+                  </td>
+                  <td className="py-3 px-4 text-[#6b6b6b] max-w-sm">
+                    {row.does}
+                  </td>
+                  <td className="py-3 px-4 font-mono text-black">
+                    {row.tool}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    <span className="px-2 py-0.5 rounded border border-[#e5e5e5] text-[#6b6b6b] text-[11px]">
+                      {row.type}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-center font-medium text-black">
+                    <span className="inline-flex items-center gap-1">
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{row.offline}</span>
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-            {/* Versions & Hardware */}
-            <div className="border border-[#e5e5e5] p-4 bg-gray-50/50 space-y-2">
-              <span className="text-[10px] text-gray-500 uppercase font-bold block mb-2">
-                SOFTWARE & ENVIRONMENT
-              </span>
-              <div>
-                <span className="text-gray-500 block text-[10px]">PYTHON RUNTIME:</span>
-                <span className="text-black">{info.versions.python}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">TORCH:</span>
-                <span className="text-black">{info.versions.torch}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">OPENCV:</span>
-                <span className="text-black">{info.versions.opencv}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">FFMPEG:</span>
-                <span className="text-black truncate block">{info.versions.ffmpeg}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">DEPLOYMENT TARGET:</span>
-                <span className="text-black font-semibold">{info.environment}</span>
-              </div>
-            </div>
+      {/* SECTION 3: COMPREHENSIVE GLOSSARY */}
+      <section className="border border-[#e5e5e5] rounded-xl p-6 sm:p-8 bg-white space-y-6">
+        <div>
+          <h2 className="text-xl font-bold text-black">Plain-English glossary</h2>
+          <p className="text-xs text-[#6b6b6b] mt-0.5">
+            Every technical term used across Distill explained in one simple sentence.
+          </p>
+        </div>
 
-            {/* Thresholds & Security */}
-            <div className="border border-[#e5e5e5] p-4 bg-gray-50/50 space-y-2">
-              <span className="text-[10px] text-gray-500 uppercase font-bold block mb-2">
-                ALGORITHMIC THRESHOLDS
-              </span>
-              <div>
-                <span className="text-gray-500 block text-[10px]">IDENTICAL SLIDE HAMMING:</span>
-                <span className="text-black font-semibold">&le; {info.thresholds.identical_hamming} bits</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">MODIFIED SLIDE HAMMING:</span>
-                <span className="text-black font-semibold">&le; {info.thresholds.modified_hamming} bits</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">VIDEO SIMILARITY:</span>
-                <span className="text-black font-semibold">&ge; {info.thresholds.video_similarity * 100}%</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">TRANSCRIPT SIMILARITY:</span>
-                <span className="text-black font-semibold">&ge; {info.thresholds.transcript_similarity * 100}%</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">SECURE ALLOWED ROOTS:</span>
-                <span className="text-black text-[10px] break-all block">
-                  {info.allowed_roots.length} restricted roots enforced
-                </span>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          {Object.entries(GLOSSARY).map(([term, explanation]) => (
+            <div key={term} className="p-3.5 rounded-lg border border-[#e5e5e5] bg-gray-50/40 space-y-1 text-xs">
+              <span className="font-semibold text-black block">{term}</span>
+              <p className="text-[#6b6b6b] leading-relaxed">{explanation}</p>
             </div>
-          </div>
-        ) : null}
+          ))}
+        </div>
       </section>
     </div>
   );

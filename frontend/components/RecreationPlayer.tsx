@@ -90,7 +90,7 @@ export default function RecreationPlayer({
             Distilled Video Recreation Engine (98%+ Storage Reduction)
           </h3>
           <p className="text-xs text-gray-500 mt-1">
-            Reconstructs original presentation experience from Opus speech audio (T2) and lossless CAS keyframes (T3).
+            Reconstructs original presentation experience from Opus speech audio and slide pictures.
           </p>
         </div>
 
