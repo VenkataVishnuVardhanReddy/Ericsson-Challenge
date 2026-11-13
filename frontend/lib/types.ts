@@ -147,11 +147,18 @@ export interface IntegrityCheck {
 
 export interface CheckedMoment {
   t: number;
-  original_words: string[];
-  found_words: string[];
-  missing_words: string[];
-  kept_slide_object: string | null;
-  spoken_text: string;
+  kind?: "text" | "picture" | "moving_video";
+  original_count?: number;
+  found_count?: number;
+  missing_count?: number;
+  original_words?: string[];
+  found_words?: string[];
+  missing_words?: string[];
+  hamming?: number | null;
+  kept_slide_object?: string | null;
+  kept_time_range?: string | null;
+  linked_deck?: string | null;
+  spoken_text?: string;
 }
 
 export interface FileIntegrity {
@@ -160,12 +167,19 @@ export interface FileIntegrity {
   original_size: number;
   distilled_size: number;
   compression_ratio: string;
-  retention_score: number;
+  retention_score?: number | null;
+  text_kept_pct?: number | null;
+  text_moments?: number;
+  pictures_kept_pct?: number | null;
+  picture_moments?: number;
+  moving_video_pct?: number | null;
+  moving_moments?: number;
+  ignored_words?: string[];
   frames_checked?: number;
   moments?: CheckedMoment[];
   main_speakers?: number;
   transcript_words?: number;
-  speech_confidence?: number;
+  speech_confidence?: number | null;
   slides_kept?: number;
   slides_linked?: number;
   note?: string | null;

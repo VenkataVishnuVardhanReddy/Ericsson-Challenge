@@ -650,108 +650,219 @@ export default function FileDetailPage() {
           <span className="text-xs uppercase tracking-wider text-[#6b6b6b] font-semibold">Part 3</span>
           <h2 className="text-xl font-bold text-black mt-1">Was anything lost?</h2>
           <p className="text-sm text-[#6b6b6b] mt-0.5">
-            We picked {integrity?.frames_checked || 20} random moments in the original video, read the text on screen, and checked how much of that text is also in the slide we kept for that moment.
+            We sampled 20 evenly spaced moments across the original recording to verify exactly what was preserved and prove nothing critical was discarded.
           </p>
         </div>
 
-        {/* Big Score Card */}
-        <div className="p-6 rounded-xl border border-black bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <span className="text-3xl sm:text-4xl font-bold font-mono text-black">
-              {integrity?.retention_score ?? 95.0}%
+        {/* Three Result Lines with '?' Tooltip Explanations */}
+        <div className="border border-[#e5e5e5] rounded-xl p-5 bg-white divide-y divide-[#e5e5e5] text-sm">
+          {/* Line 1: Slide text kept */}
+          <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-black">Slide text kept:</span>
+              <span className="font-mono text-black font-medium">
+                {integrity?.text_kept_pct !== undefined && integrity?.text_kept_pct !== null
+                  ? `${(integrity.text_kept_pct * 100).toFixed(1)}%`
+                  : "—"}
+              </span>
+              <span className="text-xs text-[#6b6b6b]">
+                ({integrity?.text_moments || 0} text moments)
+              </span>
+            </div>
+            <span
+              className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+              title="Slide text kept: Measures whether characters and words visible on slides in the original video are present in the distilled text or linked presentation decks."
+            >
+              ?
             </span>
-            <span className="text-sm font-semibold text-black block">
-              of on-screen text kept ({integrity?.frames_checked || 20} moments checked)
-            </span>
-            {integrity?.note && (
-              <p className="text-xs text-[#6b6b6b] pt-1">
-                Note: {integrity.note}
-              </p>
-            )}
           </div>
 
-          {/* Quick Metrics Chips */}
-          <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-            <div className="border border-[#e5e5e5] p-2.5 rounded-lg bg-gray-50">
-              <span className="text-[#6b6b6b] font-sans block text-[11px]">Main speakers</span>
-              <span className="font-semibold text-black text-sm">{integrity?.main_speakers || 1}</span>
+          {/* Line 2: Still pictures kept */}
+          <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-black">Still pictures kept:</span>
+              <span className="font-mono text-black font-medium">
+                {integrity?.pictures_kept_pct !== undefined && integrity?.pictures_kept_pct !== null
+                  ? `${(integrity.pictures_kept_pct * 100).toFixed(1)}%`
+                  : "—"}
+              </span>
+              <span className="text-xs text-[#6b6b6b]">
+                ({integrity?.picture_moments || 0} picture moments)
+              </span>
             </div>
-            <div className="border border-[#e5e5e5] p-2.5 rounded-lg bg-gray-50">
-              <span className="text-[#6b6b6b] font-sans block text-[11px]">Words transcribed</span>
-              <span className="font-semibold text-black text-sm">{integrity?.transcript_words?.toLocaleString() || "—"}</span>
-            </div>
+            <span
+              className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+              title="Still pictures kept: Compares visual still images from the original video against saved keyframe pictures using perceptual hashing."
+            >
+              ?
+            </span>
           </div>
+
+          {/* Line 3: Moving video */}
+          <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-black">Moving video:</span>
+              <span className="font-mono text-black font-medium">
+                {integrity?.moving_video_pct !== undefined && integrity?.moving_video_pct !== null
+                  ? `${(integrity.moving_video_pct * 100).toFixed(1)}%`
+                  : "0.0%"}
+              </span>
+              <span className="text-xs text-[#6b6b6b]">
+                of the recording — kept only in levels 1–2, by design
+              </span>
+            </div>
+            <span
+              className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+              title="Moving video: Dynamic motion like live presenter cameras and animations. Levels 3–5 intentionally drop moving video to maximize storage savings while keeping all slide content and speech audio."
+            >
+              ?
+            </span>
+          </div>
+        </div>
+
+        {/* Plain Explanation Text */}
+        <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 text-xs text-[#6b6b6b] leading-relaxed">
+          <p>
+            Distill keeps 100% of the speech audio, transcript, and distinct slide screens. Moving camera feeds are retained in Levels 1–2 (playable video) and omitted from Levels 3–5 to achieve 99% storage reduction.
+          </p>
+          {integrity?.note && (
+            <p className="mt-2 text-black font-medium">
+              Note: {integrity.note}
+            </p>
+          )}
         </div>
 
         {/* Evidence Grid: Moment-by-Moment Verification */}
         {integrity?.moments && integrity.moments.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-black">
-              Evidence: sample of checked moments
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {integrity.moments.slice(0, 6).map((m: CheckedMoment, idx: number) => (
-                <div key={idx} className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50/50 space-y-3 text-xs">
-                  <div className="flex items-center justify-between font-mono text-[#6b6b6b] text-[11px]">
-                    <span className="font-semibold text-black">Moment {idx + 1} @ {formatDuration(m.t)}</span>
-                    <span>{m.found_words.length} / {m.original_words.length} words matched</span>
-                  </div>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-black">
+                Evidence: sample of checked moments
+              </h3>
+              <span className="text-xs font-mono text-[#6b6b6b]">
+                {integrity.moments.length} moments verified
+              </span>
+            </div>
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="space-y-1">
-                      <span className="text-[10px] uppercase tracking-wider text-[#6b6b6b] font-semibold block">
-                        Original frame
-                      </span>
-                      <div className="aspect-video bg-black rounded overflow-hidden">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={`http://127.0.0.1:8000/api/recordings/${file.id}/frame?t=${m.t}`}
-                          alt={`Original @ ${m.t}s`}
-                          className="w-full h-full object-cover"
-                        />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {integrity.moments.slice(0, 8).map((m: CheckedMoment, idx: number) => {
+                const isText = m.kind === "text";
+                const isPic = m.kind === "picture";
+                const isMotion = m.kind === "moving_video";
+
+                return (
+                  <div key={idx} className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50/50 space-y-3 text-xs">
+                    {/* Header with Moment number, Timestamp, and Kind Badge */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-black">Moment {idx + 1}</span>
+                        <span className="font-mono text-[#6b6b6b] text-[11px]">@{formatDuration(m.t)}</span>
                       </div>
+                      <span className="border border-[#e5e5e5] bg-white px-2 py-0.5 rounded text-[10px] uppercase font-mono tracking-wider font-semibold text-black">
+                        {isText ? "Text" : isPic ? "Picture" : "Moving video"}
+                      </span>
                     </div>
 
-                    <div className="space-y-1">
-                      <span className="text-[10px] uppercase tracking-wider text-[#6b6b6b] font-semibold block">
-                        Kept slide picture
-                      </span>
-                      <div className="aspect-video bg-black rounded overflow-hidden">
-                        {m.kept_slide_object ? (
-                          // eslint-disable-next-line @next/next/no-img-element
+                    {/* Comparison Images */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase tracking-wider text-[#6b6b6b] font-semibold block">
+                          Original frame
+                        </span>
+                        <div className="aspect-video bg-black rounded overflow-hidden">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`http://127.0.0.1:8000/api/objects/${m.kept_slide_object}`}
-                            alt="Kept slide"
+                            src={`http://127.0.0.1:8000/api/recordings/${file.id}/frame?t=${m.t}`}
+                            alt={`Original @ ${m.t}s`}
                             className="w-full h-full object-cover"
                           />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
-                            No slide
-                          </div>
-                        )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase tracking-wider text-[#6b6b6b] font-semibold block">
+                          Kept picture
+                        </span>
+                        <div className="aspect-video bg-black rounded overflow-hidden">
+                          {m.kept_slide_object ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={`http://127.0.0.1:8000/api/objects/${m.kept_slide_object}`}
+                              alt="Kept picture"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
+                              {isMotion ? "Not kept (moving video)" : "Missing"}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {m.spoken_text && (
-                    <div className="text-[#6b6b6b] text-[11px] italic">
-                      &quot;{m.spoken_text}&quot;
+                    {/* Coverage Line */}
+                    {m.kept_time_range && (
+                      <div className="text-[11px] font-mono text-[#6b6b6b]">
+                        Kept picture covers {m.kept_time_range}
+                        {m.linked_deck && (
+                          <span className="block text-black font-sans text-xs mt-0.5">
+                            Linked to official deck: {m.linked_deck}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Verification Details */}
+                    <div className="space-y-1 pt-1 border-t border-[#e5e5e5] text-[11px]">
+                      {isText && (
+                        <div className="space-y-1">
+                          <div className="font-medium text-black">
+                            {m.found_count ?? 0} of {m.original_count ?? 0} characters found
+                          </div>
+                          {m.missing_words && m.missing_words.length > 0 && (
+                            <div className="text-[#6b6b6b]">
+                              <span className="font-medium text-black">Not found:</span>{" "}
+                              {m.missing_words.slice(0, 10).join(", ")}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {isPic && (
+                        <div className="font-medium text-black">
+                          {m.hamming !== null && m.hamming !== undefined ? (
+                            m.hamming <= 12 ? (
+                              <span>Looks the same (distance {m.hamming} ≤ 12)</span>
+                            ) : (
+                              <span className="text-[#6b6b6b]">Looks different (distance {m.hamming} &gt; 12)</span>
+                            )
+                          ) : (
+                            <span className="text-[#6b6b6b]">No picture match</span>
+                          )}
+                        </div>
+                      )}
+
+                      {isMotion && (
+                        <div className="text-[#6b6b6b]">
+                          <span className="font-medium text-black">Not kept in this level (moving video)</span>
+                          {m.hamming !== null && m.hamming !== undefined && (
+                            <span className="block text-[10px] font-mono text-[#a3a3a3]">
+                              Camera motion detected between frames (motion score: {m.hamming})
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  )}
 
-                  <div className="text-[11px] text-[#6b6b6b] flex flex-wrap gap-1">
-                    <span className="font-medium text-black">Words found:</span>
-                    {m.found_words.slice(0, 8).map((w, wIdx) => (
-                      <span key={wIdx} className="underline text-black">{w}</span>
-                    ))}
-                    {m.missing_words.length > 0 && (
-                      <span className="text-[#a3a3a3]">
-                        ({m.missing_words.length} camera/motion words omitted)
-                      </span>
+                    {/* Spoken Text */}
+                    {m.spoken_text && (
+                      <div className="text-[#6b6b6b] text-[11px] italic pt-1 border-t border-[#e5e5e5]">
+                        &quot;{m.spoken_text}&quot;
+                      </div>
                     )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

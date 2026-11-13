@@ -1016,25 +1016,36 @@ def api_file_integrity(file_id: int):
         if not distilled_size:
             distilled_size = orig_size
 
-        retention_score = 95.0
+        text_kept_pct = None
+        text_moments = 0
+        pictures_kept_pct = None
+        picture_moments = 0
+        moving_video_pct = None
+        moving_moments = 0
         moments = []
         frames_checked = 0
-        main_speakers = len(set(s["speaker"] for s in segs))
-        transcript_words = sum(len(s["text"].split()) for s in segs)
-        speech_confidence = 0.86
+        ignored_words = []
+        main_speakers = len(set(s["speaker"] for s in segs if s.get("speaker"))) or 1
+        transcript_words = sum(len((s["text"] or "").split()) for s in segs)
+        speech_confidence = None
 
         if rec and rec.get("retention"):
             try:
                 ret_d = json.loads(rec["retention"]) if isinstance(rec["retention"], str) else rec["retention"]
-                if "screen_text_retained" in ret_d and ret_d["screen_text_retained"] is not None:
-                    retention_score = round(float(ret_d["screen_text_retained"]) * 100.0, 1)
+                text_kept_pct = ret_d.get("text_kept_pct")
+                text_moments = ret_d.get("text_moments", 0)
+                pictures_kept_pct = ret_d.get("pictures_kept_pct")
+                picture_moments = ret_d.get("picture_moments", 0)
+                moving_video_pct = ret_d.get("moving_video_pct")
+                moving_moments = sum(1 for m in ret_d.get("moments", []) if m.get("kind") == "moving_video")
+                ignored_words = ret_d.get("ignored_words", [])
                 moments = ret_d.get("moments", [])
                 frames_checked = ret_d.get("frames_checked", len(moments))
-                if "main_speakers" in ret_d:
+                if "main_speakers" in ret_d and ret_d["main_speakers"]:
                     main_speakers = ret_d["main_speakers"]
-                if "transcript_words" in ret_d:
+                if "transcript_words" in ret_d and ret_d["transcript_words"]:
                     transcript_words = ret_d["transcript_words"]
-                if "speech_confidence" in ret_d:
+                if "speech_confidence" in ret_d and ret_d["speech_confidence"] is not None:
                     speech_confidence = ret_d["speech_confidence"]
             except Exception:
                 pass
@@ -1056,18 +1067,39 @@ def api_file_integrity(file_id: int):
         cas_hashes["audio_sha256"] = audio_sha
         cas_hashes["slides_content_ids"] = [k["object_hash"] for k in kfs if k.get("object_hash")]
 
-        note = None
-        if retention_score < 80.0:
-            note = "This video is mostly camera footage, so on-screen text changes constantly."
+        text_ok = (text_kept_pct is None) or (text_kept_pct >= 0.8)
+        pic_ok = (pictures_kept_pct is None) or (pictures_kept_pct >= 0.8)
 
+        review_reasons = []
+        if text_kept_pct is not None and text_kept_pct < 0.8:
+            review_reasons.append(f"Slide text retention is {text_kept_pct * 100:.1f}% (< 80% threshold)")
+        if pictures_kept_pct is not None and pictures_kept_pct < 0.8:
+            review_reasons.append(f"Still picture retention is {pictures_kept_pct * 100:.1f}% (< 80% threshold)")
+        note = " · ".join(review_reasons) if review_reasons else None
+
+        # Build honest check results
         checks = [
-            {"name": "Spoken audio", "status": "passed", "detail": f"Every spoken word transcribed with timestamps ({len(segs)} segments)"},
-            {"name": "Visual slides", "status": "passed", "detail": f"{len(kfs)} slide moments captured as crisp images"},
-            {"name": "On-screen text", "status": "passed", "detail": f"{retention_score:.1f}% text kept across {frames_checked} checked moments"},
+            {"name": "Spoken audio", "status": "passed" if len(segs) > 0 else "review", "detail": f"Every spoken word transcribed with timestamps ({len(segs)} segments)" if len(segs) > 0 else "No audio segments found"},
+            {
+                "name": "Still pictures",
+                "status": "passed" if pic_ok else "review",
+                "detail": f"{pictures_kept_pct * 100:.1f}% still pictures kept ({picture_moments} moments)" if pictures_kept_pct is not None else (f"{len(kfs)} slide moments captured" if len(kfs) > 0 else "No still pictures"),
+            },
+            {
+                "name": "Slide text",
+                "status": "passed" if text_ok else "review",
+                "detail": f"{text_kept_pct * 100:.1f}% slide text kept ({text_moments} moments)" if text_kept_pct is not None else "No slide text in this recording",
+            },
             {"name": "Who spoke", "status": "passed", "detail": f"{main_speakers} main speakers identified and attributed"},
             {"name": "Searchable", "status": "passed", "detail": "Full-text searchable via SQLite search"},
         ]
         compression_pct = round((1 - distilled_size / orig_size) * 100, 1) if orig_size > 0 else 0.0
+
+        retention_score = None
+        if text_kept_pct is not None:
+            retention_score = round(text_kept_pct * 100.0, 1)
+        elif pictures_kept_pct is not None:
+            retention_score = round(pictures_kept_pct * 100.0, 1)
 
         return {
             "file_id": file_id,
@@ -1075,7 +1107,14 @@ def api_file_integrity(file_id: int):
             "original_size": orig_size,
             "distilled_size": distilled_size,
             "compression_ratio": f"{compression_pct}%",
-            "retention_score": round(retention_score, 1),
+            "retention_score": retention_score,
+            "text_kept_pct": text_kept_pct,
+            "text_moments": text_moments,
+            "pictures_kept_pct": pictures_kept_pct,
+            "picture_moments": picture_moments,
+            "moving_video_pct": moving_video_pct,
+            "moving_moments": moving_moments,
+            "ignored_words": ignored_words,
             "frames_checked": frames_checked,
             "moments": moments,
             "main_speakers": main_speakers,
@@ -1093,28 +1132,45 @@ def api_file_integrity(file_id: int):
         slide_bytes = sum(s["bytes"] or 0 for s in slides)
         text_bytes = sum(len(c["text"].encode("utf-8")) for c in chunks)
         distilled_size = slide_bytes + text_bytes if slide_bytes else orig_size
-        retention_score = 100.0
         cas_hashes["slides_content_ids"] = [s["content_id"] for s in slides if s.get("content_id")]
 
+        has_content = (len(slides) > 0 or len(chunks) > 0)
+        retention_score = 100.0 if has_content else None
+
         checks = [
-            {"name": "Visual rendering", "status": "passed", "detail": f"All {len(slides)} pages converted to WebP keyframes"},
-            {"name": "Text extraction", "status": "passed", "detail": f"100% extracted text indexed into {len(chunks)} chunks"},
-            {"name": "Perceptual hashing", "status": "passed", "detail": "Multi-hash CAS identifiers computed for each slide"},
-            {"name": "Searchability", "status": "passed", "detail": "Full-text searchable via SQLite FTS5 index"},
+            {"name": "Visual rendering", "status": "passed" if len(slides) > 0 else "review", "detail": f"All {len(slides)} pages converted to WebP images" if slides else "No visual slides"},
+            {"name": "Text extraction", "status": "passed" if len(chunks) > 0 else "review", "detail": f"Extracted text indexed across {len(chunks)} chunks" if chunks else "No text extracted"},
+            {"name": "Searchable", "status": "passed" if len(chunks) > 0 else "review", "detail": "Full-text searchable via SQLite search"},
         ]
 
-    compression_pct = round((1 - distilled_size / orig_size) * 100, 1) if orig_size > 0 else 0.0
+        compression_pct = round((1 - distilled_size / orig_size) * 100, 1) if orig_size > 0 else 0.0
 
-    return {
-        "file_id": file_id,
-        "name": f["name"],
-        "original_size": orig_size,
-        "distilled_size": distilled_size,
-        "compression_ratio": f"{compression_pct}%",
-        "retention_score": round(retention_score, 1),
-        "checks": checks,
-        "cas_hashes": cas_hashes
-    }
+        return {
+            "file_id": file_id,
+            "name": f["name"],
+            "original_size": orig_size,
+            "distilled_size": distilled_size,
+            "compression_ratio": f"{compression_pct}%",
+            "retention_score": retention_score,
+            "text_kept_pct": 1.0 if len(chunks) > 0 else None,
+            "text_moments": len(slides) or len(chunks),
+            "pictures_kept_pct": 1.0 if len(slides) > 0 else None,
+            "picture_moments": len(slides),
+            "moving_video_pct": 0.0,
+            "moving_moments": 0,
+            "ignored_words": [],
+            "frames_checked": len(slides),
+            "moments": [],
+            "main_speakers": 0,
+            "transcript_words": sum(len((c["text"] or "").split()) for c in chunks),
+            "speech_confidence": None,
+            "slides_kept": len(slides),
+            "slides_linked": sum(1 for s in slides if s.get("content_id")),
+            "note": None,
+            "checks": checks,
+            "cas_hashes": cas_hashes,
+        }
+
 
 
 # --------------------------------------------------------------------------- Objects (WebP images)
