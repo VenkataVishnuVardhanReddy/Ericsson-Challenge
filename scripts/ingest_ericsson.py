@@ -55,8 +55,6 @@ def main() -> None:
         if total > 0 and done == total:
             break
         time.sleep(2)
-            break
-        time.sleep(2)
 
     print(f"\nPipeline processing finished in {time.time() - t0:.1f}s!\n")
 
