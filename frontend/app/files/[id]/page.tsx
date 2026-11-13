@@ -72,16 +72,25 @@ export default function FileDetailPage() {
 
   // Tiers calculation
   const origSize = file.size || 0;
-  const tiersJson = recording?.recording?.tiers ? JSON.parse(recording.recording.tiers) : null;
+  let tiersJson: any = null;
+  try {
+    if (recording?.recording?.tiers) {
+      tiersJson = typeof recording.recording.tiers === "string"
+        ? JSON.parse(recording.recording.tiers)
+        : recording.recording.tiers;
+    }
+  } catch (e) {
+    console.error("Failed to parse tiers:", e);
+  }
   const tiersList: { name: string; bytes: number; desc: string; saving: string }[] = [];
 
   if (file.kind === "video") {
-    const rawBytes = origSize;
+    const rawBytes = origSize || 1;
     const t0Bytes = rawBytes;
-    const t1Bytes = tiersJson?.tiers?.find((t: any) => t.name.startsWith("T1"))?.bytes || Math.round(rawBytes * 0.35);
-    const t2Bytes = tiersJson?.tiers?.find((t: any) => t.name.startsWith("T2"))?.bytes || Math.round(rawBytes * 0.08);
-    const t3Bytes = tiersJson?.tiers?.find((t: any) => t.name.startsWith("T3"))?.bytes || Math.round(rawBytes * 0.02);
-    const t4Bytes = tiersJson?.tiers?.find((t: any) => t.name.startsWith("T4"))?.bytes || Math.round(rawBytes * 0.0005);
+    const t1Bytes = tiersJson?.tiers?.find((t: any) => t.name?.startsWith("T1"))?.bytes || Math.round(rawBytes * 0.35);
+    const t2Bytes = tiersJson?.tiers?.find((t: any) => t.name?.startsWith("T2"))?.bytes || Math.round(rawBytes * 0.08);
+    const t3Bytes = tiersJson?.tiers?.find((t: any) => t.name?.startsWith("T3"))?.bytes || Math.round(rawBytes * 0.02);
+    const t4Bytes = tiersJson?.tiers?.find((t: any) => t.name?.startsWith("T4"))?.bytes || Math.round(rawBytes * 0.0005);
 
     tiersList.push(
       {
@@ -116,15 +125,15 @@ export default function FileDetailPage() {
       }
     );
   } else {
-    const rawBytes = origSize;
-    const slideBytes = document?.slides?.reduce((acc, s) => acc + (s.bytes || 0), 0) || rawBytes;
-    const textBytes = document?.chunks?.reduce((acc, c) => acc + c.text.length, 0) || 5000;
+    const rawBytes = origSize || 1;
+    const slideBytes = document?.slides?.reduce((acc, s) => acc + (s?.bytes || 0), 0) || rawBytes;
+    const textBytes = document?.chunks?.reduce((acc, c) => acc + (c?.text?.length || 0), 0) || 5000;
 
     tiersList.push(
       {
         name: "T0: Original File",
         bytes: rawBytes,
-        desc: `Raw ${file.ext.toUpperCase()} document`,
+        desc: `Raw ${(file.ext || "").toUpperCase()} document`,
         saving: "0%",
       },
       {
@@ -263,7 +272,7 @@ export default function FileDetailPage() {
           keyframes={recording.keyframes || []}
           segments={recording.segments || []}
           hasAudio={recording.has_audio}
-          recreated={recording.recreated || []}
+          recreated={Array.isArray(recording.recreated) ? recording.recreated : []}
         />
       )}
 
@@ -289,7 +298,7 @@ export default function FileDetailPage() {
               <div key={slide.id} className="border border-[#e5e5e5] p-2 bg-gray-50/50 space-y-2">
                 <div className="aspect-video bg-white border border-[#e5e5e5] overflow-hidden">
                   <img
-                    src={api.objectUrl(slide.content_id)}
+                    src={api.objectUrl(slide.object_hash || slide.content_id)}
                     alt={`Slide ${slide.page_no}`}
                     className="w-full h-full object-contain"
                   />

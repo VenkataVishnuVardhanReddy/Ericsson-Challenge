@@ -168,7 +168,7 @@ export default function DuplicatesPage() {
                         : "border-[#e5e5e5] text-gray-600 hover:border-gray-400"
                     }`}
                   >
-                    Slide {pair.page_a || pair.page_b} [{pair.relation.toUpperCase()}]
+                    Slide {pair.a?.page_no ?? pair.b?.page_no ?? pair.page_a ?? pair.page_b ?? 1} [{(pair.relation || "MATCH").toUpperCase()}]
                   </button>
                 );
               })}
@@ -182,12 +182,12 @@ export default function DuplicatesPage() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs font-mono">
                       <span className="font-bold text-black">{selectedRelation.a.name}</span>
-                      <span className="text-gray-500">Slide {selectedPair.page_a}</span>
+                      <span className="text-gray-500">Slide {selectedPair.a?.page_no ?? selectedPair.page_a ?? 1}</span>
                     </div>
                     <div className="aspect-video bg-gray-50 border border-[#e5e5e5] overflow-hidden flex items-center justify-center">
-                      {selectedPair.a?.image_key && (
+                      {(selectedPair.a?.object_hash || selectedPair.a?.image_key || selectedPair.a?.content_id) && (
                         <img
-                          src={api.objectUrl(selectedPair.a.image_key)}
+                          src={api.objectUrl(selectedPair.a.object_hash || selectedPair.a.image_key || selectedPair.a.content_id)}
                           alt="Slide A"
                           className="w-full h-full object-contain"
                         />
@@ -199,12 +199,12 @@ export default function DuplicatesPage() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs font-mono">
                       <span className="font-bold text-black">{selectedRelation.b.name}</span>
-                      <span className="text-gray-500">Slide {selectedPair.page_b}</span>
+                      <span className="text-gray-500">Slide {selectedPair.b?.page_no ?? selectedPair.page_b ?? 1}</span>
                     </div>
                     <div className="aspect-video bg-gray-50 border border-[#e5e5e5] overflow-hidden flex items-center justify-center">
-                      {selectedPair.b?.image_key && (
+                      {(selectedPair.b?.object_hash || selectedPair.b?.image_key || selectedPair.b?.content_id) && (
                         <img
-                          src={api.objectUrl(selectedPair.b.image_key)}
+                          src={api.objectUrl(selectedPair.b.object_hash || selectedPair.b.image_key || selectedPair.b.content_id)}
                           alt="Slide B"
                           className="w-full h-full object-contain"
                         />

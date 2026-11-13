@@ -983,7 +983,20 @@ def api_offboard_sources():
 def api_offboard(source_id: int):
     try:
         rep = offboard.analyse_leaver(source_id)
+        totals = rep.get("totals", {})
+        rep["summary"] = {
+            "total_files": totals.get("total_files", 0),
+            "safe_delete_count": totals.get("safe_delete_files", 0),
+            "partial_count": totals.get("partial_files", 0),
+            "unique_count": totals.get("unique_files", 0),
+            "review_count": totals.get("review_files", 0),
+            "total_bytes": totals.get("total_bytes", 0),
+            "safe_delete_bytes": totals.get("safe_delete_bytes", 0),
+            "reclaimable_bytes": totals.get("total_reclaimable_bytes", 0),
+            "reclaimable_pct": round(totals.get("reclaimable_pct", 0) * 100, 1),
+        }
         for item in rep.get("files", []):
+            item["verdict"] = item.get("status")
             sanitize_file(item.get("file"))
             for m in item.get("matches", []):
                 if "path" in m:

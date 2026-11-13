@@ -179,7 +179,8 @@ export interface SlideItem {
   ahash?: string;
   text: string;
   bytes: number;
-  image_key: string;
+  image_key?: string;
+  object_hash?: string;
 }
 
 export interface ChunkItem {
@@ -254,6 +255,7 @@ export interface LeaverFileMatch {
 export interface LeaverFileItem {
   file: FileItem;
   verdict: "safe_delete" | "partial" | "unique" | "review";
+  status?: string;
   reason: string;
   reclaimable_bytes: number;
   matches: LeaverFileMatch[];
@@ -263,6 +265,7 @@ export interface LeaverFileItem {
 export interface OffboardReport {
   source: SourceInfo;
   files: LeaverFileItem[];
+  totals?: any;
   summary: {
     total_files: number;
     safe_delete_count: number;

@@ -42,7 +42,11 @@ export default function OffboardingPage() {
       .then((rep) => {
         setReport(rep);
         // Pre-select files with verdict safe_delete
-        const safe = rep.files.filter((f) => f.verdict === "safe_delete").map((f) => f.file.id);
+        const filesList = rep?.files || [];
+        const safe = filesList
+          .filter((f) => f.verdict === "safe_delete" || f.status === "safe_delete")
+          .map((f) => f.file?.id)
+          .filter((id): id is number => typeof id === "number");
         setSelectedFileIds(safe);
       })
       .catch((e) => console.error(e))
@@ -125,19 +129,21 @@ export default function OffboardingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t border-[#e5e5e5] text-xs font-mono">
             <div className="border border-[#e5e5e5] p-3">
               <span className="text-gray-500 block text-[10px] uppercase">Total Files in Drive</span>
-              <span className="text-lg font-bold text-black mt-1">{report.summary.total_files}</span>
+              <span className="text-lg font-bold text-black mt-1">
+                {report.summary?.total_files ?? report.totals?.total_files ?? 0}
+              </span>
               <span className="text-[10px] text-gray-400 block mt-0.5 font-sans">
-                {formatBytes(report.summary.total_bytes)} raw storage
+                {formatBytes(report.summary?.total_bytes ?? report.totals?.total_bytes)} raw storage
               </span>
             </div>
 
             <div className="border border-green-600 bg-green-50/20 p-3">
               <span className="text-green-700 block text-[10px] uppercase font-bold">Safe to Delete</span>
               <span className="text-lg font-bold text-green-700 mt-1">
-                {report.summary.safe_delete_count}
+                {report.summary?.safe_delete_count ?? report.totals?.safe_delete_files ?? 0}
               </span>
               <span className="text-[10px] text-green-700 block mt-0.5">
-                {formatBytes(report.summary.safe_delete_bytes)} 100% duplicate
+                {formatBytes(report.summary?.safe_delete_bytes ?? report.totals?.safe_delete_bytes)} 100% duplicate
               </span>
             </div>
 
@@ -146,7 +152,8 @@ export default function OffboardingPage() {
                 Partial / Unique
               </span>
               <span className="text-lg font-bold text-amber-800 mt-1">
-                {report.summary.partial_count + report.summary.unique_count}
+                {(report.summary?.partial_count ?? report.totals?.partial_files ?? 0) +
+                  (report.summary?.unique_count ?? report.totals?.unique_files ?? 0)}
               </span>
               <span className="text-[10px] text-amber-700 block mt-0.5">
                 Contains unbacked-up slides
@@ -156,10 +163,10 @@ export default function OffboardingPage() {
             <div className="border border-black bg-black text-white p-3">
               <span className="text-gray-400 block text-[10px] uppercase">Reclaimable Ratio</span>
               <span className="text-lg font-bold text-white mt-1">
-                {report.summary.reclaimable_pct || Math.round((report.summary.safe_delete_bytes / (report.summary.total_bytes || 1)) * 100)}%
+                {report.summary?.reclaimable_pct ?? (report.totals?.reclaimable_pct ? Math.round(report.totals.reclaimable_pct * 100) : 0)}%
               </span>
               <span className="text-[10px] text-green-400 block mt-0.5 font-mono">
-                {formatBytes(report.summary.safe_delete_bytes)} reclaimable
+                {formatBytes(report.summary?.safe_delete_bytes ?? report.totals?.safe_delete_bytes)} reclaimable
               </span>
             </div>
           </div>
@@ -272,25 +279,30 @@ export default function OffboardingPage() {
                   </td>
                   <td className="py-3 px-3 text-gray-700 whitespace-nowrap">{formatBytes(f.size)}</td>
                   <td className="py-3 px-3 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-0.5 text-[10px] font-bold border uppercase ${
-                        item.verdict === "safe_delete"
-                          ? "border-green-600 text-green-700 bg-green-50"
-                          : item.verdict === "partial"
-                          ? "border-amber-600 text-amber-700 bg-amber-50"
-                          : item.verdict === "review"
-                          ? "border-purple-600 text-purple-700 bg-purple-50"
-                          : "border-black text-black bg-gray-100"
-                      }`}
-                    >
-                      {item.verdict === "safe_delete"
-                        ? "SAFE TO DELETE"
-                        : item.verdict === "partial"
-                        ? "PARTIAL DUPLICATE"
-                        : item.verdict === "review"
-                        ? "REVIEW NEEDED"
-                        : "UNIQUE ASSET"}
-                    </span>
+                    {(() => {
+                      const st = item.verdict || item.status;
+                      return (
+                        <span
+                          className={`px-2 py-0.5 text-[10px] font-bold border uppercase ${
+                            st === "safe_delete"
+                              ? "border-green-600 text-green-700 bg-green-50"
+                              : st === "partial"
+                              ? "border-amber-600 text-amber-700 bg-amber-50"
+                              : st === "review"
+                              ? "border-purple-600 text-purple-700 bg-purple-50"
+                              : "border-black text-black bg-gray-100"
+                          }`}
+                        >
+                          {st === "safe_delete"
+                            ? "SAFE TO DELETE"
+                            : st === "partial"
+                            ? "PARTIAL DUPLICATE"
+                            : st === "review"
+                            ? "REVIEW NEEDED"
+                            : "UNIQUE ASSET"}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="py-3 px-3 whitespace-nowrap text-gray-600">
                     {item.matches && item.matches.length > 0 ? (

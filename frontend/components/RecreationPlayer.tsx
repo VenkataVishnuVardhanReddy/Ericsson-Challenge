@@ -27,7 +27,7 @@ export default function RecreationPlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewMode, setViewMode] = useState<"audio_canvas" | "recreated_video">("audio_canvas");
   const [recreateLoading, setRecreateLoading] = useState(false);
-  const [recreatedList, setRecreatedList] = useState(recreated);
+  const [recreatedList, setRecreatedList] = useState(Array.isArray(recreated) ? recreated : []);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const transcriptContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -234,8 +234,8 @@ export default function RecreationPlayer({
             <div ref={transcriptContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-mono">
               {segments.map((seg, idx) => {
                 const isActive = currentTime >= seg.start && currentTime <= seg.end;
-                // Highlight deictic references (e.g. "as you see here")
-                const parts = seg.text.split(DEICTIC_REGEX);
+                const text = seg?.text || "";
+                const parts = text.split(DEICTIC_REGEX);
 
                 return (
                   <div
