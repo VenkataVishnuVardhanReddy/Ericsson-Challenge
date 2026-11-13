@@ -416,19 +416,90 @@ def write_packet(file_id, f, info, segs, kf_rows, m, voices, tsource, tmeta, dia
     return {"summary": summary}
 
 
-def extractive_summary(segs: list[dict], n: int = 5) -> str:
-    """Cheap, model-free summary: most 'central' sentences by word frequency."""
+def extractive_summary(segs: list[dict], n: int = 5, slide_titles: list[str] | None = None) -> str:
+    """Cheap, model-free summary without AI:
+    - skips sentences under 10 words;
+    - removes conversational fillers (okay, all right, ah, um, uh, you know, I mean, yeah, right);
+    - skips sentences starting with But/And/So or containing '?';
+    - boosts sentences sharing words with on-screen slide titles;
+    - picks 5 sentences spread evenly over the recording, in time order.
+    """
     from collections import Counter
+    import re
 
-    sents = [s["text"] for s in segs if len(s["text"].split()) >= 6]
-    if not sents:
-        return ""
-    stop = set("the a an and or of to in on for is are was were be this that it we you i they with as at by from so "
-               "our can will have has here there what which about just like also very really okay yeah".split())
-    freq = Counter(w for s in sents for w in norm_text(s).split() if w not in stop and len(w) > 2)
-    scored = sorted(((sum(freq[w] for w in norm_text(s).split()) / (len(s.split()) ** 0.7), i, s)
-                     for i, s in enumerate(sents)), reverse=True)[:n]
-    return " ".join(s for _, _, s in sorted(scored, key=lambda x: x[1]))
+    filler_re = re.compile(r"\b(?:okay|all right|ah|um|uh|you know|i mean|yeah|right)\b[,.]?", re.I)
+
+    title_words = set()
+    if slide_titles:
+        for t in slide_titles:
+            title_words.update(w.lower() for w in re.findall(r"\w+", t) if len(w) >= 3)
+
+    candidates = []
+    for idx, s in enumerate(segs):
+        raw = s.get("text", "").strip()
+        if not raw or "?" in raw:
+            continue
+        cleaned = filler_re.sub("", raw)
+        cleaned = re.sub(r"\s+", " ", cleaned).strip(" ,-")
+        if not cleaned:
+            continue
+        words = cleaned.split()
+        if len(words) < 10 or re.match(r"^(?:but|and|so)\b", cleaned, re.I):
+            continue
+
+        cleaned = cleaned[0].upper() + cleaned[1:] if len(cleaned) > 1 else cleaned.upper()
+        if not cleaned.endswith((".", "!", "?")):
+            cleaned += "."
+
+        t_mid = (s.get("start", 0.0) + s.get("end", 0.0)) / 2.0
+        candidates.append({
+            "idx": idx,
+            "text": cleaned,
+            "start": s.get("start", 0.0),
+            "mid": t_mid,
+            "words": [w.lower() for w in re.findall(r"\w+", cleaned) if len(w) > 2],
+        })
+
+    if not candidates:
+        return " ".join(s["text"].strip() for s in segs[:n] if s.get("text"))
+
+    stop = set("the a an and or of to in on for is are was were be this that it we you i they with as at by from so our can will have has here there what which about just like also very really".split())
+    freq = Counter(w for c in candidates for w in c["words"] if w not in stop)
+
+    for c in candidates:
+        score = sum(freq[w] for w in c["words"]) / (len(c["words"]) ** 0.6)
+        title_matches = sum(1 for w in c["words"] if w in title_words)
+        if title_matches > 0:
+            score *= (1.0 + 0.5 * min(4, title_matches))
+        c["score"] = score
+
+    min_t = candidates[0]["mid"]
+    max_t = candidates[-1]["mid"]
+    duration = max(1.0, max_t - min_t)
+    bin_size = duration / n
+
+    selected = []
+    used_indices = set()
+
+    for b in range(n):
+        b_start = min_t + b * bin_size
+        b_end = b_start + bin_size
+        bin_cands = [c for c in candidates if b_start <= c["mid"] <= b_end and c["idx"] not in used_indices]
+        if bin_cands:
+            best = max(bin_cands, key=lambda x: x["score"])
+            selected.append(best)
+            used_indices.add(best["idx"])
+
+    if len(selected) < n:
+        remaining = sorted([c for c in candidates if c["idx"] not in used_indices], key=lambda x: x["score"], reverse=True)
+        for c in remaining:
+            if len(selected) >= n:
+                break
+            selected.append(c)
+            used_indices.add(c["idx"])
+
+    selected.sort(key=lambda x: x["start"])
+    return " ".join(c["text"] for c in selected)
 
 
 def packet_tiers(pdir: Path, original: int, t1: dict, kf_rows, m) -> dict:

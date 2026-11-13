@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   Sparkles,
   Info,
+  X,
 } from "lucide-react";
 import { api, formatBytes, formatDuration } from "@/lib/api";
 import {
@@ -32,6 +33,8 @@ import {
   FileIntegrity,
   StorageLevel,
   CheckedMoment,
+  DeckManifest,
+  SlideAppearances,
 } from "@/lib/types";
 import { StatusBadge } from "@/components/Badge";
 import Explain from "@/components/Explain";
@@ -45,7 +48,26 @@ export default function FileDetailPage() {
   const [integrity, setIntegrity] = useState<FileIntegrity | null>(null);
   const [recording, setRecording] = useState<RecordingDetail | null>(null);
   const [document, setDocument] = useState<DocumentDetail | null>(null);
+  const [manifest, setManifest] = useState<DeckManifest | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Slide Life Story state (Beyond the brief)
+  const [storySlide, setStorySlide] = useState<SlideAppearances | null>(null);
+  const [storyOpen, setStoryOpen] = useState(false);
+  const [storyLoading, setStoryLoading] = useState(false);
+
+  const openSlideStory = async (slideId: number) => {
+    setStoryLoading(true);
+    setStoryOpen(true);
+    try {
+      const data = await api.getSlideAppearances(slideId);
+      setStorySlide(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setStoryLoading(false);
+    }
+  };
 
   const [selectedLevel, setSelectedLevel] = useState<number>(4);
   const [logScale, setLogScale] = useState(false);
@@ -81,8 +103,12 @@ export default function FileDetailPage() {
             setActiveSlideKey(rec.keyframes[0].object_hash);
           }
         } else {
-          const doc = await api.getDocument(fileId).catch(() => null);
+          const [doc, mnf] = await Promise.all([
+            api.getDocument(fileId).catch(() => null),
+            api.getDeckManifest(fileId).catch(() => null),
+          ]);
           setDocument(doc);
+          setManifest(mnf);
         }
       } catch (err) {
         console.error(err);
@@ -192,6 +218,14 @@ export default function FileDetailPage() {
               />
               <span>•</span>
               <span className="font-mono">Original: {formatBytes(file.size)}</span>
+              {(file.policy || stages?.policy) && (
+                <>
+                  <span>•</span>
+                  <span className="inline-block px-2.5 py-1 rounded-md text-xs font-mono font-medium border border-black bg-white text-black">
+                    Policy: {file.policy || stages?.policy}
+                  </span>
+                </>
+              )}
               {isVideo && recording?.recording?.duration && (
                 <>
                   <span>•</span>
@@ -541,6 +575,26 @@ export default function FileDetailPage() {
                       )}
                     </div>
 
+                    <div className="flex items-center justify-between text-xs text-[#6b6b6b]">
+                      <span>Active slide preview</span>
+                      {activeSlideKey && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const curKf = keyframes.find((k) => k.object_hash === activeSlideKey);
+                            if (curKf) {
+                              openSlideStory(curKf.slide_id || curKf.id);
+                            }
+                          }}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-[#e5e5e5] bg-white hover:bg-gray-100 text-black font-medium transition-colors"
+                          title="Inspect where this slide appears across the archive"
+                        >
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>Slide life story</span>
+                        </button>
+                      )}
+                    </div>
+
                     {/* Slide Thumbnail Strip */}
                     <div className="space-y-1.5">
                       <span className="text-xs text-[#6b6b6b] block font-medium">
@@ -610,41 +664,139 @@ export default function FileDetailPage() {
           </div>
         )}
 
-        {/* DOCUMENT PREVIEWS */}
+        {/* DOCUMENT PREVIEWS & MANIFEST */}
         {!isVideo && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-[#6b6b6b] font-medium">
-                {document?.slides?.length || 0} slides extracted as WebP
-              </span>
-              {(document?.slides?.length || 0) > 8 && (
-                <button
-                  type="button"
-                  onClick={() => setShowAllSlides(!showAllSlides)}
-                  className="text-xs text-[#6b6b6b] hover:text-black font-medium transition-colors border border-[#e5e5e5] px-3 py-1.5 rounded-lg"
-                >
-                  {showAllSlides ? "Show first 8 slides" : `Show all ${document?.slides?.length} slides`}
-                </button>
-              )}
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {(showAllSlides ? (document?.slides || []) : (document?.slides || []).slice(0, 8)).map((s) => (
-                <div key={s.id} className="border border-[#e5e5e5] rounded-lg overflow-hidden bg-white space-y-1.5 p-2">
-                  <div className="aspect-[4/3] bg-gray-50 rounded overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={api.objectUrl(s.object_hash)}
-                      alt={`Slide ${s.page_no}`}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#6b6b6b] px-1 font-mono">
-                    <span>Page {s.page_no}</span>
-                    <span>{formatBytes(s.bytes)}</span>
-                  </div>
+            {manifest && (
+              <div className="p-4 rounded-xl border border-[#e5e5e5] bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+                <div>
+                  <span className="font-semibold text-black block text-sm">Document Storage Manifest</span>
+                  <p className="text-[#6b6b6b] mt-0.5">
+                    {manifest.stored_here_count} slides stored here ({formatBytes(manifest.size_after_bytes)}) • {manifest.shared_count} slides shared with other decks
+                  </p>
+                  {manifest.reason && (
+                    <p className="text-[#6b6b6b] font-mono text-[11px] mt-1">
+                      Reason: {manifest.reason}
+                    </p>
+                  )}
                 </div>
-              ))}
-            </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 rounded border border-black bg-white font-mono text-xs font-semibold text-black">
+                    Policy: {manifest.policy}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {manifest?.slides && manifest.slides.length > 0 ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-xs font-medium text-[#6b6b6b]">
+                  <span>Ordered slide manifest ({manifest.slides.length} slides)</span>
+                  <span className="text-[11px]">Click any thumbnail to inspect slide life story</span>
+                </div>
+
+                <div className="border border-[#e5e5e5] rounded-xl overflow-hidden bg-white divide-y divide-[#e5e5e5] max-h-[520px] overflow-y-auto">
+                  {manifest.slides.map((s) => (
+                    <div
+                      key={s.slide_id}
+                      className="p-3.5 flex items-center justify-between gap-4 hover:bg-gray-50/70 transition-colors"
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <span className="font-mono text-xs text-[#6b6b6b] w-8 flex-shrink-0">
+                          #{s.page_no}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openSlideStory(s.slide_id)}
+                          className="w-20 aspect-video rounded border border-[#e5e5e5] bg-gray-100 overflow-hidden flex-shrink-0 hover:ring-2 hover:ring-black transition-all"
+                          title="Click to view slide life story"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={api.objectUrl(s.object_hash)}
+                            alt={s.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                        <div className="min-w-0">
+                          <span className="font-medium text-xs text-black block truncate">
+                            {s.title}
+                          </span>
+                          <div className="flex items-center gap-2 mt-1">
+                            {s.stored_here ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono border border-black bg-black text-white">
+                                stored here
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono border border-[#e5e5e5] bg-gray-100 text-black">
+                                {s.status}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 flex-shrink-0">
+                        <span className="font-mono text-xs text-[#6b6b6b]">
+                          {s.stored_here ? formatBytes(s.bytes) : "0 B (ref)"}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => openSlideStory(s.slide_id)}
+                          className="px-2.5 py-1 rounded text-xs border border-[#e5e5e5] hover:bg-black hover:text-white hover:border-black transition-colors"
+                        >
+                          Life story
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : document?.slides && document.slides.length > 0 ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-[#6b6b6b] font-medium">
+                    {document.slides.length} slides extracted as WebP
+                  </span>
+                  {document.slides.length > 8 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowAllSlides(!showAllSlides)}
+                      className="text-xs text-[#6b6b6b] hover:text-black font-medium transition-colors border border-[#e5e5e5] px-3 py-1.5 rounded-lg"
+                    >
+                      {showAllSlides ? "Show first 8 slides" : `Show all ${document.slides.length} slides`}
+                    </button>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {(showAllSlides ? document.slides : document.slides.slice(0, 8)).map((s) => (
+                    <div key={s.id} className="border border-[#e5e5e5] rounded-lg overflow-hidden bg-white space-y-1.5 p-2">
+                      <div
+                        className="aspect-[4/3] bg-gray-50 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => openSlideStory(s.id)}
+                        title="Click to view slide life story"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={api.objectUrl(s.object_hash)}
+                          alt={`Slide ${s.page_no}`}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-[#6b6b6b] px-1 font-mono">
+                        <span>Page {s.page_no}</span>
+                        <span>{formatBytes(s.bytes)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="border border-[#e5e5e5] rounded-xl p-4 bg-gray-50 text-xs text-[#6b6b6b] space-y-1">
+                <span className="font-semibold text-black block">Extracted document content</span>
+                <p>Text extracted and indexed for full-text and semantic search.</p>
+              </div>
+            )}
+
             <div className="pt-2">
               <a
                 href={api.rawFileUrl(file.id)}
@@ -692,22 +844,24 @@ export default function FileDetailPage() {
             </span>
           </div>
 
-          {/* Line 2: Still pictures kept */}
+          {/* Line 2: Pictures match (pixel comparison, no OCR) */}
           <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-black">Still pictures kept:</span>
+              <span className="font-semibold text-black">Pictures match (pixel comparison, no OCR):</span>
               <span className="font-mono text-black font-medium">
-                {integrity?.pictures_kept_pct !== undefined && integrity?.pictures_kept_pct !== null
-                  ? `${(integrity.pictures_kept_pct * 100).toFixed(1)}%`
-                  : (integrity?.picture_note || "—")}
+                {integrity?.visual_match_pct !== undefined && integrity?.visual_match_pct !== null
+                  ? `${(integrity.visual_match_pct * 100).toFixed(1)}%`
+                  : (integrity?.pictures_kept_pct !== undefined && integrity?.pictures_kept_pct !== null
+                    ? `${(integrity.pictures_kept_pct * 100).toFixed(1)}%`
+                    : (integrity?.picture_note || "—"))}
               </span>
               <span className="text-xs text-[#6b6b6b]">
-                ({integrity?.picture_moments || 0} picture moments)
+                ({integrity?.frames_checked || 20} moments checked)
               </span>
             </div>
             <span
               className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
-              title="Still pictures kept: Compares visual still images from the original video against saved keyframe pictures using perceptual hashing."
+              title="Pictures match: Compares original video frames against kept slide pictures using perceptual hashing (pHash distance <= 12) with presenter activity mask applied."
             >
               ?
             </span>
@@ -734,24 +888,47 @@ export default function FileDetailPage() {
             </span>
           </div>
 
-          {/* Line 4: OCR vs official deck (if linked) */}
+          {/* Line 4: OCR reads official slide text correctly */}
           {integrity?.ocr_accuracy_pct !== undefined && integrity?.ocr_accuracy_pct !== null && (
-            <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-black">OCR vs official deck:</span>
-                <span className="font-mono text-black font-medium">
-                  {(integrity.ocr_accuracy_pct * 100).toFixed(1)}%
-                </span>
-                <span className="text-xs text-[#6b6b6b]">
-                  ({integrity?.ocr_slides_checked || 0} linked slides verified)
+            <div className="py-3 first:pt-0 last:pb-0 space-y-2">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-black">OCR reads official slide text correctly:</span>
+                  <span className="font-mono text-black font-medium">
+                    {(integrity.ocr_accuracy_pct * 100).toFixed(1)}%
+                  </span>
+                  <span className="text-xs text-[#6b6b6b]">
+                    ({integrity?.ocr_slides_checked || 0} slides, checked against the original PDF text)
+                  </span>
+                </div>
+                <span
+                  className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                  title="OCR reads official slide text correctly: Measures word recall by checking whether clean words (>= 3 chars) from original presentation deck slides are accurately recognized in distilled slide pictures."
+                >
+                  ?
                 </span>
               </div>
-              <span
-                className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
-                title="OCR accuracy: Compares text extracted from video slide keyframes against the clean original text extracted directly from official presentation deck slides."
-              >
-                ?
-              </span>
+
+              {integrity.lowest_slides && integrity.lowest_slides.length > 0 && (
+                <details className="text-xs group border-t border-[#e5e5e5] pt-2">
+                  <summary className="font-medium text-black cursor-pointer hover:underline list-none flex items-center justify-between">
+                    <span>View lowest scoring slides ({integrity.lowest_slides.length})</span>
+                    <span className="text-[#6b6b6b] text-[11px] group-open:rotate-180 transition-transform">▼</span>
+                  </summary>
+                  <div className="mt-2.5 space-y-2 bg-gray-50 p-3 rounded-lg border border-[#e5e5e5]">
+                    {integrity.lowest_slides.map((ls, i) => (
+                      <div key={i} className="space-y-1 text-[11px] pb-2 last:pb-0 border-b last:border-b-0 border-[#e5e5e5]">
+                        <div className="flex justify-between font-semibold text-black">
+                          <span>Page {ls.page_no}</span>
+                          <span className="font-mono">{ls.score_pct}% word recall</span>
+                        </div>
+                        <p className="text-[#6b6b6b]"><span className="font-medium text-black">Official text:</span> {ls.official_snippet}</p>
+                        <p className="text-[#6b6b6b]"><span className="font-medium text-black">OCR reading:</span> {ls.ocr_snippet}</p>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
             </div>
           )}
         </div>
@@ -964,6 +1141,144 @@ export default function FileDetailPage() {
           </div>
         )}
       </section>
+
+      {/* SLIDE LIFE STORY MODAL */}
+      {storyOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-black rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+            <button
+              type="button"
+              onClick={() => {
+                setStoryOpen(false);
+                setStorySlide(null);
+              }}
+              className="absolute top-6 right-6 p-1.5 rounded-lg border border-[#e5e5e5] hover:bg-gray-100 text-black transition-colors"
+              title="Close modal"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div>
+              <span className="text-xs uppercase tracking-wider text-[#6b6b6b] font-mono font-semibold">
+                Slide Life Story
+              </span>
+              <h3 className="text-xl font-bold text-black mt-1">
+                {storySlide?.title || "Slide details"}
+              </h3>
+              <p className="text-xs text-[#6b6b6b] mt-0.5">
+                Tracks everywhere this exact visual slide appears across official company decks and recorded meeting presentations.
+              </p>
+            </div>
+
+            {storyLoading ? (
+              <div className="py-12 text-center text-xs text-[#6b6b6b] space-y-2">
+                <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p>Tracking slide appearances across archive...</p>
+              </div>
+            ) : storySlide ? (
+              <div className="space-y-6">
+                {/* Slide Preview */}
+                <div className="aspect-video max-w-md mx-auto rounded-xl border border-[#e5e5e5] overflow-hidden bg-gray-50">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={api.objectUrl(storySlide.object_hash)}
+                    alt={storySlide.title}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                {/* Appearance 1: Document Decks */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-black uppercase tracking-wider text-[11px]">
+                      Document Decks ({storySlide.decks?.length || 0})
+                    </span>
+                    <span className="text-[#6b6b6b]">Stored once in Content Addressable Storage</span>
+                  </div>
+                  {storySlide.decks && storySlide.decks.length > 0 ? (
+                    <div className="border border-[#e5e5e5] rounded-xl divide-y divide-[#e5e5e5] text-xs">
+                      {storySlide.decks.map((d, i) => (
+                        <div key={i} className="p-3.5 flex items-center justify-between gap-4">
+                          <div className="min-w-0 space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-black truncate">{d.name}</span>
+                              {d.revision && (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono border border-[#e5e5e5] bg-gray-50 text-black">
+                                  Rev {d.revision}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 text-[#6b6b6b] text-[11px]">
+                              <span>Page {d.page_no}</span>
+                              <span>•</span>
+                              <span>{d.source_name || (d.governed ? "SharePoint" : "OneDrive")}</span>
+                            </div>
+                          </div>
+                          <Link
+                            href={`/files/${d.file_id}`}
+                            className="text-xs font-medium text-black hover:underline flex-shrink-0"
+                          >
+                            Open deck →
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[#6b6b6b] italic">No document deck occurrences found.</p>
+                  )}
+                </div>
+
+                {/* Appearance 2: Video Recordings */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-black uppercase tracking-wider text-[11px]">
+                      Meeting Recordings ({storySlide.videos?.length || 0})
+                    </span>
+                    <span className="text-[#6b6b6b]">Presented live during recorded meetings</span>
+                  </div>
+                  {storySlide.videos && storySlide.videos.length > 0 ? (
+                    <div className="border border-[#e5e5e5] rounded-xl divide-y divide-[#e5e5e5] text-xs">
+                      {storySlide.videos.map((v, i) => (
+                        <div key={i} className="p-3.5 flex items-center justify-between gap-4">
+                          <div className="min-w-0 space-y-1">
+                            <span className="font-semibold text-black block truncate">{v.video_name}</span>
+                            <div className="flex items-center gap-2 text-[#6b6b6b] text-[11px]">
+                              <span>Shown at {v.timestamp_str}</span>
+                              <span>•</span>
+                              <span>{v.source_name}</span>
+                            </div>
+                          </div>
+                          {v.file_id === fileId ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setStoryOpen(false);
+                                jumpToTime(v.timestamp);
+                              }}
+                              className="px-2.5 py-1 rounded text-xs border border-black bg-black text-white hover:bg-gray-800 transition-colors flex-shrink-0"
+                            >
+                              Jump to {v.timestamp_str}
+                            </button>
+                          ) : (
+                            <Link
+                              href={`/files/${v.file_id}`}
+                              className="text-xs font-medium text-black hover:underline flex-shrink-0"
+                            >
+                              Open recording →
+                            </Link>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[#6b6b6b] italic">Not presented in any recorded video meetings.</p>
+                  )}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

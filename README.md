@@ -1,102 +1,128 @@
-# Distill — Enterprise Data Storage Optimization & AI Activation Engine
+# Distill — Enterprise Data Storage Optimization
 
-**Challenge by Ericsson — Ericsson Build Hackathon 2026 (Karlskrona)**  
-*Free, 100% offline, CPU-only enterprise platform that compresses long meeting and training recordings by **98%+** without losing information, deduplicates multi-version presentations down to individual slides ("Git for Slides"), performs cross-system duplicate analysis for departing employees, and activates dark enterprise data into AI-ready, searchable intelligence.*
-
----
-
-## The Enterprise Challenge & Solution
-
-Ericsson produces thousands of hours of internal meeting recordings, training sessions, and technical presentations across SharePoint, OneDrive, and EricssonPlay. Because raw video files are enormous (~1 GB per 2 hours), storage quotas force permanent file deletions, destroying institutional knowledge and starving future AI models of training data. Documents downloaded to laptops and re-uploaded create duplicate sprawl.
-
-**Distill solves both challenges simultaneously:**
-1. **Storage Reduction (98%+ Savings):** Replaces raw videos with structured, content-addressable packets (time-linked text transcripts, 24 kbps Opus audio, and high-fidelity slide keyframes), while deduplicating slides across revision decks.
-2. **Data Activation for AI:** Converts inaccessible video pixels into structured, tokenized JSONL corpus ready for model fine-tuning and grounded RAG question answering with second-by-second timestamps and exact slide citations.
-3. **Leaver Drive Governance:** Audits departing employee OneDrives against central SharePoint and EricssonPlay repositories, safely pruning duplicates while rescuing unique draft slides.
+> **Ericsson Build Hackathon 2026 — "Data Storage Optimization" Challenge**  
+> **Core Result:** Ericsson's files got **98.3% smaller**, and nothing important was lost. All 12 sample files were processed and verified with exact mathematical integrity.
 
 ---
 
-## 5-Tier Content-Addressable Storage (CAS) Architecture
+## 1. Executive Summary: What We Proved
 
-```mermaid
-graph LR
-    Raw[T0: Raw Video 1.2 GB] --> T1[T1: Re-encoded AV1/x264 ~400 MB]
-    Raw --> T2[T2: Opus Audio + Keyframes ~60 MB]
-    Raw --> T3[T3: Lossless Text & Slide Packet ~15 MB]
-    Raw --> T4[T4: ASCII Text & Slide Prompts ~50 KB]
-    
-    T3 --> Recreation[On-Demand Video Recreation]
-    T3 --> AI[AI Training Flywheel & RAG QA]
-    T3 --> CAS[CAS Slide Hash Deduplication]
-```
+Across the 12 provided Ericsson enterprise files (including three multi-gigabyte meeting recordings, presentation decks with multiple revisions, and personal employee OneDrive folders):
 
-- **T0 — Raw Source:** Untouched master binary (kept until verified).
-- **T1 — High-Efficiency Video (CRF 28, AV1/x264):** ~60–70% storage saving for standard video streaming.
-- **T2 — Voice & Visual Moments:** 24 kbps Opus audio + perceptual keyframes. ~95% storage saving.
-- **T3 — Lossless Text & Slide Packet (Default):** Complete timestamped Whisper transcript + lossless WebP slide keyframes + SQLite FTS5 index. **~98–99% storage saving.**
-- **T4 — Pure Tokenized Text & Prompts:** Ultra-compact plain text with generative slide prompts for LLM training and instant transfer. **~99.9% storage saving.**
+- **Original Archive Size:** **1.45 GB** (1,556,024,836 bytes)
+- **Optimized Archive Size:** **24.9 MB** (26,087,879 bytes)
+- **Storage Space Freed:** **98.3% space saved**
+- **Retention Verification:**
+  - **95.8% to 99.7%** on-screen character match across recorded meeting presentations
+  - **90.0% to 100.0%** visual perceptual match (pixel comparison, no OCR) against original video frames
+  - **98.9%** slide OCR word recall against official PowerPoint reference decks
+  - **100%** spoken audio transcribed with speaker attribution (who said what, when)
+- **Mathematical Exactness:** Every byte saved is accounted for in a waterfall formula that sums down to the exact byte:  
+  `1,556,024,836 B - 1,522,715,191 B (videos) - 3,772,216 B (duplicates) - 3,449,550 B (slides) = 26,087,879 B`
 
 ---
 
-## "Nothing Was Lost" Information Retention Guarantee
+## 2. The 5 Storage Levels for Meeting Recordings
 
-Distill enforces a mathematical verification protocol on every processed asset:
-- **Audio Content:** 100% spoken word coverage transcribed via Whisper int8 with word-level timestamps.
-- **Speaker Attribution:** Offline speaker diarization (`sherpa-onnx` pyannote + speechbrain) identifying unique speaker turns and voiceprints.
-- **Visual Accuracy:** Perceptual hashing (pHash + dHash + aHash) and RapidOCR character matching guaranteeing &ge;99% text fidelity against source PowerPoint decks.
-- **Deictic Resolution:** Spoken references like *"as you see here on the left"* are permanently linked to the exact slide and bounding box shown on screen.
-- **Video Recreation:** The complete recording can be re-rendered into playable MP4 on demand from distilled data.
+Users choose the level that matches the age and regulatory need of their recordings:
 
----
-
-## Scenario-Based Volume Savings (Ericsson Projections)
-
-| Enterprise Scenario | Raw Volume | Distilled Volume (T3) | Net Storage Freed | Reduction % |
-|---|---|---|---|---|
-| **Single 2.5-hour Meeting** | 1,200 MB | 18.4 MB | 1,181.6 MB | **98.5%** |
-| **Department (100 meetings/mo)** | 12,000 GB / yr | 240 GB / yr | 11,760 GB / yr | **98.0%** |
-| **Presentation Deck (3 Revisions)** | 145 MB | 38 MB | 107 MB | **73.8%** |
-| **Departing Employee (OneDrive)** | 1,280 MB | 72 MB | 1,208 MB | **94.4%** |
+| Level | Plain English Name | Storage Footprint | What is Preserved |
+|---|---|---|---|
+| **Level 1** | **Original** | **100%** (1.1 GB) | The untouched original video file (kept byte-identical). |
+| **Level 2** | **Smaller video** | **~15%** (~160 MB) | Playable video re-encoded at 5 fps H.264 (quality setting 32, max 1280 px). |
+| **Level 3** | **Audio + slides + text** | **~2.2%** (~24 MB) | Full Opus speech audio (16 kbps) + crisp slide pictures (WebP) + searchable transcript. |
+| **Level 4** | **Slides + text** | **~0.7%** (~7.5 MB) | Clean slide pictures (WebP) + complete timestamped transcript + speaker attribution. |
+| **Level 5** | **Text + links** | **~0.1%** (~1.2 MB) | Slide pictures that exist in official decks become links; transcript preserved. |
 
 ---
 
-## Quickstart Guide
+## 3. "Was Anything Lost?" Verification Method
+
+To prove to evaluators that critical knowledge was not discarded, Distill implements an automated moment-by-moment verification protocol:
+
+1. **20 Evenly Spaced Moments:** For every video, frames are sampled at `t = duration * (i + 0.5) / 20`.
+2. **Text Retention Check:** Compares original video frame OCR against preserved slide text using character-level sequence matching (`SequenceMatcher(autojunk=False)` with &ge; 90% fuzzy similarity window).
+   - *Result on 88-minute Tech Concept recording:* **95.8%** of visible on-screen text verified preserved.
+   - *Result on GraalVM technical presentation:* **99.7%** of visible on-screen text verified preserved.
+3. **Visual Pixel Match (No OCR):** Compares original video frame against kept slide picture using perceptual hashing (`pHash` distance &le; 12 on 320 px grayscale, with presenter webcam motion masked).
+   - *Result:* **90.0% to 100.0%** visual match.
+4. **Official Slide OCR Accuracy:** Compares kept slide pictures against official PowerPoint deck slide text, excluding speaker notes and boilerplate headers/footers.
+   - *Result:* **98.9%** word recall across 36 checked slides.
+
+---
+
+## 4. Document Policy: "Git for Slides"
+
+Organizations frequently re-upload presentation decks with minor edits, creating duplicate sprawl:
+
+- **SharePoint Governance:** Official documents in SharePoint remain **100% byte-identical** in their original format (`policy: "original kept"`).
+- **Exact Duplicates in Personal Drives:** Exact copies in OneDrive become zero-byte reference pointers to the governed SharePoint version (`policy: "duplicate → reference"`).
+- **Version Revision Control (Delta Storage):**
+  - **SD-WAN Rev B (File 5):** Kept intact in SharePoint (28 slides, 3.5 MB).
+  - **SD-WAN Rev A (File 11):** Stored as a delta (`policy: "revision → delta"`). Only the **3 modified slides** are saved; the other **22 identical slides** point directly to the primary deck in Content Addressable Storage (CAS). Total storage: **92 KB** instead of 3.46 MB (**97.3% space saved**).
+
+---
+
+## 5. Beyond the Brief: Interactive Features
+
+1. **Savings Projection Sliders (Overview Page):**
+   - Enterprise scale calculator allowing evaluators to adjust:
+     - TB of meeting recordings (default 10 TB)
+     - % older than 1 year (default 60%)
+     - Storage cost €/TB/month (default €20)
+     - Carbon footprint kg CO₂/TB/year (default 40 kg)
+   - Projects live capacity freed (e.g. 5.9 TB), annual cost avoided (€1,426/yr), and tonnes of CO₂ eliminated (0.24 tonnes/yr).
+2. **Slide Life Story Panel:**
+   - Evaluators can click any slide thumbnail on document pages or video players to see everywhere that exact slide visual appears across company presentation decks and meeting video recordings with clickable timestamps.
+
+---
+
+## 6. How to Run
 
 ### Prerequisites
 - Python 3.10+ (CPU-optimized, zero GPU required)
 - Node.js 18+ & npm
 - FFmpeg (in system PATH)
 
-### 1. Start the Backend API Engine
+### 1. Run the Backend API Server
 ```powershell
-# From project root
-.\.venv\Scripts\python.exe -m distill
+# From Hackthon repository root
+.\.venv\Scripts\python.exe -m uvicorn distill.app:app --host 127.0.0.1 --port 8000
 ```
-Backend runs on `http://127.0.0.1:8000`.
+Backend runs at `http://127.0.0.1:8000`.
 
-### 2. Start the Minimalist Next.js 16 Web UI
+### 2. Run the Next.js Frontend
 ```powershell
-# From frontend/ directory
+# In a second terminal
 cd frontend
+$env:PATH = "C:\Users\Vishnu\AppData\Local\Programs\nodejs;$env:PATH" # if node is not in global PATH
 npm run dev
 ```
 Open **http://localhost:3000** in your browser.
 
-### 3. Run Official Ericsson Ingestion & Ground-Truth Benchmark
+### 3. Verify Pitch Metrics Directly From DB
 ```powershell
-# Run official dataset pipeline
-.\.venv\Scripts\python.exe scripts\ingest_ericsson.py
-
-# Run ground-truth verification
-.\.venv\Scripts\python.exe scripts\run_e2e_test.py
+# Run the standalone verification query tool
+.\.venv\Scripts\python.exe scripts\pitch_numbers.py
 ```
 
 ---
 
-## Technical Specifications & Security
+## 7. Key API Endpoints
 
-- **Strict Path Sandboxing:** Restricts file access strictly to configured roots (`sample_data/`, `data/uploads/`). Rejects path traversal (403).
-- **Zip Bomb & XML Bomb Protection:** `defusedxml` with 500 MB decompression limit on `.docx` and `.pptx` processing.
-- **Prompt Injection Defense:** Strict XML `<context>` encapsulation and system instructions isolating untrusted document text from LLM instructions.
-- **Automated PII Anonymization:** Redacts emails, phone numbers, and pseudonymizes speaker identities before exporting training corpora.
-- **Reversible Quarantine Audit:** Leaver drive pruning moves files to `.quarantine/` with SHA-256 signatures, ensuring zero irreversible data destruction without admin approval.
+- `GET /api/overview` — Archive waterfall savings, per-source breakdown, and headline totals.
+- `GET /api/files` — All 12 files with original bytes, size after, % saved, policy, and reason.
+- `GET /api/files/{id}/stages` — 5 storage levels, progress stages, and processing details.
+- `GET /api/files/{id}/integrity` — 20 sampled moments, text match %, visual match %, and slide recall.
+- `GET /api/files/{id}/manifest` — Ordered slide manifest with "stored here" vs "shared with <deck>, page N".
+- `GET /api/slides/{id}/appearances` — Slide life story across document decks and video recordings.
+- `GET /api/duplicates` — Exact duplicate groups, version chains, and shared slide statistics.
+- `GET /api/search?q={query}` — Full-text and semantic search across transcripts and slide text.
+- `GET /api/offboard` — Departing employee folder audit against official SharePoint repositories.
+
+---
+
+## 8. Technology Stack
+
+- **Backend:** FastAPI, SQLite (FTS5 + WAL mode), RapidOCR, Whisper Base (CPU int8), pyannote + WeSpeaker, ImageHash (pHash/dHash).
+- **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 3, Lucide Icons. Designed strictly in monochromatic high-contrast enterprise design system.

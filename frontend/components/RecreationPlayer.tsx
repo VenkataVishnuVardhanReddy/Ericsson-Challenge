@@ -256,7 +256,7 @@ export default function RecreationPlayer({
                         p && p.match(DEICTIC_REGEX) ? (
                           <span
                             key={pIdx}
-                            className="bg-amber-100 border-b border-amber-500 text-amber-900 px-1 py-0.5 rounded-none font-medium"
+                            className="bg-gray-200 border-b border-black text-black px-1 py-0.5 rounded-none font-medium"
                             title="Deictic reference linked to visible slide"
                           >
                             {p}

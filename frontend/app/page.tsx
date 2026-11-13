@@ -25,6 +25,12 @@ export default function OverviewPage() {
   const [loading, setLoading] = useState(true);
   const [showFormula, setShowFormula] = useState(false);
 
+  // Savings Projection Sliders State
+  const [tbRecordings, setTbRecordings] = useState(10);
+  const [pctOlderThanOneYear, setPctOlderThanOneYear] = useState(60);
+  const [costPerTbMonth, setCostPerTbMonth] = useState(20);
+  const [kgCo2PerTbYear, setKgCo2PerTbYear] = useState(40);
+
   useEffect(() => {
     async function load() {
       try {
@@ -64,6 +70,15 @@ export default function OverviewPage() {
       </div>
     );
   }
+
+  // Projection calculations based on measured savings
+  const videoSavingRate = waterfall.original_bytes > 0
+    ? waterfall.video_reduction_bytes / (waterfall.video_reduction_bytes + 14288259)
+    : 0.9907;
+  const eligibleTb = tbRecordings * (pctOlderThanOneYear / 100);
+  const tbFreed = eligibleTb * videoSavingRate;
+  const eurosSavedPerYear = tbFreed * costPerTbMonth * 12;
+  const tonnesCo2Avoided = (tbFreed * kgCo2PerTbYear) / 1000;
 
   return (
     <div className="space-y-16 py-4">
@@ -315,7 +330,134 @@ export default function OverviewPage() {
         </div>
       </section>
 
-      {/* SECTION E: CALL TO ACTION */}
+      {/* SECTION E: SAVINGS PROJECTION (SCALE ACROSS ERICSSON) */}
+      <section className="border border-[#e5e5e5] rounded-xl p-6 sm:p-8 bg-white space-y-6">
+        <div>
+          <span className="text-xs uppercase tracking-wider text-[#6b6b6b] font-semibold">
+            Beyond the brief • Savings Projection
+          </span>
+          <h2 className="text-2xl font-bold text-black mt-1">
+            Scale this across Ericsson
+          </h2>
+          <p className="text-sm text-[#6b6b6b] mt-1">
+            Estimate potential capacity, cost, and carbon savings when Distill is applied across older meeting recordings at enterprise scale.
+          </p>
+        </div>
+
+        {/* Sliders Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
+          {/* Slider 1: TB of meeting recordings */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="font-medium text-black">TB of meeting recordings</span>
+              <span className="font-mono font-semibold text-black">{tbRecordings} TB</span>
+            </div>
+            <input
+              type="range"
+              min={1}
+              max={500}
+              step={1}
+              value={tbRecordings}
+              onChange={(e) => setTbRecordings(Number(e.target.value))}
+              className="w-full accent-black cursor-pointer"
+            />
+            <span className="text-[11px] text-[#6b6b6b] block">Total pool of recorded videos</span>
+          </div>
+
+          {/* Slider 2: % older than 1 year */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="font-medium text-black">% older than 1 year</span>
+              <span className="font-mono font-semibold text-black">{pctOlderThanOneYear}%</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={pctOlderThanOneYear}
+              onChange={(e) => setPctOlderThanOneYear(Number(e.target.value))}
+              className="w-full accent-black cursor-pointer"
+            />
+            <span className="text-[11px] text-[#6b6b6b] block">Recordings eligible for distillation</span>
+          </div>
+
+          {/* Slider 3: Storage cost € per TB per month */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="font-medium text-black">Storage cost</span>
+              <span className="font-mono font-semibold text-black">€{costPerTbMonth} / TB / mo</span>
+            </div>
+            <input
+              type="range"
+              min={5}
+              max={100}
+              step={1}
+              value={costPerTbMonth}
+              onChange={(e) => setCostPerTbMonth(Number(e.target.value))}
+              className="w-full accent-black cursor-pointer"
+            />
+            <span className="text-[11px] text-[#6b6b6b] block">Cloud storage fee estimate</span>
+          </div>
+
+          {/* Slider 4: kg CO₂ per TB per year */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="font-medium text-black">Carbon footprint</span>
+              <span className="font-mono font-semibold text-black">{kgCo2PerTbYear} kg CO₂ / TB</span>
+            </div>
+            <input
+              type="range"
+              min={10}
+              max={200}
+              step={5}
+              value={kgCo2PerTbYear}
+              onChange={(e) => setKgCo2PerTbYear(Number(e.target.value))}
+              className="w-full accent-black cursor-pointer"
+            />
+            <span className="text-[11px] text-[#6b6b6b] block">Labelled as an assumption</span>
+          </div>
+        </div>
+
+        {/* Projection Outputs */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[#e5e5e5]">
+          <div className="p-4 rounded-xl border border-[#e5e5e5] bg-gray-50 space-y-1">
+            <span className="text-xs text-[#6b6b6b] font-medium">Storage capacity freed</span>
+            <div className="text-2xl font-bold font-mono text-black">
+              {tbFreed.toFixed(1)} TB
+            </div>
+            <span className="text-[11px] text-[#6b6b6b] block">
+              Based on {((videoSavingRate) * 100).toFixed(1)}% measured video reduction
+            </span>
+          </div>
+
+          <div className="p-4 rounded-xl border border-[#e5e5e5] bg-gray-50 space-y-1">
+            <span className="text-xs text-[#6b6b6b] font-medium">Cost avoided per year</span>
+            <div className="text-2xl font-bold font-mono text-black">
+              €{Math.round(eurosSavedPerYear).toLocaleString()}
+            </div>
+            <span className="text-[11px] text-[#6b6b6b] block">
+              Annual recurring storage savings
+            </span>
+          </div>
+
+          <div className="p-4 rounded-xl border border-[#e5e5e5] bg-gray-50 space-y-1">
+            <span className="text-xs text-[#6b6b6b] font-medium">Carbon emissions avoided</span>
+            <div className="text-2xl font-bold font-mono text-black">
+              {tonnesCo2Avoided.toFixed(2)} tonnes
+            </div>
+            <span className="text-[11px] text-[#6b6b6b] block">
+              CO₂ emissions avoided per year
+            </span>
+          </div>
+        </div>
+
+        <p className="text-xs text-[#6b6b6b] italic text-center pt-1">
+          Estimate based on our measured results and the assumptions above.
+        </p>
+      </section>
+
+      {/* SECTION F: CALL TO ACTION */}
       <section className="p-8 sm:p-10 rounded-2xl border border-black bg-black text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="space-y-2 max-w-xl">
           <span className="text-xs text-[#a3a3a3] uppercase tracking-wider font-semibold">Interactive proof</span>

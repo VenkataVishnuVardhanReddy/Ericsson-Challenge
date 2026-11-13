@@ -36,6 +36,7 @@ export interface FileItem {
   revision?: string;
   size_after_bytes?: number;
   saved_pct?: number;
+  policy?: string;
   reason?: string;
   slide_count?: number;
 }
@@ -140,9 +141,70 @@ export interface StorageLevel {
 export interface FileStages {
   file_id: number;
   status: string;
+  policy?: string;
   levels?: StorageLevel[];
   progress?: StageItem[];
   stages: StageItem[];
+}
+
+export interface SlideManifestItem {
+  slide_id: number;
+  page_no: number;
+  title: string;
+  status: string;
+  stored_here: boolean;
+  shared_deck?: string | null;
+  shared_page?: number | null;
+  object_hash?: string;
+  bytes: number;
+}
+
+export interface DeckManifest {
+  file_id: number;
+  name: string;
+  revision?: string | null;
+  policy: string;
+  reason: string;
+  total_slides: number;
+  stored_here_count: number;
+  shared_count: number;
+  original_bytes: number;
+  size_after_bytes: number;
+  slides: SlideManifestItem[];
+}
+
+export interface DeckAppearance {
+  slide_id: number;
+  file_id: number;
+  name: string;
+  title: string;
+  revision?: string | null;
+  page_no: number;
+  governed: boolean;
+  source_name: string;
+  object_hash?: string;
+}
+
+export interface VideoAppearance {
+  keyframe_id: number;
+  file_id: number;
+  video_name: string;
+  video_title: string;
+  source_name: string;
+  timestamp: number;
+  timestamp_str: string;
+  end: number;
+  object_hash?: string;
+}
+
+export interface SlideAppearances {
+  slide_id: number;
+  page_no: number;
+  title: string;
+  object_hash?: string;
+  content_id: string;
+  decks: DeckAppearance[];
+  videos: VideoAppearance[];
 }
 
 export interface IntegrityCheck {
@@ -183,6 +245,12 @@ export interface FileIntegrity {
   visual_match_pct?: number | null;
   ocr_accuracy_pct?: number | null;
   ocr_slides_checked?: number;
+  lowest_slides?: Array<{
+    page_no: number;
+    score_pct: number;
+    official_snippet: string;
+    ocr_snippet: string;
+  }>;
   moving_video_pct?: number | null;
   moving_moments?: number;
   ignored_words?: string[];
@@ -216,6 +284,7 @@ export interface Keyframe {
   is_slide: number;
   description: string;
   image_key?: string;
+  slide_id?: number | null;
   matched_slide_id?: number | null;
   linked_slide?: any;
 }

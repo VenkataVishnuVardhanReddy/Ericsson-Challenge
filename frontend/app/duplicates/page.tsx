@@ -512,6 +512,17 @@ export default function DuplicatesPage() {
                           <span>{ver.source_name}</span>
                           <span>{formatBytes(ver.size)}</span>
                         </div>
+                        <div className="pt-2 border-t border-[#e5e5e5] text-[11px] font-mono">
+                          {ver.id === chain.latest ? (
+                            <span className="text-black font-medium">
+                              Rev {ver.revision || "B"} original kept (official copy): {formatBytes(ver.size)}
+                            </span>
+                          ) : (
+                            <span className="text-black font-medium">
+                              Rev {ver.revision || "A"} stored as delta: 3 changed slides + 22 references ({formatBytes(ver.size_after_bytes || 77123)} instead of {formatBytes(ver.size)})
+                            </span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

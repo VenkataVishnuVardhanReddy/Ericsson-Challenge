@@ -140,9 +140,8 @@ DOC_NO_RE = re.compile(
     r"|\b[A-Z]{2,4}-\d{2}:\d{4,6}(?:\s?U[a-z]{2})?\b"
 )
 REV_RE = re.compile(
-    r"(?:\b(?:Rev(?:ision)?\.?\s*[:\-_]?\s*)|[_\-]Rev\s*)([A-Z]{1,2}\d{0,2}|R\d[A-Z]|PA\d{1,2})\b"
-    r"|\bU[a-z]{2}\s*\|\s*([A-Z]{1,2}\d{0,2}|R\d[A-Z]|PA\d{1,2})\s*\|",
-    re.I,
+    r"(?:\bRev(?:ision)?\.?[\s:\-_.]+|[_\-]Rev[\s:\-_.]*)([A-Z]{1,2}\d{0,2}|R\d[A-Z]|PA\d{1,2})\b"
+    r"|\bUen\s*\|\s*([A-Z]{1,2}\d{0,2}|R\d[A-Z]|PA\d{1,2})\s*\|"
 )
 
 

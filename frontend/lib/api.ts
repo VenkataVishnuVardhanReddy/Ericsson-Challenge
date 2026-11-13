@@ -6,6 +6,8 @@ import {
   RecordingDetail,
   DocumentDetail,
   DuplicatesData,
+  DeckManifest,
+  SlideAppearances,
   OffboardReport,
   SearchResult,
   PipelineInfo,
@@ -59,6 +61,10 @@ export const api = {
   getRecording: (id: number) => fetchJson<RecordingDetail>(`/api/recordings/${id}`),
 
   getDocument: (id: number) => fetchJson<DocumentDetail>(`/api/documents/${id}`),
+
+  getDeckManifest: (id: number) => fetchJson<DeckManifest>(`/api/files/${id}/manifest`),
+
+  getSlideAppearances: (id: number) => fetchJson<SlideAppearances>(`/api/slides/${id}/appearances`),
 
   getDuplicates: () => fetchJson<DuplicatesData>("/api/duplicates"),
 

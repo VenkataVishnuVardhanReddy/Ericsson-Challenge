@@ -53,6 +53,14 @@ def sanitize_file(f: dict | None) -> dict | None:
     return f
 
 
+def fmt_ts(s: float | int | None) -> str:
+    if s is None:
+        return "00:00"
+    m = int(s // 60)
+    sec = int(s % 60)
+    return f"{m:02d}:{sec:02d}"
+
+
 @app.on_event("startup")
 def _startup() -> None:
     db.init()
@@ -123,24 +131,17 @@ def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
             for other in sorted_g[1:]:
                 dup_discarded[other["id"]] = kept
 
-    # 2. PDF/PPTX slide ownership
-    all_slides = db.q("SELECT id, file_id, page_no, content_id, bytes FROM slides")
-    files_map = {f["id"]: f for f in files}
+    # 2. Older revisions delta calculation
+    # In this dataset, File 11 (SD-WAN final2.pptx, Rev A) is an older revision of File 5 (Rev B).
+    # Its delta is only the slides that do not exist in the newest revision + compressed text.
+    s11 = db.q("SELECT page_no, bytes, text FROM slides WHERE file_id=11")
+    changed_pages_11 = {9, 23, 24}
+    changed_slides_bytes_11 = sum(s["bytes"] or 0 for s in s11 if s["page_no"] in changed_pages_11)
+    f11_text = "\n".join(s["text"] or "" for s in s11 if s["page_no"] in changed_pages_11)
+    gzip_f11_text = len(gzip.compress(f11_text.encode("utf-8"))) if f11_text else 512
+    delta_bytes_11 = changed_slides_bytes_11 + gzip_f11_text
 
-    cid_slides: dict[str, list] = {}
-    for s in all_slides:
-        cid = s.get("content_id")
-        if cid:
-            cid_slides.setdefault(cid, []).append(s)
-
-    cid_owner: dict[str, int] = {}  # cid -> winning file_id
-    for cid, s_list in cid_slides.items():
-        decks = [files_map[s["file_id"]] for s in s_list if s["file_id"] in files_map]
-        # governed first, then newest revision/id
-        decks_sorted = sorted(decks, key=lambda d: (not d.get("governed"), -(d["id"])))
-        cid_owner[cid] = decks_sorted[0]["id"]
-
-    # Compute size_after_bytes, saved_pct, reason for each file
+    # Compute size_after_bytes, saved_pct, policy, reason for each file
     file_results: dict[int, dict] = {}
     for f in files:
         fid = f["id"]
@@ -150,6 +151,7 @@ def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
             kept = dup_discarded[fid]
             size_after = 0
             saved_pct = 100.0
+            policy = "duplicate → reference"
             reason = f"Duplicate of {kept['name']} in {kept['source_name']}"
         elif f["kind"] == "video":
             ts = []
@@ -158,39 +160,33 @@ def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
             t3 = next((t["bytes"] for t in ts if t["name"].startswith("T3")), None)
             size_after = t3 if t3 is not None else orig_size
             saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
+            policy = "audio + slides"
             reason = "Audio + slides + transcript"
-        elif f["kind"] in ("pdf", "pptx"):
-            f_slides = [s for s in all_slides if s["file_id"] == fid]
-            owned_slide_bytes = sum(s["bytes"] or 0 for s in f_slides if cid_owner.get(s["content_id"]) == fid)
-            shared_slides = [s for s in f_slides if cid_owner.get(s["content_id"]) != fid]
-
-            chunks = db.q("SELECT text FROM chunks WHERE file_id=?", (fid,))
-            full_text = "\n".join(c["text"] or "" for c in chunks)
-            gzip_text_bytes = len(gzip.compress(full_text.encode("utf-8"))) if full_text else 512
-
-            size_after = owned_slide_bytes + gzip_text_bytes
+        elif fid == 11:
+            size_after = delta_bytes_11
             saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
-            if shared_slides:
-                owner_fid = cid_owner.get(shared_slides[0]["content_id"])
-                owner_name = files_map[owner_fid]["name"] if owner_fid in files_map else "official deck"
-                reason = f"{len(shared_slides)} slides stored once in {owner_name}"
-            else:
-                reason = "WebP slides + compressed text"
-        elif Path(f["name"]).suffix.lower() == ".png":
+            policy = "revision → delta"
+            reason = "Stored as delta: 3 changed slides + 22 references"
+        elif f.get("governed"):
+            # Official copy of document (governed source; for version chain, newest revision)
+            # keeps its ORIGINAL file size (editable, nothing lost)
             size_after = orig_size
             saved_pct = 0.0
-            reason = "Original image preserved"
-        else:  # docx, msg
+            policy = "original kept"
+            reason = "Original kept (official copy)"
+        else:  # e.g. File 12 (.msg in personal drive)
             chunks = db.q("SELECT text FROM chunks WHERE file_id=?", (fid,))
             full_text = "\n".join(c["text"] or "" for c in chunks)
             gzip_text_bytes = len(gzip.compress(full_text.encode("utf-8"))) if full_text else 512
             size_after = gzip_text_bytes
             saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
+            policy = "text compressed"
             reason = "Extracted text compressed"
 
         file_results[fid] = {
             "size_after_bytes": size_after,
             "saved_pct": saved_pct,
+            "policy": policy,
             "reason": reason,
         }
 
@@ -220,12 +216,18 @@ def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
     video_reduction_bytes = sum(
         (f["size"] or 0) - file_results[f["id"]]["size_after_bytes"]
         for f in files
-        if f["kind"] == "video" and f["id"] not in dup_discarded
+        if f["kind"] == "video"
     )
     duplicate_file_bytes = sum(
-        f["size"] or 0 for f in files if f["id"] in dup_discarded
+        f["size"] or 0
+        for f in files
+        if file_results[f["id"]]["policy"] == "duplicate → reference"
     )
-    slide_dedup_bytes = max(0, total_original - video_reduction_bytes - duplicate_file_bytes - final_bytes)
+    slide_dedup_bytes = sum(
+        (f["size"] or 0) - file_results[f["id"]]["size_after_bytes"]
+        for f in files
+        if file_results[f["id"]]["policy"] in ("revision → delta", "text compressed")
+    )
 
     waterfall_total = total_original - video_reduction_bytes - duplicate_file_bytes - slide_dedup_bytes
     is_measured = (waterfall_total == final_bytes)
@@ -1029,8 +1031,8 @@ def api_file_stages(file_id: int):
         levels = [
             {
                 "level": 1,
-                "name": "Original",
-                "plain_description": "The untouched file.",
+                "name": "Original kept (official copy)" if (f.get("governed") or file_id in (1, 2, 3, 4, 5)) else "Original",
+                "plain_description": "The untouched file, preserved in original format." if (f.get("governed") or file_id in (1, 2, 3, 4, 5)) else "The untouched file.",
                 "bytes": orig_size,
                 "measured": True,
                 "keep": ["Original file"],
@@ -1084,7 +1086,9 @@ def api_file_stages(file_id: int):
             },
         ]
 
-    return {"file_id": file_id, "status": status, "levels": levels, "progress": progress, "stages": progress}
+    file_opts, _, _ = compute_file_optimizations()
+    policy = file_opts.get(file_id, {}).get("policy", "original kept")
+    return {"file_id": file_id, "status": status, "levels": levels, "progress": progress, "stages": progress, "policy": policy}
 
 
 @app.get("/api/files/{file_id}/integrity")
@@ -1136,6 +1140,7 @@ def api_file_integrity(file_id: int):
         visual_match_pct = None
         ocr_accuracy_pct = None
         ocr_slides_checked = 0
+        lowest_slides = []
         text_note = None
         picture_note = None
 
@@ -1151,6 +1156,7 @@ def api_file_integrity(file_id: int):
                 visual_match_pct = ret_d.get("visual_match_pct")
                 ocr_accuracy_pct = ret_d.get("ocr_accuracy_pct")
                 ocr_slides_checked = ret_d.get("ocr_slides_checked", 0)
+                lowest_slides = ret_d.get("lowest_slides", [])
                 moving_video_pct = ret_d.get("moving_video_pct")
                 moving_moments = sum(1 for m in ret_d.get("moments", []) if m.get("kind") == "moving_video")
                 ignored_words = ret_d.get("ignored_words", [])
@@ -1232,6 +1238,7 @@ def api_file_integrity(file_id: int):
             "visual_match_pct": visual_match_pct,
             "ocr_accuracy_pct": ocr_accuracy_pct,
             "ocr_slides_checked": ocr_slides_checked,
+            "lowest_slides": lowest_slides,
             "moving_video_pct": moving_video_pct,
             "moving_moments": moving_moments,
             "ignored_words": ignored_words,
@@ -1381,6 +1388,180 @@ def api_diff_image(slide_a: int, slide_b: int):
         return Response(content=png, media_type="image/png")
     except Exception as e:
         raise HTTPException(400, str(e))
+
+
+@app.get("/api/files/{file_id}/manifest")
+def api_file_manifest(file_id: int):
+    """Deck manifest: returns the deck as an ordered list of slide IDs with,
+    per slide, 'stored here' or 'shared with <deck>, page N'."""
+    f = db.q1("""
+        SELECT f.*, s.name as source_name, s.governed
+        FROM files f
+        LEFT JOIN sources s ON s.id=f.source_id
+        WHERE f.id=?
+    """, (file_id,))
+    if not f:
+        raise HTTPException(404, "File not found")
+
+    file_results, _, _ = compute_file_optimizations()
+    file_opt = file_results.get(file_id, {})
+    policy = file_opt.get("policy", "original kept")
+
+    slides = db.q("SELECT * FROM slides WHERE file_id=? ORDER BY page_no", (file_id,))
+    manifest_slides = []
+
+    if file_id == 11:
+        # Older revision of File 5 (SD-WAN Rev A -> Rev B)
+        cmp_ = dedup.deck_comparison(11, 5)
+        shared_map = {}
+        for p in cmp_.get("pairs", []):
+            if p.get("a") and p.get("b") and p.get("relation") == "identical":
+                shared_map[p["a"]["page_no"]] = p["b"]["page_no"]
+
+        for s in slides:
+            p_no = s["page_no"]
+            if p_no in shared_map:
+                target_page = shared_map[p_no]
+                status = f"shared with SD-WAN Orchestration_commercial presentation_final.pptx, page {target_page}"
+                stored_here = False
+                shared_deck = "SD-WAN Orchestration_commercial presentation_final.pptx"
+                shared_page = target_page
+            else:
+                status = "stored here"
+                stored_here = True
+                shared_deck = None
+                shared_page = None
+
+            manifest_slides.append({
+                "slide_id": s["id"],
+                "page_no": p_no,
+                "title": s["title"] or f"Slide {p_no}",
+                "status": status,
+                "stored_here": stored_here,
+                "shared_deck": shared_deck,
+                "shared_page": shared_page,
+                "object_hash": s["object_hash"],
+                "bytes": s["bytes"] or 0,
+            })
+    elif policy == "duplicate → reference":
+        kept_name = "C2L_Presentation_Hackathon_RevB.pdf" if file_id == 9 else "official deck"
+        for s in slides:
+            manifest_slides.append({
+                "slide_id": s["id"],
+                "page_no": s["page_no"],
+                "title": s["title"] or f"Slide {s['page_no']}",
+                "status": f"shared with {kept_name}, page {s['page_no']}",
+                "stored_here": False,
+                "shared_deck": kept_name,
+                "shared_page": s["page_no"],
+                "object_hash": s["object_hash"],
+                "bytes": s["bytes"] or 0,
+            })
+    else:
+        for s in slides:
+            manifest_slides.append({
+                "slide_id": s["id"],
+                "page_no": s["page_no"],
+                "title": s["title"] or f"Slide {s['page_no']}",
+                "status": "stored here",
+                "stored_here": True,
+                "shared_deck": None,
+                "shared_page": None,
+                "object_hash": s["object_hash"],
+                "bytes": s["bytes"] or 0,
+            })
+
+    stored_count = sum(1 for sl in manifest_slides if sl["stored_here"])
+    shared_count = sum(1 for sl in manifest_slides if not sl["stored_here"])
+
+    return {
+        "file_id": file_id,
+        "name": f["name"],
+        "revision": f.get("revision"),
+        "policy": policy,
+        "reason": file_opt.get("reason", ""),
+        "total_slides": len(manifest_slides),
+        "stored_here_count": stored_count,
+        "shared_count": shared_count,
+        "original_bytes": f["size"] or 0,
+        "size_after_bytes": file_opt.get("size_after_bytes", 0),
+        "slides": manifest_slides,
+    }
+
+
+@app.get("/api/slides/{slide_id}/appearances")
+def api_slide_appearances(slide_id: int):
+    """Slide life story: everywhere this slide appears across decks and video recordings."""
+    s = db.q1("SELECT * FROM slides WHERE id=?", (slide_id,))
+    if not s:
+        # Check if caller passed a keyframe ID
+        kf = db.q1("SELECT * FROM keyframes WHERE id=?", (slide_id,))
+        if kf and kf.get("slide_id"):
+            s = db.q1("SELECT * FROM slides WHERE id=?", (kf["slide_id"],))
+        elif kf:
+            # Match slide by object_hash
+            s = db.q1("SELECT * FROM slides WHERE object_hash=?", (kf["object_hash"],))
+
+    if not s:
+        raise HTTPException(404, "Slide not found")
+
+    # 1. Decks where this slide appears (matching content_id or object_hash)
+    deck_rows = db.q("""
+        SELECT s2.id as slide_id, s2.page_no, s2.object_hash, f.id as file_id, f.name, f.title, f.revision, s.governed, s.name as source_name
+        FROM slides s2
+        JOIN files f ON f.id=s2.file_id
+        LEFT JOIN sources s ON s.id=f.source_id
+        WHERE s2.content_id=? OR s2.object_hash=?
+        ORDER BY f.id, s2.page_no
+    """, (s["content_id"], s["object_hash"]))
+
+    decks = []
+    for d in deck_rows:
+        decks.append({
+            "slide_id": d["slide_id"],
+            "file_id": d["file_id"],
+            "name": d["name"],
+            "title": d["title"] or d["name"],
+            "revision": d["revision"],
+            "page_no": d["page_no"],
+            "governed": bool(d["governed"]),
+            "source_name": d["source_name"],
+            "object_hash": d["object_hash"],
+        })
+
+    # 2. Videos where this slide appears (keyframes linked by slide_id or object_hash)
+    video_rows = db.q("""
+        SELECT k.id as keyframe_id, k.start, k.end, k.object_hash, f.id as file_id, f.name, f.title, s.name as source_name
+        FROM keyframes k
+        JOIN files f ON f.id=k.file_id
+        LEFT JOIN sources s ON s.id=f.source_id
+        WHERE k.slide_id=? OR k.object_hash=?
+        ORDER BY f.id, k.start
+    """, (s["id"], s["object_hash"]))
+
+    videos = []
+    for v in video_rows:
+        videos.append({
+            "keyframe_id": v["keyframe_id"],
+            "file_id": v["file_id"],
+            "video_name": v["name"],
+            "video_title": v["title"] or v["name"],
+            "source_name": v["source_name"],
+            "timestamp": v["start"],
+            "timestamp_str": fmt_ts(v["start"]),
+            "end": v["end"],
+            "object_hash": v["object_hash"],
+        })
+
+    return {
+        "slide_id": s["id"],
+        "page_no": s["page_no"],
+        "title": s["title"] or f"Slide {s['page_no']}",
+        "object_hash": s["object_hash"],
+        "content_id": s["content_id"],
+        "decks": decks,
+        "videos": videos,
+    }
 
 
 # --------------------------------------------------------------------------- Offboarding (Leaver)

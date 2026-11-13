@@ -53,14 +53,14 @@ export default function StagesTimeline({ fileId, initialStatus }: Props) {
         <span className="text-gray-600">
           {doneCount}/{totalStages} STAGES
         </span>
-        <span className={pct === 100 ? "text-green-600 font-bold" : "text-gray-500"}>{pct}%</span>
+        <span className={pct === 100 ? "text-black font-bold" : "text-gray-500"}>{pct}%</span>
       </div>
       <div className="flex items-center space-x-0.5 w-full bg-gray-100 h-1.5 rounded-none overflow-hidden">
         {data.stages.map((stage, idx) => {
           let bg = "bg-gray-200";
           if (stage.status === "done") bg = "bg-black";
-          else if (stage.status === "running") bg = "bg-amber-600 animate-pulse";
-          else if (stage.status === "error") bg = "bg-red-600";
+          else if (stage.status === "running") bg = "bg-neutral-500 animate-pulse";
+          else if (stage.status === "error") bg = "bg-neutral-800";
           return (
             <div
               key={idx}

@@ -17,6 +17,11 @@ import sys
 from difflib import SequenceMatcher
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 import cv2
 import numpy as np
 from PIL import Image
@@ -196,30 +201,96 @@ def recompute_video(file_id: int):
     for k in kfs:
         k["intervals_list"] = json.loads(k["intervals"] or "[]")
 
+    # Load deck text and file meta
+    slide_rows = {s["id"]: s for s in db.q("SELECT * FROM slides")}
     slide_text = {s["id"]: s["text"] for s in db.q("SELECT id, text FROM slides")}
     slide_file = {s["id"]: s["file_id"] for s in db.q("SELECT id, file_id FROM slides")}
-    files_by_id = {f_row["id"]: f_row for f_row in db.q("SELECT id, name, title FROM files")}
+    files_by_id = {f_row["id"]: f_row for f_row in db.q("SELECT id, name, title, meta FROM files")}
     segs = db.q("SELECT * FROM segments WHERE file_id=? ORDER BY start", (file_id,))
 
-    # Measure OCR accuracy on keyframes linked to official decks
+    # Measure OCR accuracy on keyframes linked to official decks:
+    # Word recall of official slide words (>= 3 chars) in kept picture's OCR text.
+    # Visible text only: remove "[Speaker notes]" and deck boilerplate lines.
     ocr_scores = []
     for k in kfs:
-        if k.get("slide_id") and k.get("ocr_text"):
-            sid = k["slide_id"]
-            off_text = slide_text.get(sid, "")
-            if off_text and len(off_text.strip()) > 10:
-                k_clean = re.sub(r"[^a-z0-9]", "", (k["ocr_text"] or "").lower())
-                off_clean = re.sub(r"[^a-z0-9]", "", off_text.lower())
-                if k_clean and off_clean:
-                    ratio = SequenceMatcher(None, k_clean, off_clean).ratio()
-                    ocr_scores.append(ratio)
+        sid = k.get("slide_id")
+        if not sid or sid not in slide_rows:
+            continue
+        s_row = slide_rows[sid]
+        f_row = files_by_id.get(s_row["file_id"])
+        meta = json.loads(f_row.get("meta") or "{}") if (f_row and isinstance(f_row.get("meta"), str)) else ((f_row.get("meta") or {}) if f_row else {})
+        bp_list = meta.get("boilerplate") or []
 
-    ocr_accuracy_pct = round(sum(ocr_scores) / len(ocr_scores), 3) if ocr_scores else None
-    ocr_slides_checked = len(ocr_scores)
+        off_text = s_row.get("text") or ""
+        if "[Speaker notes]" in off_text:
+            off_text = off_text.split("[Speaker notes]")[0]
+        for bp in bp_list:
+            if bp and bp.strip():
+                off_text = off_text.replace(bp, "")
+
+        off_words = [w for w in re.findall(r"[a-z0-9]+", off_text.lower()) if len(w) >= 3]
+        if not off_words:
+            continue
+
+        ocr_txt = (k.get("ocr_text") or "").lower()
+        ocr_compact = re.sub(r"[^a-z0-9]", "", ocr_txt)
+        ocr_words = [w for w in re.findall(r"[a-z0-9]+", ocr_txt) if len(w) >= 3]
+        ocr_words_set = set(ocr_words)
+
+        found = 0
+        for w in off_words:
+            if w in ocr_words_set or w in ocr_compact:
+                found += 1
+                continue
+            w_len = len(w)
+            matched = False
+            for ow in ocr_words:
+                if abs(len(ow) - w_len) <= 2 and SequenceMatcher(None, w, ow, autojunk=False).ratio() >= 0.90:
+                    matched = True
+                    break
+            if not matched and w_len >= 5 and len(ocr_compact) >= w_len:
+                for j in range(len(ocr_compact) - w_len + 1):
+                    sub = ocr_compact[j:j+w_len]
+                    if SequenceMatcher(None, w, sub, autojunk=False).ratio() >= 0.90:
+                        matched = True
+                        break
+            if matched:
+                found += 1
+
+        recall = found / len(off_words)
+        ocr_scores.append({
+            "keyframe_id": k["id"],
+            "slide_id": sid,
+            "page_no": s_row["page_no"],
+            "recall": recall,
+            "found": found,
+            "total": len(off_words),
+            "official_snippet": " ".join(off_text.split())[:120],
+            "ocr_snippet": " ".join((k.get("ocr_text") or "").split())[:120],
+        })
+
+    if ocr_scores:
+        ocr_accuracy_pct = round(sum(s["recall"] for s in ocr_scores) / len(ocr_scores), 3)
+        ocr_slides_checked = len(ocr_scores)
+        sorted_by_recall = sorted(ocr_scores, key=lambda x: x["recall"])
+        lowest_slides = [
+            {
+                "page_no": s["page_no"],
+                "score_pct": round(s["recall"] * 100, 1),
+                "official_snippet": s["official_snippet"],
+                "ocr_snippet": s["ocr_snippet"],
+            }
+            for s in sorted_by_recall[:3]
+        ]
+    else:
+        ocr_accuracy_pct = None
+        ocr_slides_checked = 0
+        lowest_slides = []
 
     moments_res = []
     text_scores = []
     picture_scores = []
+    visual_matches = []
     moving_count = 0
 
     for idx, (t, im1, im2) in enumerate(moments_raw):
@@ -284,6 +355,23 @@ def recompute_video(file_id: int):
         orig_b64 = img_to_b64(im1, max_w=320)
         kept_b64 = ""
 
+        # Visual match across EVERY moment: pHash distance <= 12 with activity mask
+        dist_phash = 64
+        if matched_kf and matched_kf.get("object_hash"):
+            im_path = object_path(matched_kf["object_hash"])
+            if im_path.exists():
+                try:
+                    im_kept = Image.open(im_path)
+                    if not kept_b64:
+                        kept_b64 = img_to_b64(im_kept, max_w=320)
+                    g_kept = np.asarray(im_kept.resize((320, h320), Image.BILINEAR).convert("L"), dtype=np.uint8)
+                    ph1 = phash_img(Image.fromarray(g1_m))
+                    ph2 = phash_img(Image.fromarray((g_kept * mask).astype(np.uint8)))
+                    dist_phash = bin(int(ph1, 16) ^ int(ph2, 16)).count("1")
+                except Exception:
+                    dist_phash = 64
+        visual_matches.append(dist_phash <= 12)
+
         if kind == "moving_video":
             moving_count += 1
             hamming = dist_motion
@@ -294,7 +382,7 @@ def recompute_video(file_id: int):
                 text_scores.append(0.0)
             else:
                 im_path = object_path(matched_kf["object_hash"])
-                if im_path.exists():
+                if im_path.exists() and not kept_b64:
                     try:
                         kept_b64 = img_to_b64(Image.open(im_path), max_w=320)
                     except Exception:
@@ -316,7 +404,7 @@ def recompute_video(file_id: int):
                             sub = kept_string[j:j + w_len]
                             mismatches = sum(1 for c1, c2 in zip(w, sub) if c1 != c2)
                             if mismatches <= max_diff:
-                                if SequenceMatcher(None, w, sub).ratio() >= 0.90:
+                                if SequenceMatcher(None, w, sub, autojunk=False).ratio() >= 0.90:
                                     matched = True
                                     break
                         if matched:
@@ -335,29 +423,11 @@ def recompute_video(file_id: int):
                 score = (found_chars / original_count) if original_count > 0 else 1.0
                 text_scores.append(score)
         elif kind == "picture":
-            if not matched_kf or not matched_kf.get("object_hash"):
-                hamming = 64
-                picture_scores.append(0.0)
+            hamming = dist_phash
+            if dist_phash <= 12:
+                picture_scores.append(1.0)
             else:
-                im_path = object_path(matched_kf["object_hash"])
-                if im_path.exists():
-                    try:
-                        im_kept = Image.open(im_path)
-                        kept_b64 = img_to_b64(im_kept, max_w=320)
-                        g_kept = np.asarray(im_kept.resize((320, h320), Image.BILINEAR).convert("L"), dtype=np.uint8)
-                        ph1 = phash_img(Image.fromarray(g1_m))
-                        ph2 = phash_img(Image.fromarray((g_kept * mask).astype(np.uint8)))
-                        dist_phash = bin(int(ph1, 16) ^ int(ph2, 16)).count("1")
-                    except Exception:
-                        dist_phash = 64
-                else:
-                    dist_phash = 64
-
-                hamming = dist_phash
-                if dist_phash <= 12:
-                    picture_scores.append(1.0)
-                else:
-                    picture_scores.append(0.0)
+                picture_scores.append(0.0)
 
         moments_res.append({
             "t": round(t, 1),
@@ -368,6 +438,8 @@ def recompute_video(file_id: int):
             "found_words": found_words[:15],
             "missing_words": missing_words[:15],
             "hamming": hamming,
+            "visual_dist": dist_phash,
+            "visual_match": dist_phash <= 12,
             "kept_slide_object": kept_obj,
             "kept_time_range": kept_time_range,
             "linked_deck": linked_deck,
@@ -392,7 +464,7 @@ def recompute_video(file_id: int):
         pictures_kept_pct = round(sum(picture_scores) / len(picture_scores), 3)
         picture_note = None
 
-    visual_match_pct = pictures_kept_pct
+    visual_match_pct = round(sum(1 for v in visual_matches if v) / len(visual_matches), 3) if visual_matches else None
     moving_video_pct = round(moving_count / len(moments_res), 3) if moments_res else None
 
     # Database moments without bulky base64
@@ -410,6 +482,7 @@ def recompute_video(file_id: int):
     ret_orig["visual_match_pct"] = visual_match_pct
     ret_orig["ocr_accuracy_pct"] = ocr_accuracy_pct
     ret_orig["ocr_slides_checked"] = ocr_slides_checked
+    ret_orig["lowest_slides"] = lowest_slides
     ret_orig["moving_video_pct"] = moving_video_pct
     ret_orig["screen_text_retained"] = text_kept_pct if text_kept_pct is not None else pictures_kept_pct
     ret_orig["frames_checked"] = len(moments_res)
@@ -434,6 +507,7 @@ def recompute_video(file_id: int):
         "visual_match_pct": visual_match_pct,
         "ocr_accuracy_pct": ocr_accuracy_pct,
         "ocr_slides_checked": ocr_slides_checked,
+        "lowest_slides": lowest_slides,
         "moving_video_pct": moving_video_pct,
         "moving_moments": moving_count,
         "moments": moments_res,
@@ -526,8 +600,27 @@ def export_spot_check_html(all_reports: list[dict], out_path: Path):
 
         t_pct = f"{rep['text_kept_pct']*100:.1f}%" if rep["text_kept_pct"] is not None else (rep.get("text_note") or "—")
         p_pct = f"{rep['pictures_kept_pct']*100:.1f}%" if rep["pictures_kept_pct"] is not None else (rep.get("picture_note") or "—")
+        v_pct = f"{rep['visual_match_pct']*100:.1f}%" if rep.get("visual_match_pct") is not None else "—"
         m_pct = f"{rep['moving_video_pct']*100:.1f}%" if rep["moving_video_pct"] is not None else "—"
         ocr_pct = f"{rep['ocr_accuracy_pct']*100:.1f}% ({rep['ocr_slides_checked']} slides)" if rep["ocr_accuracy_pct"] is not None else "No linked official slides"
+
+        lowest_html = ""
+        if rep.get("lowest_slides"):
+            items = []
+            for ls in rep["lowest_slides"]:
+                items.append(
+                    f"<li><strong>Page {ls['page_no']} ({ls['score_pct']}% recall):</strong><br/>"
+                    f"<em>Official:</em> {html.escape(ls['official_snippet'])}<br/>"
+                    f"<em>OCR:</em> {html.escape(ls['ocr_snippet'])}</li>"
+                )
+            lowest_html = f"""
+            <div style="margin-top: 12px; padding: 12px; background: #f5f5f5; border-radius: 8px; font-size: 12px; border: 1px solid #e5e5e5;">
+              <strong style="color: #000;">Lowest scoring official slides (OCR recall against clean PDF text):</strong>
+              <ul style="margin: 6px 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 6px;">
+                {''.join(items)}
+              </ul>
+            </div>
+            """
 
         card = f"""
         <div class="video-section">
@@ -536,10 +629,11 @@ def export_spot_check_html(all_reports: list[dict], out_path: Path):
             <div class="video-stats">
               <span><strong>Duration:</strong> {fmt_ts(rep['duration'])}</span>
               <span><strong>Slide Text Kept:</strong> {t_pct}</span>
-              <span><strong>Visual Picture Match:</strong> {p_pct}</span>
+              <span><strong>Pictures Match (pixel comparison, no OCR):</strong> {v_pct}</span>
               <span><strong>Moving Video:</strong> {m_pct}</span>
-              <span><strong>OCR vs Official Deck:</strong> {ocr_pct}</span>
+              <span><strong>OCR Reads Official Slides:</strong> {ocr_pct}</span>
             </div>
+            {lowest_html}
           </div>
           <table class="moments-table">
             <thead>
@@ -784,13 +878,21 @@ def main():
         old_str = f"{rep['old_score']*100:.1f}%" if rep['old_score'] is not None else "None"
         t_str = f"{rep['text_kept_pct']*100:.1f}%" if rep['text_kept_pct'] is not None else (rep.get("text_note") or "N/A")
         p_str = f"{rep['pictures_kept_pct']*100:.1f}%" if rep['pictures_kept_pct'] is not None else (rep.get("picture_note") or "N/A")
+        v_str = f"{rep['visual_match_pct']*100:.1f}%" if rep.get('visual_match_pct') is not None else "N/A"
         m_str = f"{rep['moving_video_pct']*100:.1f}%" if rep['moving_video_pct'] is not None else "0.0%"
-        ocr_str = f"{rep['ocr_accuracy_pct']*100:.1f}%" if rep['ocr_accuracy_pct'] is not None else "N/A"
+        ocr_str = f"{rep['ocr_accuracy_pct']*100:.1f}% ({rep['ocr_slides_checked']} slides)" if rep['ocr_accuracy_pct'] is not None else "N/A"
         print(f"  Old Retention Score : {old_str}")
         print(f"  Slide Text Kept     : {t_str} ({rep['text_moments']} moments)")
+        print(f"  Pictures Match      : {v_str} (pixel comparison across all 20 moments)")
         print(f"  Pictures Kept       : {p_str} ({rep['picture_moments']} moments)")
         print(f"  Moving Video        : {m_str} ({rep['moving_moments']} moments)")
-        print(f"  OCR vs Official Deck: {ocr_str} ({rep['ocr_slides_checked']} slides)")
+        print(f"  OCR Reads Slides    : {ocr_str}")
+        if rep.get("lowest_slides"):
+            print("  Lowest 3 Slides OCR :")
+            for ls in rep["lowest_slides"]:
+                off_snip = ls['official_snippet'][:40].encode("ascii", "replace").decode("ascii")
+                ocr_snip = ls['ocr_snippet'][:40].encode("ascii", "replace").decode("ascii")
+                print(f"    Page {ls['page_no']} ({ls['score_pct']}% recall) - Off: {off_snip}... | OCR: {ocr_snip}...")
 
     out_html = ROOT / "recreated" / "spot_check.html"
     export_spot_check_html(all_reports, out_html)

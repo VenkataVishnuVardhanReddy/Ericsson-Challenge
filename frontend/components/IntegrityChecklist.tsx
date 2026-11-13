@@ -31,7 +31,7 @@ export default function IntegrityChecklist({ fileId }: Props) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#e5e5e5] gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-green-600 inline-block"></span>
+            <span className="w-2 h-2 rounded-full bg-black inline-block"></span>
             <h3 className="font-mono font-bold text-sm text-black uppercase tracking-wider">
               "Nothing Was Lost" Verification Protocol
             </h3>
@@ -44,7 +44,7 @@ export default function IntegrityChecklist({ fileId }: Props) {
         <div className="flex items-center space-x-4 font-mono text-right">
           <div>
             <div className="text-[10px] text-gray-500 uppercase">Information Retention</div>
-            <div className="text-xl font-bold text-green-600">{data.retention_score}%</div>
+            <div className="text-xl font-bold text-black">{data.retention_score}%</div>
           </div>
           <div className="border-l border-gray-200 pl-4">
             <div className="text-[10px] text-gray-500 uppercase">Compression Ratio</div>
@@ -58,7 +58,7 @@ export default function IntegrityChecklist({ fileId }: Props) {
         {data.checks.map((check, idx) => (
           <div key={idx} className="border border-[#e5e5e5] p-3 flex items-start space-x-3 bg-gray-50/50">
             <div className="mt-0.5">
-              <span className="inline-block px-1.5 py-0.5 border border-green-600 text-green-700 bg-green-50 text-[10px] font-mono font-bold">
+              <span className="inline-block px-1.5 py-0.5 border border-black text-black bg-white text-[10px] font-mono font-bold">
                 PASSED
               </span>
             </div>
