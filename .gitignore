@@ -1,0 +1,21 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Local data, models and generated output (large / machine-specific)
+data/
+scratch_tts/
+
+# Ericsson's sample material: not ours to publish, and videos exceed GitHub's 100 MB limit
+sample_data/ericsson_official/
+ericsson.pdf
+*.mp4
+*.msg
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

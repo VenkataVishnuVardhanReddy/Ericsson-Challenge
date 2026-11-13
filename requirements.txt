@@ -1,0 +1,22 @@
+# Web app
+fastapi
+uvicorn
+pydantic
+python-multipart
+
+# Video, images, documents
+numpy
+pillow
+opencv-python
+imagehash
+imageio-ffmpeg
+pymupdf
+python-pptx
+soundfile
+
+# AI models (all run offline on CPU)
+faster-whisper
+sherpa-onnx
+rapidocr-onnxruntime
+sentence-transformers
+
