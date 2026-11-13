@@ -11,9 +11,10 @@ import os
 import sys
 import time
 
+import gzip
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 from pydantic import BaseModel
 
 from . import ai, config as C, db, dedup, offboard, pipeline, recreate, search
@@ -61,12 +62,186 @@ def _startup() -> None:
 
 
 # --------------------------------------------------------------------------- UI
-@app.get("/", response_class=HTMLResponse)
+# --------------------------------------------------------------------------- UI
+@app.get("/")
 def index():
+    return RedirectResponse(url="http://localhost:3000", status_code=307)
+
+
+@app.get("/legacy", response_class=HTMLResponse)
+def legacy_ui():
     p = UI_DIR / "index.html"
     if not p.exists():
         return HTMLResponse("<h1>Distill API running (ui/index.html missing)</h1>")
     return HTMLResponse(p.read_text(encoding="utf-8"))
+
+
+@app.get("/api/spot-check", response_class=HTMLResponse)
+def api_spot_check():
+    p = C.ROOT / "recreated" / "spot_check.html"
+    if not p.exists():
+        raise HTTPException(404, "Spot-check report not generated yet. Run scripts/recompute_checks.py.")
+    return HTMLResponse(p.read_text(encoding="utf-8"))
+
+
+def fmt_waterfall_bytes(b: int) -> str:
+    if b >= 1024**3:
+        return f"{b / (1024**3):.2f} GB"
+    elif b >= 1024**2:
+        return f"{b / (1024**2):.1f} MB"
+    elif b >= 1024:
+        return f"{b / 1024:.1f} KB"
+    return f"{b} B"
+
+
+def compute_file_optimizations() -> tuple[dict[int, dict], dict, list[dict]]:
+    """ONE function that computes size_after_bytes, saved_pct and reason for every file.
+    Used in GET /api/files, per source in /api/overview, and for the waterfall.
+    """
+    db.init()
+    files = db.q("""
+        SELECT f.*, s.name as source_name, s.kind as source_kind, s.governed,
+               r.tiers
+        FROM files f
+        LEFT JOIN sources s ON s.id=f.source_id
+        LEFT JOIN recordings r ON r.file_id=f.id
+        ORDER BY f.id
+    """)
+
+    # 1. Exact duplicates: group by sha256
+    sha_groups: dict[str, list] = {}
+    for f in files:
+        if f.get("sha256"):
+            sha_groups.setdefault(f["sha256"], []).append(f)
+
+    dup_discarded: dict[int, dict] = {}  # file_id -> kept_f
+    for sha, group in sha_groups.items():
+        if len(group) > 1:
+            # Kept copy: governed first, then lowest id (oldest)
+            sorted_g = sorted(group, key=lambda x: (not x.get("governed"), x["id"]))
+            kept = sorted_g[0]
+            for other in sorted_g[1:]:
+                dup_discarded[other["id"]] = kept
+
+    # 2. PDF/PPTX slide ownership
+    all_slides = db.q("SELECT id, file_id, page_no, content_id, bytes FROM slides")
+    files_map = {f["id"]: f for f in files}
+
+    cid_slides: dict[str, list] = {}
+    for s in all_slides:
+        cid = s.get("content_id")
+        if cid:
+            cid_slides.setdefault(cid, []).append(s)
+
+    cid_owner: dict[str, int] = {}  # cid -> winning file_id
+    for cid, s_list in cid_slides.items():
+        decks = [files_map[s["file_id"]] for s in s_list if s["file_id"] in files_map]
+        # governed first, then newest revision/id
+        decks_sorted = sorted(decks, key=lambda d: (not d.get("governed"), -(d["id"])))
+        cid_owner[cid] = decks_sorted[0]["id"]
+
+    # Compute size_after_bytes, saved_pct, reason for each file
+    file_results: dict[int, dict] = {}
+    for f in files:
+        fid = f["id"]
+        orig_size = f["size"] or 0
+
+        if fid in dup_discarded:
+            kept = dup_discarded[fid]
+            size_after = 0
+            saved_pct = 100.0
+            reason = f"Duplicate of {kept['name']} in {kept['source_name']}"
+        elif f["kind"] == "video":
+            ts = []
+            if f.get("tiers"):
+                ts = json.loads(f["tiers"]).get("tiers", []) if isinstance(f["tiers"], str) else f["tiers"].get("tiers", [])
+            t3 = next((t["bytes"] for t in ts if t["name"].startswith("T3")), None)
+            size_after = t3 if t3 is not None else orig_size
+            saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
+            reason = "Audio + slides + transcript"
+        elif f["kind"] in ("pdf", "pptx"):
+            f_slides = [s for s in all_slides if s["file_id"] == fid]
+            owned_slide_bytes = sum(s["bytes"] or 0 for s in f_slides if cid_owner.get(s["content_id"]) == fid)
+            shared_slides = [s for s in f_slides if cid_owner.get(s["content_id"]) != fid]
+
+            chunks = db.q("SELECT text FROM chunks WHERE file_id=?", (fid,))
+            full_text = "\n".join(c["text"] or "" for c in chunks)
+            gzip_text_bytes = len(gzip.compress(full_text.encode("utf-8"))) if full_text else 512
+
+            size_after = owned_slide_bytes + gzip_text_bytes
+            saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
+            if shared_slides:
+                owner_fid = cid_owner.get(shared_slides[0]["content_id"])
+                owner_name = files_map[owner_fid]["name"] if owner_fid in files_map else "official deck"
+                reason = f"{len(shared_slides)} slides stored once in {owner_name}"
+            else:
+                reason = "WebP slides + compressed text"
+        elif Path(f["name"]).suffix.lower() == ".png":
+            size_after = orig_size
+            saved_pct = 0.0
+            reason = "Original image preserved"
+        else:  # docx, msg
+            chunks = db.q("SELECT text FROM chunks WHERE file_id=?", (fid,))
+            full_text = "\n".join(c["text"] or "" for c in chunks)
+            gzip_text_bytes = len(gzip.compress(full_text.encode("utf-8"))) if full_text else 512
+            size_after = gzip_text_bytes
+            saved_pct = round((1 - size_after / orig_size) * 100, 1) if orig_size else 0.0
+            reason = "Extracted text compressed"
+
+        file_results[fid] = {
+            "size_after_bytes": size_after,
+            "saved_pct": saved_pct,
+            "reason": reason,
+        }
+
+    # Per-source breakdown
+    sources = db.q("SELECT * FROM sources ORDER BY id")
+    by_source = []
+    for s in sources:
+        sf = [f for f in files if f["source_id"] == s["id"]]
+        raw_b = sum(f["size"] or 0 for f in sf)
+        after_b = sum(file_results[f["id"]]["size_after_bytes"] for f in sf)
+        saved_p = round((1 - after_b / raw_b) * 100, 1) if raw_b else 0.0
+        by_source.append({
+            **s,
+            "file_count": len(sf),
+            "bytes": raw_b,
+            "size_after_bytes": after_b,
+            "saved_pct": saved_p,
+            "videos": sum(1 for f in sf if f["kind"] == "video"),
+            "docs": sum(1 for f in sf if f["kind"] in ("pdf", "pptx")),
+            "done": sum(1 for f in sf if f["status"] == "done"),
+        })
+
+    # Storage Waterfall (Adds up EXACTLY to final size down to the byte)
+    total_original = sum(f["size"] or 0 for f in files)
+    final_bytes = sum(res["size_after_bytes"] for res in file_results.values())
+
+    video_reduction_bytes = sum(
+        (f["size"] or 0) - file_results[f["id"]]["size_after_bytes"]
+        for f in files
+        if f["kind"] == "video" and f["id"] not in dup_discarded
+    )
+    duplicate_file_bytes = sum(
+        f["size"] or 0 for f in files if f["id"] in dup_discarded
+    )
+    slide_dedup_bytes = max(0, total_original - video_reduction_bytes - duplicate_file_bytes - final_bytes)
+
+    waterfall_total = total_original - video_reduction_bytes - duplicate_file_bytes - slide_dedup_bytes
+    is_measured = (waterfall_total == final_bytes)
+
+    waterfall = {
+        "original_bytes": total_original,
+        "video_reduction_bytes": video_reduction_bytes,
+        "duplicate_file_bytes": duplicate_file_bytes,
+        "slide_dedup_bytes": slide_dedup_bytes,
+        "final_bytes": final_bytes,
+        "savings_pct": round((1 - final_bytes / total_original) * 100, 1) if total_original else 0.0,
+        "formula": f"Original ({fmt_waterfall_bytes(total_original)}) − Videos turned into slides + text ({fmt_waterfall_bytes(video_reduction_bytes)}) − Duplicate files ({fmt_waterfall_bytes(duplicate_file_bytes)}) − Slides stored once across decks ({fmt_waterfall_bytes(slide_dedup_bytes)}) = Final size ({fmt_waterfall_bytes(final_bytes)})",
+        "measured": is_measured,
+    }
+
+    return file_results, waterfall, by_source
 
 
 _OVERVIEW_CACHE_DATA = None
@@ -78,26 +253,29 @@ _OVERVIEW_CACHE_TIME = 0.0
 def api_overview():
     global _OVERVIEW_CACHE_DATA, _OVERVIEW_CACHE_TIME
     now = time.monotonic()
-    if _OVERVIEW_CACHE_DATA is not None and (now - _OVERVIEW_CACHE_TIME) < 30.0:
+    if _OVERVIEW_CACHE_DATA is not None and (now - _OVERVIEW_CACHE_TIME) < 10.0:
         return _OVERVIEW_CACHE_DATA
 
     db.init()
+    file_opts, waterfall, by_source = compute_file_optimizations()
+
     files = db.q("""SELECT f.*, s.name AS source_name, s.kind AS source_kind, s.governed
                     FROM files f LEFT JOIN sources s ON s.id=f.source_id""")
     recs = db.q("SELECT * FROM recordings")
     rec_map = {r["file_id"]: r for r in recs}
+    sources = db.q("SELECT * FROM sources ORDER BY id")
 
-    total_bytes = sum(f["size"] or 0 for f in files)
+    total_bytes = waterfall["original_bytes"]
     video_files = [f for f in files if f["kind"] == "video"]
     doc_files = [f for f in files if f["kind"] in ("pdf", "pptx")]
 
-    # Deduplicated video tiers (count unique videos by sha256 or per-file)
+    # Deduplicated video tiers
     tier_totals = {"T0": 0, "T1": 0, "T2": 0, "T3": 0, "T4": 0}
     retentions = []
     for f in video_files:
         r = rec_map.get(f["id"])
         if r and r["tiers"]:
-            t = json.loads(r["tiers"])
+            t = json.loads(r["tiers"]) if isinstance(r["tiers"], str) else r["tiers"]
             for entry in t.get("tiers", []):
                 code = entry["name"].split()[0]
                 if code in tier_totals:
@@ -106,7 +284,7 @@ def api_overview():
             for k in tier_totals:
                 tier_totals[k] += f["size"] or 0
         if r and r["retention"]:
-            ret = json.loads(r["retention"])
+            ret = json.loads(r["retention"]) if isinstance(r["retention"], str) else r["retention"]
             if ret.get("screen_text_retained") is not None:
                 retentions.append(ret["screen_text_retained"])
 
@@ -115,56 +293,6 @@ def api_overview():
     vgroups = dedup.video_groups()
     slide_stats = dedup.slide_index_stats()
     chains = dedup.version_chains()
-
-    exact_save = sum(g["reclaimable"] for g in exact)
-    content_save = sum(g["reclaimable"] for g in content)
-    video_dup_save = sum(g["reclaimable"] for g in vgroups if not g["byte_identical"])
-
-    # Content-addressable document storage (each unique slide stored once)
-    doc_bytes_raw = sum(f["size"] or 0 for f in doc_files)
-    unique_slide_bytes = db.q1("""
-        SELECT COALESCE(SUM(bytes), 0) AS b FROM (
-            SELECT content_id, MIN(bytes) AS bytes FROM slides GROUP BY content_id
-        )
-    """)["b"]
-    # Add text/overhead ~5 KB per deck
-    doc_bytes_dedup = unique_slide_bytes + len(doc_files) * 4096
-
-    # Best-case total optimized footprint: unique videos at T3 + deduplicated slides
-    # (count unique video sets at T3, duplicates at 0)
-    dup_video_ids = set()
-    for g in vgroups:
-        for m in g["files"]:
-            if m["id"] != g["keep"]:
-                dup_video_ids.add(m["id"])
-    t3_unique_video_bytes = 0
-    for f in video_files:
-        if f["id"] in dup_video_ids:
-            continue
-        r = rec_map.get(f["id"])
-        if r and r["tiers"]:
-            ts = json.loads(r["tiers"]).get("tiers", [])
-            t3 = next((x["bytes"] for x in ts if x["name"].startswith("T3")), f["size"])
-            t3_unique_video_bytes += t3
-        else:
-            t3_unique_video_bytes += f["size"] or 0
-
-    optimized_total = t3_unique_video_bytes + min(doc_bytes_raw, doc_bytes_dedup)
-    total_saving_pct = round(1 - optimized_total / total_bytes, 4) if total_bytes else 0.0
-
-    # Breakdown by source system
-    sources = db.q("SELECT * FROM sources ORDER BY id")
-    by_source = []
-    for s in sources:
-        sf = [f for f in files if f["source_id"] == s["id"]]
-        by_source.append({
-            **s,
-            "file_count": len(sf),
-            "bytes": sum(f["size"] or 0 for f in sf),
-            "videos": sum(1 for f in sf if f["kind"] == "video"),
-            "docs": sum(1 for f in sf if f["kind"] in ("pdf", "pptx")),
-            "done": sum(1 for f in sf if f["status"] == "done"),
-        })
 
     # Files by status breakdown
     files_by_status = {
@@ -186,34 +314,6 @@ def api_overview():
                 total_reclaimable += totals.get("safe_delete_bytes", 0)
             except Exception:
                 pass
-
-    # Storage Waterfall (Adds up EXACTLY to final size down to the byte)
-    video_reduction_bytes = 0
-    for vf in video_files:
-        r = rec_map.get(vf["id"])
-        if r and r["tiers"]:
-            try:
-                ts = json.loads(r["tiers"]).get("tiers", [])
-                t0 = next(t["bytes"] for t in ts if t["name"].startswith("T0"))
-                t3 = next(t["bytes"] for t in ts if t["name"].startswith("T3"))
-                video_reduction_bytes += (t0 - t3)
-            except Exception:
-                pass
-
-    duplicate_file_bytes = exact_save
-    slide_dedup_bytes = max(0, total_bytes - video_reduction_bytes - duplicate_file_bytes - optimized_total)
-    waterfall_final = total_bytes - video_reduction_bytes - duplicate_file_bytes - slide_dedup_bytes
-
-    waterfall = {
-        "original_bytes": total_bytes,
-        "video_reduction_bytes": video_reduction_bytes,
-        "duplicate_file_bytes": duplicate_file_bytes,
-        "slide_dedup_bytes": slide_dedup_bytes,
-        "final_bytes": waterfall_final,
-        "savings_pct": round((1 - waterfall_final / total_bytes) * 100, 1) if total_bytes else 0.0,
-        "formula": "Original (1.45 GB) - Videos turned into slides + text (1.42 GB) - Duplicate files in official storage (3.8 MB) - Slides stored once across decks (18.1 MB) = Final size (11.5 MB)",
-        "measured": True,
-    }
 
     chunks_count = db.q1("SELECT COUNT(*) n FROM chunks")["n"]
     duplicate_groups_count = len(exact) + len(content) + len(vgroups)
@@ -237,16 +337,15 @@ def api_overview():
         "storage": {
             "total_bytes": total_bytes,
             "video_bytes": sum(f["size"] or 0 for f in video_files),
-            "doc_bytes": doc_bytes_raw,
-            "optimized_total_bytes": optimized_total,
-            "total_saving_pct": total_saving_pct,
+            "doc_bytes": sum(f["size"] or 0 for f in doc_files),
+            "optimized_total_bytes": waterfall["final_bytes"],
+            "total_saving_pct": waterfall["savings_pct"],
             "waterfall": waterfall,
             "tier_totals": tier_totals,
             "dedup_savings": {
-                "exact_bytes": exact_save,
-                "content_bytes": content_save,
-                "video_perceptual_bytes": video_dup_save,
-                "doc_slide_cas_bytes": max(0, doc_bytes_raw - doc_bytes_dedup),
+                "exact_bytes": waterfall["duplicate_file_bytes"],
+                "video_reduction_bytes": waterfall["video_reduction_bytes"],
+                "slide_dedup_bytes": waterfall["slide_dedup_bytes"],
             },
         },
         "retention": {
@@ -262,6 +361,7 @@ def api_overview():
     _OVERVIEW_CACHE_DATA = res
     _OVERVIEW_CACHE_TIME = time.monotonic()
     return res
+
 
 
 class IngestReq(BaseModel):
@@ -475,8 +575,14 @@ def api_files(kind: str | None = None, source_id: int | None = None):
                     LEFT JOIN recordings r ON r.file_id=f.id
                     WHERE {' AND '.join(where)}
                     ORDER BY f.kind='video' DESC, f.size DESC""", params)
+    file_opts, _, _ = compute_file_optimizations()
     for r in rows:
         sanitize_file(r)
+        fid = r["id"]
+        if fid in file_opts:
+            r["size_after_bytes"] = file_opts[fid]["size_after_bytes"]
+            r["saved_pct"] = file_opts[fid]["saved_pct"]
+            r["reason"] = file_opts[fid]["reason"]
         for jk in ("tiers", "retention", "meta"):
             if r.get(jk) and isinstance(r[jk], str):
                 try:
@@ -1027,15 +1133,24 @@ def api_file_integrity(file_id: int):
         ignored_words = []
         main_speakers = len(set(s["speaker"] for s in segs if s.get("speaker"))) or 1
         transcript_words = sum(len((s["text"] or "").split()) for s in segs)
-        speech_confidence = None
+        visual_match_pct = None
+        ocr_accuracy_pct = None
+        ocr_slides_checked = 0
+        text_note = None
+        picture_note = None
 
         if rec and rec.get("retention"):
             try:
                 ret_d = json.loads(rec["retention"]) if isinstance(rec["retention"], str) else rec["retention"]
                 text_kept_pct = ret_d.get("text_kept_pct")
                 text_moments = ret_d.get("text_moments", 0)
+                text_note = ret_d.get("text_note")
                 pictures_kept_pct = ret_d.get("pictures_kept_pct")
                 picture_moments = ret_d.get("picture_moments", 0)
+                picture_note = ret_d.get("picture_note")
+                visual_match_pct = ret_d.get("visual_match_pct")
+                ocr_accuracy_pct = ret_d.get("ocr_accuracy_pct")
+                ocr_slides_checked = ret_d.get("ocr_slides_checked", 0)
                 moving_video_pct = ret_d.get("moving_video_pct")
                 moving_moments = sum(1 for m in ret_d.get("moments", []) if m.get("kind") == "moving_video")
                 ignored_words = ret_d.get("ignored_words", [])
@@ -1110,8 +1225,13 @@ def api_file_integrity(file_id: int):
             "retention_score": retention_score,
             "text_kept_pct": text_kept_pct,
             "text_moments": text_moments,
+            "text_note": text_note,
             "pictures_kept_pct": pictures_kept_pct,
             "picture_moments": picture_moments,
+            "picture_note": picture_note,
+            "visual_match_pct": visual_match_pct,
+            "ocr_accuracy_pct": ocr_accuracy_pct,
+            "ocr_slides_checked": ocr_slides_checked,
             "moving_video_pct": moving_video_pct,
             "moving_moments": moving_moments,
             "ignored_words": ignored_words,

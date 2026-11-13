@@ -80,8 +80,8 @@ export default function EmployeeLeavingPage() {
 
   async function loadAudit() {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/audit").then((r) => r.json());
-      setAuditList(res.audit || []);
+      const res = await api.getAudit();
+      setAuditList(res?.audit || []);
     } catch (e) {
       console.error(e);
     }

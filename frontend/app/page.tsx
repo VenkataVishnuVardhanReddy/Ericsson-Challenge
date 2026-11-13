@@ -54,28 +54,26 @@ export default function OverviewPage() {
     );
   }
 
-  const waterfall = data?.waterfall || {
-    original_bytes: 1556024836,
-    video_reduction_bytes: 1522715191,
-    duplicate_file_bytes: 3772216,
-    slide_dedup_bytes: 18058613,
-    final_bytes: 11478816,
-    savings_pct: 99.3,
-    formula: "Original (1.45 GB) − Videos turned into slides + text (1.42 GB) − Duplicate files in official storage (3.8 MB) − Slides stored once across decks (18.1 MB) = Final size (11.5 MB)",
-    measured: true,
-  };
-
+  const waterfall = data?.waterfall;
   const sources = data?.sources || [];
+
+  if (!waterfall) {
+    return (
+      <div className="py-12 text-center text-[#6b6b6b]">
+        Could not load overview results.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-16 py-4">
       {/* SECTION A: THE HEADLINE */}
       <section className="space-y-4">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-black leading-tight">
-          1.45 GB of Ericsson files → 11 MB.
+          {formatBytes(waterfall.original_bytes)} of Ericsson files → {formatBytes(waterfall.final_bytes)}.
         </h1>
         <p className="text-lg sm:text-xl text-[#6b6b6b] max-w-3xl leading-relaxed">
-          99.3% less storage. The content was kept: every slide, every spoken word, who said it and when.
+          {waterfall.savings_pct}% less storage. The content was kept: every slide, every spoken word, who said it and when.
         </p>
       </section>
 
@@ -278,13 +276,8 @@ export default function OverviewPage() {
             if (isOneDrive) roleDescription = "Personal folder of an employee who is leaving";
 
             const rawBytes = s.bytes || 0;
-            // Calculate honest post-optimization size per source
-            let postBytes = Math.round(rawBytes * 0.007);
-            if (isOneDrive) {
-              // 2 safe delete = 3.77 MB reclaimable from 7.3 MB -> ~3.5 MB
-              postBytes = Math.max(1024, rawBytes - 3772216);
-            }
-            const savingPct = rawBytes > 0 ? Math.round((1 - postBytes / rawBytes) * 100) : 0;
+            const postBytes = s.size_after_bytes ?? 0;
+            const savingPct = s.saved_pct ?? (rawBytes > 0 ? Math.round((1 - postBytes / rawBytes) * 100) : 0);
 
             return (
               <div key={s.id} className="p-6 rounded-xl border border-[#e5e5e5] bg-white space-y-4 flex flex-col justify-between">

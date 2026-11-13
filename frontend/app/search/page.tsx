@@ -203,7 +203,7 @@ export default function SearchPage() {
                           <div className="w-24 sm:w-28 aspect-video bg-gray-100 rounded-lg border border-[#e5e5e5] overflow-hidden flex-shrink-0">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                              src={`http://127.0.0.1:8000/api/objects/${item.image}`}
+                              src={api.objectUrl(item.image)}
                               alt="Slide preview"
                               className="w-full h-full object-cover"
                             />

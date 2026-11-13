@@ -10,6 +10,8 @@ export interface SourceInfo {
   videos?: number;
   docs?: number;
   done?: number;
+  size_after_bytes?: number;
+  saved_pct?: number;
 }
 
 export interface FileItem {
@@ -32,6 +34,10 @@ export interface FileItem {
   doc_date?: string;
   doc_number?: string;
   revision?: string;
+  size_after_bytes?: number;
+  saved_pct?: number;
+  reason?: string;
+  slide_count?: number;
 }
 
 export interface WaterfallData {
@@ -170,8 +176,13 @@ export interface FileIntegrity {
   retention_score?: number | null;
   text_kept_pct?: number | null;
   text_moments?: number;
+  text_note?: string | null;
   pictures_kept_pct?: number | null;
   picture_moments?: number;
+  picture_note?: string | null;
+  visual_match_pct?: number | null;
+  ocr_accuracy_pct?: number | null;
+  ocr_slides_checked?: number;
   moving_video_pct?: number | null;
   moving_moments?: number;
   ignored_words?: string[];
@@ -295,40 +306,40 @@ export interface RevisionChain {
   relations: DeckRelation[];
 }
 
+export interface SlideStats {
+  total_slides: number;
+  unique_slides: number;
+  shared_slides: number;
+  dedup_ratio: number;
+}
+
 export interface DuplicatesData {
   exact: DuplicateGroup[];
   content: DuplicateGroup[];
   video: DuplicateGroup[];
   relations: DeckRelation[];
-  chains: RevisionChain[];
+  chains: any[];
   shared_slides: any[];
-  slide_stats: any;
+  slide_stats: SlideStats;
   name_hints: any[];
 }
 
 export interface ComparePair {
-  page_a?: number;
-  page_b?: number;
-  slide_a_id?: number;
-  slide_b_id?: number;
-  relation: "identical" | "modified" | "unique_a" | "unique_b";
-  hamming: number;
-  text_similarity: number;
-  a?: SlideItem;
-  b?: SlideItem;
-  text_diff?: string;
+  a: SlideItem | null;
+  b: SlideItem | null;
+  relation: "identical" | "modified" | "new" | "removed";
+  text_diff?: Array<{ op: "same" | "add" | "del"; text: string }>;
 }
 
 export interface CompareDetail {
   a: FileItem;
   b: FileItem;
-  summary: {
-    identical: number;
-    modified: number;
-    unique_to_a: number;
-    unique_to_b: number;
-    score: number;
-  };
+  identical: number;
+  modified: number;
+  new: number;
+  removed: SlideItem[];
+  a_pages: number;
+  b_pages: number;
   pairs: ComparePair[];
 }
 

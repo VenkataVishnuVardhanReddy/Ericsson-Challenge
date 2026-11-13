@@ -110,7 +110,7 @@ export const api = {
 
   runBenchmark: () => fetchJson<any>("/api/benchmark"),
 
-  objectUrl: (key: string) => `${API_BASE}/api/objects/${key}`,
+  objectUrl: (key?: string | null) => (key ? `${API_BASE}/api/objects/${key}` : ""),
 
   rawFileUrl: (id: number) => `${API_BASE}/api/files/${id}/raw`,
 
@@ -119,6 +119,10 @@ export const api = {
   frameUrl: (id: number, t: number) => `${API_BASE}/api/recordings/${id}/frame?t=${t}`,
 
   diffImageUrl: (slideA: number, slideB: number) => `${API_BASE}/api/diff-image/${slideA}/${slideB}`,
+
+  videoUrl: (id: number) => `${API_BASE}/api/recordings/${id}/video`,
+
+  getAudit: () => fetchJson<{ audit: any[] }>("/api/audit"),
 
   getJobs: () => fetchJson<{ jobs: any[] }>("/api/jobs"),
 

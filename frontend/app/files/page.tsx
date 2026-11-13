@@ -248,18 +248,10 @@ export default function FilesPage() {
                 const isDoc = f.kind === "pdf" || f.kind === "pptx";
                 const isGov = f.governed;
 
-                // Real size after calculation
-                let sizeAfter = Math.round((f.size || 0) * 0.007);
-                if (f.id === 6) sizeAfter = 7835045; // Exact Level 4 measured
-                if (f.id === 7) sizeAfter = 1890000;
-                if (f.id === 8) sizeAfter = 2100000;
-                if (f.id === 2 || f.id === 9) sizeAfter = 0; // duplicate
-                if (f.id === 1 || f.id === 10) sizeAfter = 0; // duplicate
-                if (f.id === 4) sizeAfter = 850000;
-                if (f.id === 11) sizeAfter = 180000;
-
+                // Real size after calculation from backend API
+                const sizeAfter = f.size_after_bytes ?? 0;
                 const origSize = f.size || 0;
-                const savedPct = origSize > 0 ? Math.round((1 - sizeAfter / origSize) * 100) : 0;
+                const savedPct = f.saved_pct !== undefined ? f.saved_pct : (origSize > 0 ? Math.round((1 - sizeAfter / origSize) * 100) : 0);
 
                 const job = activeJobs.find((j) => j.file_id === f.id);
                 const isRunning = f.status === "processing" || job;
@@ -298,6 +290,11 @@ export default function FilesPage() {
                           >
                             {f.name}
                           </Link>
+                          {f.reason && (
+                            <div className="text-[11px] text-[#6b6b6b] leading-tight" title={f.reason}>
+                              {f.reason}
+                            </div>
+                          )}
                           {isRunning && (
                             <div className="flex items-center gap-2 text-[11px] text-[#6b6b6b]">
                               <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping" />

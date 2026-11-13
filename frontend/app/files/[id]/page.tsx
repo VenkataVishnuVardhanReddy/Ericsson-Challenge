@@ -51,6 +51,7 @@ export default function FileDetailPage() {
   const [logScale, setLogScale] = useState(false);
   const [copiedHash, setCopiedHash] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
+  const [showAllSlides, setShowAllSlides] = useState(false);
 
   // Audio / Media Player State
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -431,7 +432,7 @@ export default function FileDetailPage() {
                   <video
                     controls
                     className="w-full h-full"
-                    src={`http://127.0.0.1:8000/api/recordings/${file.id}/video`}
+                    src={api.videoUrl(file.id)}
                   >
                     Your browser does not support the video tag.
                   </video>
@@ -494,7 +495,7 @@ export default function FileDetailPage() {
 
                     <audio
                       ref={audioRef}
-                      src={`http://127.0.0.1:8000/api/recordings/${file.id}/audio`}
+                      src={api.audioUrl(file.id)}
                       onTimeUpdate={handleAudioTimeUpdate}
                       onEnded={() => setIsPlayingAudio(false)}
                       className="hidden"
@@ -530,7 +531,7 @@ export default function FileDetailPage() {
                         ) : (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={`http://127.0.0.1:8000/api/objects/${activeSlideKey}`}
+                            src={api.objectUrl(activeSlideKey)}
                             alt="Slide transition"
                             className="w-full h-full object-contain"
                           />
@@ -562,7 +563,7 @@ export default function FileDetailPage() {
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
-                                src={`http://127.0.0.1:8000/api/objects/${k.object_hash}`}
+                                src={api.objectUrl(k.object_hash)}
                                 alt={`Frame @ ${formatDuration(k.start)}`}
                                 className="w-full h-full object-cover"
                               />
@@ -612,13 +613,27 @@ export default function FileDetailPage() {
         {/* DOCUMENT PREVIEWS */}
         {!isVideo && (
           <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-[#6b6b6b] font-medium">
+                {document?.slides?.length || 0} slides extracted as WebP
+              </span>
+              {(document?.slides?.length || 0) > 8 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllSlides(!showAllSlides)}
+                  className="text-xs text-[#6b6b6b] hover:text-black font-medium transition-colors border border-[#e5e5e5] px-3 py-1.5 rounded-lg"
+                >
+                  {showAllSlides ? "Show first 8 slides" : `Show all ${document?.slides?.length} slides`}
+                </button>
+              )}
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {document?.slides?.slice(0, 8).map((s) => (
+              {(showAllSlides ? (document?.slides || []) : (document?.slides || []).slice(0, 8)).map((s) => (
                 <div key={s.id} className="border border-[#e5e5e5] rounded-lg overflow-hidden bg-white space-y-1.5 p-2">
                   <div className="aspect-[4/3] bg-gray-50 rounded overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={`http://127.0.0.1:8000/api/objects/${s.content_id || s.object_hash}`}
+                      src={api.objectUrl(s.object_hash)}
                       alt={`Slide ${s.page_no}`}
                       className="w-full h-full object-contain"
                     />
@@ -632,7 +647,7 @@ export default function FileDetailPage() {
             </div>
             <div className="pt-2">
               <a
-                href={`http://127.0.0.1:8000/api/files/${file.id}/raw`}
+                href={api.rawFileUrl(file.id)}
                 download
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#e5e5e5] text-xs font-medium text-black hover:bg-gray-50"
               >
@@ -654,7 +669,7 @@ export default function FileDetailPage() {
           </p>
         </div>
 
-        {/* Three Result Lines with '?' Tooltip Explanations */}
+        {/* Result Lines with '?' Tooltip Explanations */}
         <div className="border border-[#e5e5e5] rounded-xl p-5 bg-white divide-y divide-[#e5e5e5] text-sm">
           {/* Line 1: Slide text kept */}
           <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
@@ -663,7 +678,7 @@ export default function FileDetailPage() {
               <span className="font-mono text-black font-medium">
                 {integrity?.text_kept_pct !== undefined && integrity?.text_kept_pct !== null
                   ? `${(integrity.text_kept_pct * 100).toFixed(1)}%`
-                  : "—"}
+                  : (integrity?.text_note || "—")}
               </span>
               <span className="text-xs text-[#6b6b6b]">
                 ({integrity?.text_moments || 0} text moments)
@@ -684,7 +699,7 @@ export default function FileDetailPage() {
               <span className="font-mono text-black font-medium">
                 {integrity?.pictures_kept_pct !== undefined && integrity?.pictures_kept_pct !== null
                   ? `${(integrity.pictures_kept_pct * 100).toFixed(1)}%`
-                  : "—"}
+                  : (integrity?.picture_note || "—")}
               </span>
               <span className="text-xs text-[#6b6b6b]">
                 ({integrity?.picture_moments || 0} picture moments)
@@ -718,6 +733,46 @@ export default function FileDetailPage() {
               ?
             </span>
           </div>
+
+          {/* Line 4: OCR vs official deck (if linked) */}
+          {integrity?.ocr_accuracy_pct !== undefined && integrity?.ocr_accuracy_pct !== null && (
+            <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-black">OCR vs official deck:</span>
+                <span className="font-mono text-black font-medium">
+                  {(integrity.ocr_accuracy_pct * 100).toFixed(1)}%
+                </span>
+                <span className="text-xs text-[#6b6b6b]">
+                  ({integrity?.ocr_slides_checked || 0} linked slides verified)
+                </span>
+              </div>
+              <span
+                className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                title="OCR accuracy: Compares text extracted from video slide keyframes against the clean original text extracted directly from official presentation deck slides."
+              >
+                ?
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Spot Check Report Link */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 text-xs">
+          <div>
+            <span className="font-semibold text-black block">Independent spot-check report</span>
+            <span className="text-[#6b6b6b] block mt-0.5">
+              Side-by-side comparison of 20 evenly-spaced moments across original and kept footage.
+            </span>
+          </div>
+          <a
+            href="/api/spot-check"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black bg-white text-black font-medium hover:bg-gray-100 transition-colors self-start sm:self-auto whitespace-nowrap"
+          >
+            <span>Open spot check</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
         </div>
 
         {/* Plain Explanation Text */}
@@ -772,7 +827,7 @@ export default function FileDetailPage() {
                         <div className="aspect-video bg-black rounded overflow-hidden">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`http://127.0.0.1:8000/api/recordings/${file.id}/frame?t=${m.t}`}
+                            src={api.frameUrl(file.id, m.t)}
                             alt={`Original @ ${m.t}s`}
                             className="w-full h-full object-cover"
                           />
@@ -787,7 +842,7 @@ export default function FileDetailPage() {
                           {m.kept_slide_object ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
-                              src={`http://127.0.0.1:8000/api/objects/${m.kept_slide_object}`}
+                              src={api.objectUrl(m.kept_slide_object)}
                               alt="Kept picture"
                               className="w-full h-full object-cover"
                             />
