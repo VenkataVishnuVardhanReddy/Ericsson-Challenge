@@ -11,7 +11,7 @@ import {
   PipelineInfo,
 } from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = typeof window !== "undefined" ? "" : (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000");
 
 async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE}${endpoint}`;
@@ -31,9 +31,26 @@ async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T>
 }
 
 export const api = {
-  getOverview: () => fetchJson<OverviewData>("/api/overview"),
+  getOverview: async (): Promise<OverviewData | null> => {
+    try {
+      return await fetchJson<OverviewData>("/api/overview");
+    } catch (e) {
+      console.error("Failed to load overview:", e);
+      return null;
+    }
+  },
 
-  getFiles: () => fetchJson<FileItem[]>("/api/files"),
+  getFiles: async (): Promise<FileItem[]> => {
+    try {
+      const res = await fetchJson<any>("/api/files");
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.files)) return res.files;
+      return [];
+    } catch (e) {
+      console.error("Failed to load files:", e);
+      return [];
+    }
+  },
 
   getFileStages: (id: number) => fetchJson<FileStages>(`/api/files/${id}/stages`),
 

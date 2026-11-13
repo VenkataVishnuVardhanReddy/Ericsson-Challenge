@@ -82,12 +82,14 @@ export default function OptimizeDashboard() {
   const storage = overview?.storage;
   const totalRaw = storage?.total_bytes || 0;
   const optimized = storage?.optimized_total_bytes || 0;
-  const savingPct = overview?.storage?.total_saving_pct
-    ? (overview.storage.total_saving_pct * 100).toFixed(1)
+  const savingPct = storage?.total_saving_pct != null
+    ? (storage.total_saving_pct * 100).toFixed(1)
     : "0.0";
   const savedBytes = Math.max(0, totalRaw - optimized);
 
-  const filteredFiles = files.filter((f) => {
+  const fileList = Array.isArray(files) ? files : [];
+  const filteredFiles = fileList.filter((f) => {
+    if (!f) return false;
     if (filter === "all") return true;
     if (filter === "video") return f.kind === "video";
     if (filter === "docs") return f.kind === "pdf" || f.kind === "pptx";
@@ -123,7 +125,7 @@ export default function OptimizeDashboard() {
               </span>
             </div>
             <p className="text-xs text-gray-600 mt-2 max-w-xl">
-              Distilled {overview?.counts.files || 0} enterprise assets across SharePoint, EricssonPlay, and
+              Distilled {overview?.counts?.files || fileList.length || 0} enterprise assets across SharePoint, EricssonPlay, and
               OneDrive into content-addressable lossless text, perceptual keyframes, and CAS slide vectors.
             </p>
           </div>
@@ -163,14 +165,18 @@ export default function OptimizeDashboard() {
           <div className="border border-[#e5e5e5] p-3">
             <div className="text-[10px] font-mono text-gray-500 uppercase">2. Video Distillation</div>
             <div className="text-lg font-mono font-bold text-black mt-1">
-              -{formatBytes(overview?.storage.tier_totals.T0 ? overview.storage.tier_totals.T0 - overview.storage.tier_totals.T3 : 0)}
+              -{formatBytes(
+                overview?.storage?.tier_totals?.T0
+                  ? (overview.storage.tier_totals.T0 - (overview.storage.tier_totals.T3 || 0))
+                  : 0
+              )}
             </div>
             <div className="text-[10px] text-gray-500 mt-0.5">T0 raw to T3 packet</div>
           </div>
           <div className="border border-[#e5e5e5] p-3">
             <div className="text-[10px] font-mono text-gray-500 uppercase">3. Slide Deduplication</div>
             <div className="text-lg font-mono font-bold text-black mt-1">
-              -{formatBytes(overview?.storage.dedup_savings.doc_slide_cas_bytes || 0)}
+              -{formatBytes(overview?.storage?.dedup_savings?.doc_slide_cas_bytes || 0)}
             </div>
             <div className="text-[10px] text-gray-500 mt-0.5">Unique slide CAS</div>
           </div>
@@ -198,12 +204,12 @@ export default function OptimizeDashboard() {
             Source Repositories (Governed vs Unregulated)
           </h2>
           <span className="text-xs font-mono text-gray-500">
-            {overview?.counts.sources || 0} CONNECTED SOURCES
+            {overview?.counts?.sources || overview?.sources?.length || 0} CONNECTED SOURCES
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {overview?.sources.map((src) => {
+          {overview?.sources && overview.sources.map((src) => {
             const isLeaver = src.kind === "onedrive" || !src.governed;
             return (
               <div
