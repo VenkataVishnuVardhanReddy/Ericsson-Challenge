@@ -128,6 +128,32 @@ export interface StorageLevelMethod {
   type: "ai_model" | "algorithm";
 }
 
+export interface LevelContentItem {
+  path: string;
+  kind: "slides" | "audio" | "text" | "voices" | "manifest" | "reference" | "delta" | "video";
+  bytes: number;
+  count?: number;
+  url: string;
+}
+
+export interface LevelContentsResponse {
+  file_id: number;
+  level: number;
+  level_name: string;
+  total_bytes: number;
+  files: LevelContentItem[];
+}
+
+export interface ReferenceRecord {
+  type: "reference";
+  points_to: {
+    source: string;
+    name: string;
+    sha256: string;
+  };
+  original_bytes: number;
+}
+
 export interface StorageLevel {
   level: number;
   name: string;
@@ -333,6 +359,7 @@ export interface SlideItem {
   bytes: number;
   image_key?: string;
   object_hash?: string;
+  title?: string | null;
 }
 
 export interface ChunkItem {

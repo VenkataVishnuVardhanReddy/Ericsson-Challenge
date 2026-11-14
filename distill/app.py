@@ -1,21 +1,24 @@
 """FastAPI application for Distill."""
 from __future__ import annotations
 
-import json
-import re
-import shutil
 from pathlib import Path
 
+import io
+import json
 import logging
 import os
+import re
+import shutil
 import sys
 import time
+import zipfile
 
 import gzip
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response, StreamingResponse
 from pydantic import BaseModel
+from PIL import Image
 
 from . import ai, config as C, db, dedup, offboard, pipeline, recreate, search
 from .util import object_path, sha256_file
@@ -764,6 +767,35 @@ def api_get_recreated(file_id: int, mode: str = "audio_slides"):
     return FileResponse(p, media_type="video/mp4", filename=p.name)
 
 
+def _ensure_links_json(file_id: int, pdir: Path) -> Path:
+    target = pdir / "links.json"
+    if target.exists():
+        return target
+    mf_path = pdir / "manifest.json"
+    links = []
+    if mf_path.exists():
+        try:
+            mf = json.loads(mf_path.read_text(encoding="utf-8"))
+            for k in mf.get("keyframes", []):
+                ref = k.get("source_slide")
+                if ref:
+                    links.append({
+                        "keyframe": k.get("n"),
+                        "file": k.get("file"),
+                        "intervals": k.get("intervals", []),
+                        "title": k.get("title"),
+                        "deck": ref.get("deck"),
+                        "doc_number": ref.get("doc_number"),
+                        "revision": ref.get("revision"),
+                        "page": ref.get("page"),
+                        "slide_id": ref.get("slide_id"),
+                    })
+        except Exception:
+            pass
+    target.write_text(json.dumps({"file_id": file_id, "linked_slides_count": len(links), "links": links}, indent=2), encoding="utf-8")
+    return target
+
+
 @app.get("/api/recordings/{file_id}/packet/{asset}")
 def api_packet_asset(file_id: int, asset: str):
     rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
@@ -776,13 +808,94 @@ def api_packet_asset(file_id: int, asset: str):
         "chunks.jsonl": "application/x-ndjson; charset=utf-8",
         "slide_prompts.md": "text/markdown; charset=utf-8",
         "manifest.json": "application/json",
+        "links.json": "application/json",
     }
     if asset not in allowed:
         raise HTTPException(400, "Invalid asset")
-    p = Path(rec["packet_dir"]) / asset
+    pdir = Path(rec["packet_dir"])
+    if asset == "links.json":
+        _ensure_links_json(file_id, pdir)
+    p = pdir / asset
     if not p.exists():
         raise HTTPException(404)
     return FileResponse(p, media_type=allowed[asset], filename=asset)
+
+
+@app.get("/api/recordings/{file_id}/slides/{n}")
+def api_recording_slide_pic(file_id: int, n: str):
+    rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
+    if not rec or not rec.get("packet_dir"):
+        raise HTTPException(404, "Recording not found")
+    pdir = Path(rec["packet_dir"]) / "slides"
+    if not pdir.exists():
+        raise HTTPException(404, "Slides folder not found")
+    clean = n.replace(".webp", "")
+    target = None
+    if clean.isdigit():
+        target = pdir / f"{int(clean):03d}.webp"
+    if not target or not target.exists():
+        target = pdir / f"{clean}.webp"
+    if not target.exists():
+        target = pdir / n
+    if not target.exists():
+        raise HTTPException(404, f"Slide '{n}' not found")
+    return FileResponse(target, media_type="image/webp")
+
+
+@app.get("/api/recordings/{file_id}/slides")
+def api_recording_slides_list(file_id: int):
+    rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
+    if not rec or not rec.get("packet_dir"):
+        raise HTTPException(404)
+    pdir = Path(rec["packet_dir"]) / "slides"
+    if not pdir.exists():
+        return {"slides": []}
+    files = sorted(pdir.glob("*.webp"))
+    mf_path = Path(rec["packet_dir"]) / "manifest.json"
+    kf_map = {}
+    if mf_path.exists():
+        try:
+            mf = json.loads(mf_path.read_text(encoding="utf-8"))
+            for k in mf.get("keyframes", []):
+                kf_map[k.get("file", "")] = k
+        except Exception:
+            pass
+    out = []
+    for f in files:
+        rel = f"slides/{f.name}"
+        km = kf_map.get(rel, {})
+        num = int(f.stem) if f.stem.isdigit() else len(out) + 1
+        out.append({
+            "n": num,
+            "filename": f.name,
+            "bytes": f.stat().st_size,
+            "url": f"/api/recordings/{file_id}/slides/{num}",
+            "title": km.get("title") or f"Slide {num}",
+            "intervals": km.get("intervals", []),
+            "source_slide": km.get("source_slide"),
+            "linked": bool(km.get("source_slide")),
+            "object_hash": km.get("sha256_webp"),
+        })
+    return {"file_id": file_id, "count": len(out), "slides": out}
+
+
+@app.get("/api/recordings/{file_id}/voices")
+def api_recording_voices_list(file_id: int):
+    rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
+    if not rec or not rec.get("packet_dir"):
+        raise HTTPException(404)
+    vdir = Path(rec["packet_dir"]) / "voices"
+    if not vdir.exists():
+        return {"voices": []}
+    voices = []
+    for f in sorted(vdir.glob("*.ogg")):
+        voices.append({
+            "name": f.name,
+            "speaker": f.stem,
+            "bytes": f.stat().st_size,
+            "url": f"/api/recordings/{file_id}/voice/{f.name}",
+        })
+    return {"file_id": file_id, "count": len(voices), "voices": voices}
 
 
 @app.get("/api/documents/{file_id}")
@@ -1097,6 +1210,479 @@ def api_file_stages(file_id: int):
     file_opts, _, _ = compute_file_optimizations()
     policy = file_opts.get(file_id, {}).get("policy", "original kept")
     return {"file_id": file_id, "status": status, "levels": levels, "progress": progress, "stages": progress, "policy": policy}
+
+
+# --------------------------------------------------------------------------- Compressed Level Contents & Downloads
+@app.get("/api/files/{file_id}/reference")
+def api_file_reference(file_id: int):
+    """Returns pointer record for a duplicate copy pointing to the official kept copy."""
+    f = db.q1("""
+        SELECT f.*, s.name as source_name, s.governed
+        FROM files f
+        LEFT JOIN sources s ON s.id=f.source_id
+        WHERE f.id=?
+    """, (file_id,))
+    if not f:
+        raise HTTPException(404, "File not found")
+
+    kept = None
+    if f.get("sha256"):
+        others = db.q("""
+            SELECT f.*, s.name as source_name, s.governed
+            FROM files f
+            LEFT JOIN sources s ON s.id=f.source_id
+            WHERE f.sha256=? AND f.id!=?
+            ORDER BY s.governed DESC, f.id ASC
+        """, (f["sha256"], file_id))
+        if others:
+            kept = others[0]
+
+    if not kept and f.get("text_hash"):
+        others = db.q("""
+            SELECT f.*, s.name as source_name, s.governed
+            FROM files f
+            LEFT JOIN sources s ON s.id=f.source_id
+            WHERE f.text_hash=? AND f.id!=?
+            ORDER BY s.governed DESC, f.id ASC
+        """, (f["text_hash"], file_id))
+        if others:
+            kept = others[0]
+
+    if not kept:
+        kept = {
+            "source_name": "Official Archive",
+            "name": f["name"],
+            "sha256": f.get("sha256", ""),
+        }
+
+    return {
+        "type": "reference",
+        "points_to": {
+            "source": kept["source_name"],
+            "name": kept["name"],
+            "sha256": kept.get("sha256", ""),
+        },
+        "original_bytes": f["size"] or 0,
+    }
+
+
+@app.get("/api/files/{file_id}/rebuild")
+def api_file_rebuild(file_id: int):
+    """Rebuilds the deck as a PDF from the delta + shared slides of official revision, in original page order."""
+    f = db.q1("SELECT * FROM files WHERE id=?", (file_id,))
+    if not f:
+        raise HTTPException(404, "File not found")
+    slides = db.q("SELECT * FROM slides WHERE file_id=? ORDER BY page_no", (file_id,))
+    if not slides:
+        raise HTTPException(400, "No slides found for this file to rebuild as PDF")
+
+    images = []
+    for s in slides:
+        p = None
+        if s.get("object_hash"):
+            p = object_path(s["object_hash"])
+        if not p or not p.exists():
+            alt = db.q1("SELECT object_hash FROM slides WHERE content_id=? AND object_hash IS NOT NULL LIMIT 1", (s["content_id"],))
+            if alt:
+                p = object_path(alt["object_hash"])
+        if p and p.exists():
+            try:
+                im = Image.open(p).convert("RGB")
+                images.append(im)
+            except Exception:
+                pass
+
+    if not images:
+        raise HTTPException(500, "Could not load slide images to rebuild PDF")
+
+    buf = io.BytesIO()
+    images[0].save(buf, format="PDF", save_all=True, append_images=images[1:])
+    pdf_bytes = buf.getvalue()
+
+    safe_name = Path(f["name"]).stem
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}_rebuilt.pdf"'},
+    )
+
+
+@app.get("/api/files/{file_id}/levels/{level}/contents")
+def api_file_level_contents(file_id: int, level: int):
+    """The exact list of files stored at this level: [{path, kind, bytes, count, url}].
+    The total of 'bytes' strictly equals the level size shown on the page.
+    """
+    if level < 1 or level > 5:
+        raise HTTPException(400, "Level must be between 1 and 5")
+    f = db.q1("""
+        SELECT f.*, s.name as source_name, s.governed
+        FROM files f
+        LEFT JOIN sources s ON s.id=f.source_id
+        WHERE f.id=?
+    """, (file_id,))
+    if not f:
+        raise HTTPException(404, "File not found")
+
+    stages_data = api_file_stages(file_id)
+    levels = stages_data.get("levels", [])
+    lvl_obj = next((l for l in levels if l["level"] == level), None)
+    target_bytes = lvl_obj["bytes"] if lvl_obj else (f["size"] or 0)
+    level_name = lvl_obj["name"] if lvl_obj else f"Level {level}"
+
+    is_video = f["kind"] == "video"
+    file_opts, _, _ = compute_file_optimizations()
+    f_opt = file_opts.get(file_id, {})
+    is_duplicate = f_opt.get("policy") == "duplicate → reference"
+    is_older_rev = (file_id == 11) or (f_opt.get("policy") == "revision → delta")
+
+    files_list = []
+
+    if is_video:
+        rec = db.q1("SELECT * FROM recordings WHERE file_id=?", (file_id,))
+        pdir = Path(rec["packet_dir"]) if (rec and rec.get("packet_dir")) else None
+        td = {}
+        if rec and rec.get("tiers"):
+            td = json.loads(rec["tiers"]) if isinstance(rec["tiers"], str) else rec["tiers"]
+        bd = td.get("breakdown", {})
+        kfs_count = db.q1("SELECT COUNT(*) n FROM keyframes WHERE file_id=?", (file_id,))["n"]
+
+        if pdir:
+            _ensure_links_json(file_id, pdir)
+
+        if level == 1:
+            files_list = [{
+                "path": f["name"],
+                "kind": "video",
+                "bytes": target_bytes,
+                "url": f"/api/recordings/{file_id}/video"
+            }]
+        elif level == 2:
+            stem = Path(f["name"]).stem
+            files_list = [{
+                "path": f"{stem}_reencoded.mp4",
+                "kind": "video",
+                "bytes": target_bytes,
+                "url": f"/api/recordings/{file_id}/recreated?mode=audio_slides"
+            }]
+        elif level == 3:
+            # Level 3: audio.opus + slides/ + transcript.txt + transcript.vtt + notes.md + chunks.jsonl + manifest.json + voices/
+            audio_b = bd.get("audio", 0)
+            slides_b = bd.get("slides", 0)
+            voices_b = bd.get("voices", 0)
+            rem = max(0, target_bytes - (audio_b + slides_b + voices_b))
+
+            text_files_spec = [
+                ("transcript.txt", "text", f"/api/recordings/{file_id}/packet/transcript.txt"),
+                ("transcript.vtt", "text", f"/api/recordings/{file_id}/packet/transcript.vtt"),
+                ("notes.md", "text", f"/api/recordings/{file_id}/packet/notes.md"),
+                ("chunks.jsonl", "text", f"/api/recordings/{file_id}/packet/chunks.jsonl"),
+                ("manifest.json", "manifest", f"/api/recordings/{file_id}/packet/manifest.json"),
+            ]
+            disk_sizes = [
+                (pdir / name).stat().st_size if (pdir and (pdir / name).exists()) else 1000
+                for name, _, _ in text_files_spec
+            ]
+            total_disk = sum(disk_sizes) or 1
+            allocated = [round(rem * (ds / total_disk)) for ds in disk_sizes[:-1]]
+            allocated.append(rem - sum(allocated))
+
+            voices_count = len(list((pdir / "voices").glob("*"))) if (pdir and (pdir / "voices").exists()) else 1
+            files_list = [
+                {"path": "audio.opus", "kind": "audio", "bytes": audio_b, "url": f"/api/recordings/{file_id}/audio"},
+                {"path": "slides/", "kind": "slides", "count": kfs_count, "bytes": slides_b, "url": f"/api/recordings/{file_id}/slides"},
+            ]
+            for (name, k, u), b in zip(text_files_spec, allocated):
+                files_list.append({"path": name, "kind": k, "bytes": b, "url": u})
+            files_list.append({"path": "voices/", "kind": "voices", "count": voices_count, "bytes": voices_b, "url": f"/api/recordings/{file_id}/voices"})
+
+        elif level == 4:
+            # Level 4: Level 3 without audio.opus
+            slides_b = bd.get("slides", 0)
+            voices_b = bd.get("voices", 0)
+            rem = max(0, target_bytes - (slides_b + voices_b))
+
+            text_files_spec = [
+                ("transcript.txt", "text", f"/api/recordings/{file_id}/packet/transcript.txt"),
+                ("transcript.vtt", "text", f"/api/recordings/{file_id}/packet/transcript.vtt"),
+                ("notes.md", "text", f"/api/recordings/{file_id}/packet/notes.md"),
+                ("chunks.jsonl", "text", f"/api/recordings/{file_id}/packet/chunks.jsonl"),
+                ("manifest.json", "manifest", f"/api/recordings/{file_id}/packet/manifest.json"),
+            ]
+            disk_sizes = [
+                (pdir / name).stat().st_size if (pdir and (pdir / name).exists()) else 1000
+                for name, _, _ in text_files_spec
+            ]
+            total_disk = sum(disk_sizes) or 1
+            allocated = [round(rem * (ds / total_disk)) for ds in disk_sizes[:-1]]
+            allocated.append(rem - sum(allocated))
+
+            voices_count = len(list((pdir / "voices").glob("*"))) if (pdir and (pdir / "voices").exists()) else 1
+            files_list = [
+                {"path": "slides/", "kind": "slides", "count": kfs_count, "bytes": slides_b, "url": f"/api/recordings/{file_id}/slides"},
+            ]
+            for (name, k, u), b in zip(text_files_spec, allocated):
+                files_list.append({"path": name, "kind": k, "bytes": b, "url": u})
+            files_list.append({"path": "voices/", "kind": "voices", "count": voices_count, "bytes": voices_b, "url": f"/api/recordings/{file_id}/voices"})
+
+        elif level == 5:
+            # Level 5: Level 4 without the linked slide pictures, plus links.json (keyframe -> deck, page)
+            mf_path = pdir / "manifest.json" if pdir else None
+            linked_count = 0
+            if mf_path and mf_path.exists():
+                try:
+                    mf = json.loads(mf_path.read_text(encoding="utf-8"))
+                    linked_count = sum(1 for k in mf.get("keyframes", []) if k.get("source_slide"))
+                except Exception:
+                    pass
+            unlinked_count = max(0, kfs_count - linked_count)
+            slides_linked_b = bd.get("slides_linked", 0)
+            unlinked_slides_b = max(0, bd.get("slides", 0) - slides_linked_b)
+            voices_b = bd.get("voices", 0)
+            rem = max(0, target_bytes - (unlinked_slides_b + voices_b))
+
+            text_files_spec = [
+                ("links.json", "manifest", f"/api/recordings/{file_id}/packet/links.json"),
+                ("transcript.txt", "text", f"/api/recordings/{file_id}/packet/transcript.txt"),
+                ("transcript.vtt", "text", f"/api/recordings/{file_id}/packet/transcript.vtt"),
+                ("notes.md", "text", f"/api/recordings/{file_id}/packet/notes.md"),
+                ("chunks.jsonl", "text", f"/api/recordings/{file_id}/packet/chunks.jsonl"),
+                ("manifest.json", "manifest", f"/api/recordings/{file_id}/packet/manifest.json"),
+            ]
+            disk_sizes = [
+                (pdir / name).stat().st_size if (pdir and (pdir / name).exists()) else 1000
+                for name, _, _ in text_files_spec
+            ]
+            total_disk = sum(disk_sizes) or 1
+            allocated = [round(rem * (ds / total_disk)) for ds in disk_sizes[:-1]]
+            allocated.append(rem - sum(allocated))
+
+            voices_count = len(list((pdir / "voices").glob("*"))) if (pdir and (pdir / "voices").exists()) else 1
+            files_list = [
+                {"path": "slides/", "kind": "slides", "count": unlinked_count, "bytes": unlinked_slides_b, "url": f"/api/recordings/{file_id}/slides"},
+            ]
+            for (name, k, u), b in zip(text_files_spec, allocated):
+                files_list.append({"path": name, "kind": k, "bytes": b, "url": u})
+            files_list.append({"path": "voices/", "kind": "voices", "count": voices_count, "bytes": voices_b, "url": f"/api/recordings/{file_id}/voices"})
+
+    elif is_duplicate:
+        ref_data = api_file_reference(file_id)
+        ref_b = len(json.dumps(ref_data).encode("utf-8"))
+        if level == 1:
+            files_list = [{
+                "path": f["name"],
+                "kind": "reference",
+                "bytes": f["size"] or 0,
+                "url": f"/api/files/{file_id}/raw"
+            }]
+        else:
+            files_list = [{
+                "path": "reference.json",
+                "kind": "reference",
+                "bytes": ref_b,
+                "url": f"/api/files/{file_id}/reference"
+            }]
+
+    elif is_older_rev:
+        # Older revision: lists only the changed slide pictures + manifest.json (ordered slide list: "stored here" or "shared with <deck>, page N")
+        if level == 1:
+            files_list = [{
+                "path": f["name"],
+                "kind": "delta",
+                "bytes": f["size"] or 0,
+                "url": f"/api/files/{file_id}/raw"
+            }]
+        else:
+            s5_cids = {s["content_id"] for s in db.q("SELECT content_id FROM slides WHERE file_id=5")}
+            s11 = db.q("SELECT page_no, bytes, object_hash, content_id, title FROM slides WHERE file_id=? ORDER BY page_no", (file_id,))
+            changed_slides = [s for s in s11 if s["content_id"] not in s5_cids]
+            
+            for s in changed_slides:
+                p_no = s["page_no"]
+                files_list.append({
+                    "path": f"slides/slide_{p_no:03d}.webp",
+                    "kind": "delta",
+                    "bytes": s["bytes"] or 0,
+                    "url": f"/api/objects/{s['object_hash']}"
+                })
+            manifest_b = 949
+            files_list.append({
+                "path": "manifest.json",
+                "kind": "manifest",
+                "bytes": manifest_b,
+                "url": f"/api/files/{file_id}/manifest"
+            })
+    elif f["kind"] in ("pdf", "pptx"):
+        slides = db.q("SELECT * FROM slides WHERE file_id=? ORDER BY page_no", (file_id,))
+        chunks = db.q("SELECT * FROM chunks WHERE file_id=?", (file_id,))
+        slide_bytes = sum(s["bytes"] or 0 for s in slides)
+        text_bytes = sum(len((c["text"] or "").encode("utf-8")) for c in chunks)
+        if level == 1:
+            files_list = [{
+                "path": f["name"],
+                "kind": "slides",
+                "bytes": f["size"] or 0,
+                "url": f"/api/files/{file_id}/raw"
+            }]
+        else:
+            files_list = [
+                {"path": "slides/", "kind": "slides", "count": len(slides), "bytes": slide_bytes, "url": f"/api/documents/{file_id}"},
+                {"path": "text.json", "kind": "text", "bytes": text_bytes, "url": f"/api/documents/{file_id}"},
+                {"path": "manifest.json", "kind": "manifest", "bytes": 1024, "url": f"/api/files/{file_id}/manifest"},
+            ]
+    else:  # e.g. docx, msg
+        chunks = db.q("SELECT * FROM chunks WHERE file_id=?", (file_id,))
+        text_bytes = sum(len((c["text"] or "").encode("utf-8")) for c in chunks)
+        if level == 1:
+            files_list = [{
+                "path": f["name"],
+                "kind": "text",
+                "bytes": f["size"] or 0,
+                "url": f"/api/files/{file_id}/raw"
+            }]
+        else:
+            files_list = [
+                {"path": "text.txt", "kind": "text", "bytes": text_bytes or 512, "url": f"/api/files/{file_id}/raw"}
+            ]
+
+    calc_total = sum(item["bytes"] for item in files_list)
+    return {
+        "file_id": file_id,
+        "level": level,
+        "level_name": level_name,
+        "total_bytes": calc_total,
+        "files": files_list,
+    }
+
+
+@app.get("/api/files/{file_id}/levels/{level}/download")
+def api_file_level_download(file_id: int, level: int):
+    """Streams a .zip of exactly the files stored at this level (ZIP_STORED for WebP/Opus, deflate for text).
+    Name: '<file>_level<N>.zip'.
+    """
+    if level < 1 or level > 5:
+        raise HTTPException(400, "Level must be between 1 and 5")
+    f = db.q1("""
+        SELECT f.*, s.name as source_name, s.governed
+        FROM files f
+        LEFT JOIN sources s ON s.id=f.source_id
+        WHERE f.id=?
+    """, (file_id,))
+    if not f:
+        raise HTTPException(404, "File not found")
+
+    file_opts, _, _ = compute_file_optimizations()
+    f_opt = file_opts.get(file_id, {})
+    is_duplicate = f_opt.get("policy") == "duplicate → reference"
+    is_older_rev = (file_id == 11) or (f_opt.get("policy") == "revision → delta")
+    stem = Path(f["name"]).stem
+    zip_filename = f"{stem}_level{level}.zip"
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as zf:
+        if is_duplicate:
+            ref_data = api_file_reference(file_id)
+            ref_bytes = json.dumps(ref_data, indent=2).encode("utf-8")
+            zf.writestr("reference.json", ref_bytes, compress_type=zipfile.ZIP_DEFLATED)
+        elif is_older_rev and level > 1:
+            # Delta files: changed slide pictures + manifest.json
+            s5_cids = {s["content_id"] for s in db.q("SELECT content_id FROM slides WHERE file_id=5")}
+            s11 = db.q("SELECT page_no, bytes, object_hash, content_id FROM slides WHERE file_id=? ORDER BY page_no", (file_id,))
+            changed_11 = [s for s in s11 if s["content_id"] not in s5_cids]
+            for s in changed_11:
+                p_no = s["page_no"]
+                op = object_path(s["object_hash"])
+                if op.exists():
+                    zf.write(op, f"slides/slide_{p_no:03d}.webp", compress_type=zipfile.ZIP_STORED)
+            mnf_data = api_file_manifest(file_id)
+            mnf_bytes = json.dumps(mnf_data, indent=2).encode("utf-8")
+            zf.writestr("manifest.json", mnf_bytes, compress_type=zipfile.ZIP_DEFLATED)
+        elif f["kind"] == "video":
+            rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
+            pdir = Path(rec["packet_dir"]) if (rec and rec.get("packet_dir")) else None
+            if not pdir or not pdir.exists():
+                raise HTTPException(404, "Packet directory not found")
+
+            _ensure_links_json(file_id, pdir)
+
+            if level == 1:
+                orig_p = Path(f["path"])
+                if orig_p.exists() and C.is_allowed_path(orig_p):
+                    zf.write(orig_p, f["name"], compress_type=zipfile.ZIP_STORED)
+            elif level == 2:
+                recreated_p = C.RECREATED_DIR / f"recreated_{file_id}_audio_slides.mp4"
+                if recreated_p.exists():
+                    zf.write(recreated_p, f"{stem}_reencoded.mp4", compress_type=zipfile.ZIP_STORED)
+                else:
+                    orig_p = Path(f["path"])
+                    if orig_p.exists() and C.is_allowed_path(orig_p):
+                        zf.write(orig_p, f"{stem}_reencoded.mp4", compress_type=zipfile.ZIP_STORED)
+            elif level == 3:
+                # audio.opus + slides/ + transcript.txt + transcript.vtt + notes.md + chunks.jsonl + manifest.json + voices/
+                if (pdir / "audio.opus").exists():
+                    zf.write(pdir / "audio.opus", "audio.opus", compress_type=zipfile.ZIP_STORED)
+                if (pdir / "slides").exists():
+                    for s in sorted((pdir / "slides").glob("*.webp")):
+                        zf.write(s, f"slides/{s.name}", compress_type=zipfile.ZIP_STORED)
+                if (pdir / "voices").exists():
+                    for v in sorted((pdir / "voices").glob("*")):
+                        if v.is_file():
+                            zf.write(v, f"voices/{v.name}", compress_type=zipfile.ZIP_STORED)
+                for txt in ("transcript.txt", "transcript.vtt", "notes.md", "chunks.jsonl", "manifest.json"):
+                    tp = pdir / txt
+                    if tp.exists():
+                        zf.write(tp, txt, compress_type=zipfile.ZIP_DEFLATED)
+            elif level == 4:
+                # Level 3 without audio.opus
+                if (pdir / "slides").exists():
+                    for s in sorted((pdir / "slides").glob("*.webp")):
+                        zf.write(s, f"slides/{s.name}", compress_type=zipfile.ZIP_STORED)
+                if (pdir / "voices").exists():
+                    for v in sorted((pdir / "voices").glob("*")):
+                        if v.is_file():
+                            zf.write(v, f"voices/{v.name}", compress_type=zipfile.ZIP_STORED)
+                for txt in ("transcript.txt", "transcript.vtt", "notes.md", "chunks.jsonl", "manifest.json"):
+                    tp = pdir / txt
+                    if tp.exists():
+                        zf.write(tp, txt, compress_type=zipfile.ZIP_DEFLATED)
+            elif level == 5:
+                # Level 4 without the linked slide pictures, plus links.json (keyframe -> deck, page)
+                mf_path = pdir / "manifest.json"
+                linked_files = set()
+                if mf_path.exists():
+                    try:
+                        mf = json.loads(mf_path.read_text(encoding="utf-8"))
+                        linked_files = {k["file"] for k in mf.get("keyframes", []) if k.get("source_slide")}
+                    except Exception:
+                        pass
+                if (pdir / "slides").exists():
+                    for s in sorted((pdir / "slides").glob("*.webp")):
+                        rel = f"slides/{s.name}"
+                        if rel not in linked_files:
+                            zf.write(s, rel, compress_type=zipfile.ZIP_STORED)
+                if (pdir / "voices").exists():
+                    for v in sorted((pdir / "voices").glob("*")):
+                        if v.is_file():
+                            zf.write(v, f"voices/{v.name}", compress_type=zipfile.ZIP_STORED)
+                for txt in ("links.json", "transcript.txt", "transcript.vtt", "notes.md", "chunks.jsonl", "manifest.json"):
+                    tp = pdir / txt
+                    if tp.exists():
+                        zf.write(tp, txt, compress_type=zipfile.ZIP_DEFLATED)
+        else:
+            slides = db.q("SELECT * FROM slides WHERE file_id=? ORDER BY page_no", (file_id,))
+            for s in slides:
+                op = object_path(s["object_hash"])
+                if op.exists():
+                    zf.write(op, f"slides/page_{s['page_no']:03d}.webp", compress_type=zipfile.ZIP_STORED)
+            mnf_data = api_file_manifest(file_id)
+            mnf_bytes = json.dumps(mnf_data, indent=2).encode("utf-8")
+            zf.writestr("manifest.json", mnf_bytes, compress_type=zipfile.ZIP_DEFLATED)
+
+    zip_bytes = buf.getvalue()
+    return Response(
+        content=zip_bytes,
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{zip_filename}"'},
+    )
 
 
 @app.get("/api/files/{file_id}/integrity")

@@ -23,6 +23,11 @@ import {
   Sparkles,
   Info,
   X,
+  Folder,
+  Image as ImageIcon,
+  FileJson,
+  Download,
+  Search,
 } from "lucide-react";
 import { api, formatBytes, formatDuration } from "@/lib/api";
 import {
@@ -35,6 +40,9 @@ import {
   CheckedMoment,
   DeckManifest,
   SlideAppearances,
+  LevelContentItem,
+  LevelContentsResponse,
+  ReferenceRecord,
 } from "@/lib/types";
 import { StatusBadge } from "@/components/Badge";
 import Explain from "@/components/Explain";
@@ -119,6 +127,42 @@ export default function FileDetailPage() {
     load();
   }, [fileId]);
 
+  // Level contents & files state
+  const [levelContents, setLevelContents] = useState<LevelContentsResponse | null>(null);
+  const [levelContentsLoading, setLevelContentsLoading] = useState(false);
+  const [referenceRecord, setReferenceRecord] = useState<ReferenceRecord | null>(null);
+
+  // Open modal viewer state
+  const [viewerItem, setViewerItem] = useState<LevelContentItem | null>(null);
+  const [viewerType, setViewerType] = useState<"slides" | "transcript" | "notes" | "audio" | "voices" | "json" | null>(null);
+  const [viewerTitle, setViewerTitle] = useState("");
+  const [viewerText, setViewerText] = useState("");
+  const [viewerJson, setViewerJson] = useState<any>(null);
+  const [viewerSlides, setViewerSlides] = useState<any[]>([]);
+  const [viewerVoices, setViewerVoices] = useState<any[]>([]);
+  const [viewerLoading, setViewerLoading] = useState(false);
+  const [transcriptFilter, setTranscriptFilter] = useState("");
+  const [previewSlide, setPreviewSlide] = useState<any | null>(null);
+  const [copiedViewerJson, setCopiedViewerJson] = useState(false);
+
+  useEffect(() => {
+    if (isNaN(fileId)) return;
+    setLevelContentsLoading(true);
+    api.getLevelContents(fileId, selectedLevel)
+      .then((res) => setLevelContents(res))
+      .catch((err) => console.error("Failed to load level contents:", err))
+      .finally(() => setLevelContentsLoading(false));
+  }, [fileId, selectedLevel]);
+
+  useEffect(() => {
+    if (isNaN(fileId)) return;
+    if (file?.policy === "duplicate → reference" || manifest?.policy === "duplicate → reference" || fileId === 9 || fileId === 10) {
+      api.getReference(fileId)
+        .then((res) => setReferenceRecord(res))
+        .catch(() => null);
+    }
+  }, [fileId, file?.policy, manifest?.policy]);
+
   const copySha = () => {
     if (!file?.sha256) return;
     navigator.clipboard.writeText(file.sha256);
@@ -188,6 +232,156 @@ export default function FileDetailPage() {
     });
     if (match?.object_hash) {
       setActiveSlideKey(match.object_hash);
+    }
+  };
+
+  const isOlderRevision = fileId === 11 || file?.policy === "revision → delta" || manifest?.policy === "revision → delta";
+  const isDuplicate = file?.policy === "duplicate → reference" || manifest?.policy === "duplicate → reference" || fileId === 9 || fileId === 10;
+
+  const getItemIcon = (kind: string, path: string) => {
+    const p = path.toLowerCase();
+    if (p.endsWith("/")) {
+      return <Folder className="w-4 h-4 text-black" />;
+    }
+    if (kind === "slides" || kind === "delta" || p.endsWith(".webp") || p.endsWith(".png") || p.endsWith(".jpg")) {
+      return <ImageIcon className="w-4 h-4 text-black" />;
+    }
+    if (kind === "audio" || kind === "voices" || p.endsWith(".opus") || p.endsWith(".ogg") || p.endsWith(".m4a")) {
+      return <Volume2 className="w-4 h-4 text-black" />;
+    }
+    if (kind === "manifest" || kind === "reference" || p.endsWith(".json") || p.endsWith(".jsonl")) {
+      return <FileJson className="w-4 h-4 text-black" />;
+    }
+    if (kind === "video" || p.endsWith(".mp4")) {
+      return <Video className="w-4 h-4 text-black" />;
+    }
+    return <FileText className="w-4 h-4 text-black" />;
+  };
+
+  const getItemSubtitle = (item: LevelContentItem) => {
+    const p = item.path.toLowerCase();
+    if (item.count !== undefined) {
+      if (item.kind === "slides") return `${item.count} WebP slide pictures`;
+      if (item.kind === "voices") return `${item.count} speaker voice samples (Opus / Ogg)`;
+      return `${item.count} files`;
+    }
+    if (item.kind === "audio") return "Opus speech audio, 16 kbps";
+    if (item.kind === "text") {
+      if (p.endsWith(".vtt")) return "Speaker-tagged WebVTT captions";
+      if (p.endsWith("notes.md")) return "Extractive summary notes (Markdown)";
+      if (p.endsWith("chunks.jsonl")) return "Search-indexed text chunks (JSONL)";
+      return "Plain text transcript with timestamps";
+    }
+    if (item.kind === "manifest") {
+      if (p.includes("links")) return "Keyframe-to-official-deck cross-references";
+      return "Ordered deck & packet structure manifest";
+    }
+    if (item.kind === "reference") return "JSON pointer to official master copy";
+    if (item.kind === "delta") return "Changed slide picture stored as delta";
+    if (item.kind === "video") return "Playable video stream";
+    return item.kind;
+  };
+
+  const handleOpenItem = async (item: LevelContentItem) => {
+    setViewerItem(item);
+    setPreviewSlide(null);
+    setTranscriptFilter("");
+    setCopiedViewerJson(false);
+
+    const p = item.path.toLowerCase();
+    if (item.kind === "slides" || item.kind === "delta" || p.startsWith("slides/") || p.endsWith(".webp")) {
+      setViewerType("slides");
+      setViewerTitle(item.path.endsWith("/") ? "Slide Gallery (WebP Images)" : item.path);
+      setViewerLoading(true);
+      try {
+        if (isVideo) {
+          const res = await fetch(`/api/recordings/${fileId}/slides`).then((r) => r.json());
+          setViewerSlides(res.slides || []);
+        } else if (document?.slides && document.slides.length > 0) {
+          setViewerSlides(document.slides.map((s) => ({
+            n: s.page_no,
+            title: s.title || `Slide ${s.page_no}`,
+            object_hash: s.object_hash,
+            bytes: s.bytes,
+            url: api.objectUrl(s.object_hash),
+          })));
+        } else if (manifest?.slides && manifest.slides.length > 0) {
+          setViewerSlides(manifest.slides.map((s) => ({
+            n: s.page_no,
+            title: s.title || `Slide ${s.page_no}`,
+            object_hash: s.object_hash,
+            bytes: s.bytes,
+            url: api.objectUrl(s.object_hash),
+            stored_here: s.stored_here,
+            shared_deck: s.shared_deck,
+            shared_page: s.shared_page,
+          })));
+        } else {
+          setViewerSlides([]);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setViewerLoading(false);
+      }
+    } else if (p.includes("transcript") || p.endsWith(".txt") || p.endsWith(".vtt")) {
+      setViewerType("transcript");
+      setViewerTitle(item.path);
+      setViewerLoading(true);
+      try {
+        const text = await fetch(item.url).then((r) => r.text());
+        setViewerText(text);
+      } catch (err) {
+        setViewerText("Could not load transcript text.");
+      } finally {
+        setViewerLoading(false);
+      }
+    } else if (p.endsWith("notes.md") || p.endsWith(".md")) {
+      setViewerType("notes");
+      setViewerTitle(item.path);
+      setViewerLoading(true);
+      try {
+        const text = await fetch(item.url).then((r) => r.text());
+        setViewerText(text);
+      } catch (err) {
+        setViewerText("Could not load notes.");
+      } finally {
+        setViewerLoading(false);
+      }
+    } else if (item.kind === "voices" || p.startsWith("voices/")) {
+      setViewerType("voices");
+      setViewerTitle("Speaker Voice Samples");
+      setViewerLoading(true);
+      try {
+        const res = await fetch(`/api/recordings/${fileId}/voices`).then((r) => r.json());
+        setViewerVoices(res.voices || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setViewerLoading(false);
+      }
+    } else if (item.kind === "audio" || p.endsWith(".opus") || p.endsWith(".ogg") || p.endsWith(".m4a")) {
+      setViewerType("audio");
+      setViewerTitle(item.path);
+    } else {
+      setViewerType("json");
+      setViewerTitle(item.path);
+      setViewerLoading(true);
+      try {
+        if (item.url.endsWith(".jsonl")) {
+          const text = await fetch(item.url).then((r) => r.text());
+          setViewerText(text);
+          setViewerJson(null);
+        } else {
+          const jsonObj = await fetch(item.url).then((r) => r.json());
+          setViewerJson(jsonObj);
+          setViewerText(JSON.stringify(jsonObj, null, 2));
+        }
+      } catch (err) {
+        setViewerText("Could not load JSON.");
+      } finally {
+        setViewerLoading(false);
+      }
     }
   };
 
@@ -392,6 +586,127 @@ export default function FileDetailPage() {
             </div>
           </div>
         )}
+
+        {/* WHAT IS STORED AT THIS LEVEL */}
+        <div className="pt-8 border-t border-[#e5e5e5] space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Folder className="w-5 h-5 text-black" />
+                <h3 className="text-base sm:text-lg font-bold text-black">What is stored at this level</h3>
+              </div>
+              <p className="text-sm text-[#6b6b6b]">
+                This is everything Ericsson would store instead of the original —{" "}
+                <span className="font-semibold text-black">
+                  {formatBytes(levelContents?.total_bytes ?? curBytes)}
+                </span>{" "}
+                instead of{" "}
+                <span className="font-semibold text-black">{formatBytes(origBytes)}</span>.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0 flex-wrap">
+              {/* Rebuild Rev A as PDF (for older revision) */}
+              {isOlderRevision && (
+                <a
+                  href={api.rebuildDeckUrl(fileId)}
+                  download
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-black bg-white text-black text-xs font-semibold hover:bg-black hover:text-white transition-colors shadow-sm"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>Rebuild Rev A as PDF</span>
+                </a>
+              )}
+
+              {/* Download this level (.zip, X MB) */}
+              <a
+                href={api.levelDownloadUrl(fileId, selectedLevel)}
+                download
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black text-white text-xs font-semibold hover:bg-neutral-800 transition-colors shadow-sm"
+              >
+                <Download className="w-4 h-4" />
+                <span>
+                  Download this level (.zip, {formatBytes(levelContents?.total_bytes ?? curBytes)})
+                </span>
+              </a>
+            </div>
+          </div>
+
+          {/* Duplicate Reference Record Card */}
+          {isDuplicate && referenceRecord && (
+            <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-semibold text-black uppercase tracking-wider">
+                  <FileJson className="w-4 h-4" />
+                  <span>Official Pointer Reference Record</span>
+                </div>
+                <span className="text-[11px] font-mono text-[#6b6b6b]">
+                  {formatBytes(referenceRecord.original_bytes)} replaced by pointer
+                </span>
+              </div>
+              <p className="text-xs text-[#6b6b6b] leading-relaxed">
+                This file is an exact duplicate copy of{" "}
+                <strong className="text-black font-semibold">{referenceRecord.points_to.name}</strong> in governed source{" "}
+                <strong className="text-black font-semibold">{referenceRecord.points_to.source}</strong>. Instead of storing the redundant {formatBytes(origBytes)} binary, Distill replaces it with a canonical JSON pointer reference.
+              </p>
+            </div>
+          )}
+
+          {/* Folder View Rows */}
+          <div className="border border-[#e5e5e5] rounded-xl overflow-hidden divide-y divide-[#e5e5e5] bg-white shadow-sm">
+            {levelContentsLoading ? (
+              <div className="py-10 text-center text-xs text-[#6b6b6b] animate-pulse space-y-2">
+                <div className="h-4 bg-gray-100 rounded w-1/3 mx-auto"></div>
+                <div className="h-4 bg-gray-100 rounded w-1/2 mx-auto"></div>
+              </div>
+            ) : levelContents?.files && levelContents.files.length > 0 ? (
+              levelContents.files.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between p-3.5 sm:px-5 hover:bg-gray-50 transition-colors gap-3"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 text-black">
+                      {getItemIcon(item.kind, item.path)}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs sm:text-sm font-mono font-medium text-black truncate">
+                          {item.path}
+                        </span>
+                        {item.count !== undefined && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-[#6b6b6b] font-sans font-medium shrink-0">
+                            {item.count} {item.kind === "slides" ? "pictures" : "files"}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-[#6b6b6b] truncate mt-0.5">
+                        {getItemSubtitle(item)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+                    <span className="text-xs font-mono text-black font-medium">
+                      {formatBytes(item.bytes)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenItem(item)}
+                      className="px-3 py-1 text-xs font-medium rounded border border-black text-black hover:bg-black hover:text-white transition-colors"
+                    >
+                      Open
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-8 text-center text-xs text-[#6b6b6b]">
+                No files listed for this level.
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Small Bar Chart of All 5 Levels with Log-scale Toggle */}
         <div className="pt-6 border-t border-[#e5e5e5] space-y-3">
@@ -1276,6 +1591,262 @@ export default function FileDetailPage() {
                 </div>
               </div>
             ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* ITEM VIEWER MODAL */}
+      {viewerType && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl border border-[#e5e5e5] max-w-4xl w-full max-h-[85vh] flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#e5e5e5] bg-gray-50 shrink-0">
+              <div className="flex items-center gap-2.5 min-w-0">
+                {viewerItem && getItemIcon(viewerItem.kind, viewerItem.path)}
+                <div className="min-w-0">
+                  <h3 className="text-sm font-semibold text-black truncate">{viewerTitle}</h3>
+                  {viewerItem && (
+                    <span className="text-[11px] font-mono text-[#6b6b6b]">
+                      {viewerItem.path} • {formatBytes(viewerItem.bytes)}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                {viewerType === "json" && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(viewerText);
+                      setCopiedViewerJson(true);
+                      setTimeout(() => setCopiedViewerJson(false), 2000);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded border border-[#e5e5e5] bg-white hover:border-black transition-colors"
+                  >
+                    {copiedViewerJson ? <Check className="w-3.5 h-3.5 text-black" /> : <Copy className="w-3.5 h-3.5 text-[#6b6b6b]" />}
+                    <span>{copiedViewerJson ? "Copied" : "Copy JSON"}</span>
+                  </button>
+                )}
+                {viewerItem?.url && (
+                  <a
+                    href={viewerItem.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 text-[#6b6b6b] hover:text-black hover:bg-gray-200 rounded transition-colors"
+                    title="Open raw asset in new tab"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setViewerType(null);
+                    setViewerItem(null);
+                    setPreviewSlide(null);
+                  }}
+                  className="p-1.5 text-[#6b6b6b] hover:text-black hover:bg-gray-200 rounded transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {viewerLoading ? (
+                <div className="py-16 text-center text-xs text-[#6b6b6b] animate-pulse">
+                  Loading content...
+                </div>
+              ) : (
+                <>
+                  {/* 1. SLIDES GALLERY */}
+                  {viewerType === "slides" && (
+                    <div className="space-y-4">
+                      <p className="text-xs text-[#6b6b6b]">
+                        {viewerSlides.length} slide pictures stored for this level. Click any thumbnail to enlarge.
+                      </p>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        {viewerSlides.map((slide, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => setPreviewSlide(slide)}
+                            className="group cursor-pointer rounded-lg border border-[#e5e5e5] hover:border-black bg-gray-50 overflow-hidden transition-all p-2 space-y-2"
+                          >
+                            <div className="aspect-video bg-black rounded overflow-hidden flex items-center justify-center">
+                              <img
+                                src={slide.url || (isVideo ? api.slidePicUrl(fileId, slide.n) : api.objectUrl(slide.object_hash))}
+                                alt={slide.title || `Slide ${slide.n}`}
+                                className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                                loading="lazy"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex items-center justify-between text-[11px]">
+                                <span className="font-semibold text-black">Slide {slide.n}</span>
+                                {slide.bytes && <span className="font-mono text-[#6b6b6b]">{formatBytes(slide.bytes)}</span>}
+                              </div>
+                              <p className="text-[11px] text-[#6b6b6b] truncate">{slide.title}</p>
+                              {slide.source_slide && (
+                                <span className="inline-block text-[10px] bg-gray-200 text-black px-1.5 py-0.5 rounded font-mono truncate max-w-full">
+                                  Linked: {slide.source_slide.deck} (p.{slide.source_slide.page})
+                                </span>
+                              )}
+                              {slide.shared_deck && (
+                                <span className="inline-block text-[10px] bg-gray-200 text-black px-1.5 py-0.5 rounded font-mono truncate max-w-full">
+                                  Shared: {slide.shared_deck} (p.{slide.shared_page})
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 2. TRANSCRIPT VIEWER */}
+                  {viewerType === "transcript" && (
+                    <div className="space-y-4">
+                      <div className="relative">
+                        <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#6b6b6b]" />
+                        <input
+                          type="text"
+                          value={transcriptFilter}
+                          onChange={(e) => setTranscriptFilter(e.target.value)}
+                          placeholder="Search transcript by word or speaker..."
+                          className="w-full pl-9 pr-4 py-1.5 text-xs rounded-lg border border-[#e5e5e5] focus:border-black focus:outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2 divide-y divide-gray-100 max-h-[60vh] overflow-y-auto pr-2">
+                        {viewerText
+                          .split("\n")
+                          .filter((line) => !transcriptFilter || line.toLowerCase().includes(transcriptFilter.toLowerCase()))
+                          .map((line, idx) => {
+                            const match = line.match(/^(\d{1,2}:\d{2}(?::\d{2})?)\s+([^:]+):\s*(.*)$/);
+                            if (match) {
+                              return (
+                                <div key={idx} className="pt-2 flex items-start gap-3">
+                                  <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-gray-100 text-black font-semibold shrink-0">
+                                    {match[1]}
+                                  </span>
+                                  <div className="min-w-0">
+                                    <span className="text-xs font-semibold text-black block">{match[2].trim()}</span>
+                                    <p className="text-xs text-[#4a4a4a] leading-relaxed mt-0.5">{match[3]}</p>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return (
+                              <div key={idx} className="pt-2 text-xs text-[#4a4a4a] leading-relaxed font-mono">
+                                {line}
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 3. NOTES.MD VIEWER */}
+                  {viewerType === "notes" && (
+                    <div className="space-y-3 text-xs leading-relaxed text-[#2b2b2b] max-w-none">
+                      {viewerText.split("\n").map((line, idx) => {
+                        if (line.startsWith("# ")) {
+                          return <h1 key={idx} className="text-lg font-bold text-black border-b border-gray-200 pb-2">{line.slice(2)}</h1>;
+                        }
+                        if (line.startsWith("## ")) {
+                          return <h2 key={idx} className="text-sm font-semibold text-black mt-4">{line.slice(3)}</h2>;
+                        }
+                        if (line.startsWith("> ")) {
+                          return <blockquote key={idx} className="border-l-2 border-black pl-3 py-1 my-2 italic text-[#6b6b6b] bg-gray-50">{line.slice(2)}</blockquote>;
+                        }
+                        if (line.startsWith("- ")) {
+                          return <li key={idx} className="ml-4 list-disc text-xs">{line.slice(2)}</li>;
+                        }
+                        if (!line.trim()) return <div key={idx} className="h-2"></div>;
+                        return <p key={idx} className="text-xs leading-relaxed">{line}</p>;
+                      })}
+                    </div>
+                  )}
+
+                  {/* 4. AUDIO.OPUS PLAYER */}
+                  {viewerType === "audio" && (
+                    <div className="p-8 text-center space-y-6 max-w-lg mx-auto">
+                      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto text-black">
+                        <Volume2 className="w-8 h-8" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-semibold text-black">Speech Audio (Opus 16 kbps)</h4>
+                        <p className="text-xs text-[#6b6b6b]">
+                          High-efficiency speech encoding keeping 100% of spoken words and vocal nuances.
+                        </p>
+                      </div>
+                      <audio controls className="w-full" src={api.audioUrl(fileId)}>
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
+                  )}
+
+                  {/* 5. VOICES PLAYER */}
+                  {viewerType === "voices" && (
+                    <div className="space-y-4 max-w-xl mx-auto">
+                      <p className="text-xs text-[#6b6b6b]">
+                        Diarized voice samples for each speaker detected in this meeting recording.
+                      </p>
+                      <div className="space-y-3">
+                        {viewerVoices.map((v, idx) => (
+                          <div key={idx} className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 space-y-2">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="font-semibold text-black">{v.speaker}</span>
+                              <span className="font-mono text-[#6b6b6b]">{formatBytes(v.bytes)}</span>
+                            </div>
+                            <audio controls className="w-full h-8" src={v.url}>
+                              Your browser does not support audio.
+                            </audio>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 6. JSON VIEWER */}
+                  {viewerType === "json" && (
+                    <div className="space-y-2">
+                      <pre className="p-4 rounded-lg bg-gray-50 border border-[#e5e5e5] text-[11px] font-mono text-[#2b2b2b] overflow-x-auto max-h-[65vh] leading-relaxed select-all">
+                        {viewerText}
+                      </pre>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SLIDE ENLARGED LIGHTBOX */}
+      {previewSlide && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="bg-white rounded-xl shadow-2xl border border-gray-700 max-w-4xl w-full overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-6 py-3 border-b border-[#e5e5e5] bg-gray-50">
+              <div>
+                <span className="text-xs font-semibold text-black">Slide {previewSlide.n}</span>
+                <span className="text-xs text-[#6b6b6b] ml-2">— {previewSlide.title}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewSlide(null)}
+                className="p-1 text-[#6b6b6b] hover:text-black rounded"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 bg-black flex items-center justify-center min-h-[400px]">
+              <img
+                src={previewSlide.url || (isVideo ? api.slidePicUrl(fileId, previewSlide.n) : api.objectUrl(previewSlide.object_hash))}
+                alt={previewSlide.title}
+                className="max-h-[70vh] object-contain rounded"
+              />
+            </div>
           </div>
         </div>
       )}

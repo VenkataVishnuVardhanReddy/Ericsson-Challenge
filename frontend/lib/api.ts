@@ -11,6 +11,8 @@ import {
   OffboardReport,
   SearchResult,
   PipelineInfo,
+  LevelContentsResponse,
+  ReferenceRecord,
 } from "./types";
 
 const API_BASE = typeof window !== "undefined" ? "" : (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000");
@@ -139,6 +141,24 @@ export const api = {
     fetchJson<any>(`/api/recordings/${id}/recreate?mode=${mode}&force=${force}`, {
       method: "POST",
     }),
+
+  getLevelContents: (fileId: number, level: number) =>
+    fetchJson<LevelContentsResponse>(`/api/files/${fileId}/levels/${level}/contents`),
+
+  levelDownloadUrl: (fileId: number, level: number) =>
+    `${API_BASE}/api/files/${fileId}/levels/${level}/download`,
+
+  getReference: (fileId: number) =>
+    fetchJson<ReferenceRecord>(`/api/files/${fileId}/reference`),
+
+  rebuildDeckUrl: (fileId: number) =>
+    `${API_BASE}/api/files/${fileId}/rebuild`,
+
+  slidePicUrl: (recordingId: number, n: number | string) =>
+    `${API_BASE}/api/recordings/${recordingId}/slides/${n}`,
+
+  packetAssetUrl: (recordingId: number, asset: string) =>
+    `${API_BASE}/api/recordings/${recordingId}/packet/${asset}`,
 };
 
 export function formatBytes(bytes: number | null | undefined): string {
