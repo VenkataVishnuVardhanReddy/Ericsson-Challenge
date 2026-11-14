@@ -4,8 +4,14 @@ venv/
 __pycache__/
 *.pyc
 
-# Local data, models and generated output (large / machine-specific)
-data/
+# Local data exclusions (large models & raw sources)
+data/models/
+data/raw/
+data/uploads/
+data/_old_rescued/
+data/*.db-wal
+data/*.db-shm
+data/*.db-journal
 scratch/
 scratch_tts/
 .quarantine/
@@ -15,14 +21,18 @@ frontend/node_modules/
 frontend/.next/
 frontend/out/
 
-# Ericsson sample material & large binaries
+# Ericsson sample material & large raw binaries
 sample_data/
 ericsson.pdf
+raw/
+
+# Allow recreated demo videos while ignoring raw video binaries
 *.mp4
-*.msg
+!data/recreated/*.mp4
 
 # Editors / OS
 .vscode/
 .idea/
 Thumbs.db
 .DS_Store
+Claude outputs/

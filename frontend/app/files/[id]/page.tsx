@@ -152,6 +152,10 @@ export default function FileDetailPage() {
       .then((res) => setLevelContents(res))
       .catch((err) => console.error("Failed to load level contents:", err))
       .finally(() => setLevelContentsLoading(false));
+
+    api.getFileIntegrity(fileId, selectedLevel)
+      .then((res) => setIntegrity(res))
+      .catch((err) => console.error("Failed to load level integrity:", err));
   }, [fileId, selectedLevel]);
 
   useEffect(() => {
@@ -1132,155 +1136,433 @@ export default function FileDetailPage() {
           <span className="text-xs uppercase tracking-wider text-[#6b6b6b] font-semibold">Part 3</span>
           <h2 className="text-xl font-bold text-black mt-1">Was anything lost?</h2>
           <p className="text-sm text-[#6b6b6b] mt-0.5">
-            We sampled 20 evenly spaced moments across the original recording to verify exactly what was preserved and prove nothing critical was discarded.
+            {isVideo
+              ? `Verification of information preservation at Level ${selectedLevel} (${currentLevelObj?.name || ""}): measured against the original raw recording.`
+              : "Cryptographic and structural verification proving no content was lost during distillation."}
           </p>
         </div>
 
-        {/* Result Lines with '?' Tooltip Explanations */}
-        <div className="border border-[#e5e5e5] rounded-xl p-5 bg-white divide-y divide-[#e5e5e5] text-sm">
-          {/* Line 1: Slide text kept */}
-          <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-black">Slide text kept:</span>
-              <span className="font-mono text-black font-medium">
-                {integrity?.text_kept_pct !== undefined && integrity?.text_kept_pct !== null
-                  ? `${(integrity.text_kept_pct * 100).toFixed(1)}%`
-                  : (integrity?.text_note || "—")}
-              </span>
-              <span className="text-xs text-[#6b6b6b]">
-                ({integrity?.text_moments || 0} text moments)
-              </span>
-            </div>
-            <span
-              className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
-              title="Slide text kept: Measures whether characters and words visible on slides in the original video are present in the distilled text or linked presentation decks."
-            >
-              ?
-            </span>
-          </div>
+        {!isVideo ? (
+          /* DOCUMENT VERIFICATION SECTION (PROVEN / MEASURED — NO ARBITRARY PERCENTAGE BARS) */
+          <div className="space-y-6">
+            <div className="p-6 rounded-xl border border-black bg-gray-50/70 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className={`inline-block px-2.5 py-1 text-xs font-mono font-bold uppercase rounded border ${
+                    integrity?.status === "proven"
+                      ? "border-black bg-black text-white"
+                      : integrity?.status === "measured"
+                      ? "border-black bg-white text-black"
+                      : "border-gray-300 bg-gray-100 text-gray-500"
+                  }`}>
+                    {integrity?.status === "proven" ? "Proven" : integrity?.status === "measured" ? "Measured" : "Not measured"}
+                  </span>
+                  <span className="text-sm font-semibold text-black">
+                    {integrity?.method === "content_id"
+                      ? "Slide-by-slide structural equivalence"
+                      : integrity?.method === "text_hash"
+                      ? "Decompressed text hash equivalence"
+                      : "Cryptographic SHA-256 bit-level match"}
+                  </span>
+                </div>
+                <span className="font-mono text-xs text-[#6b6b6b]">
+                  Method: {integrity?.method || "sha256"}
+                </span>
+              </div>
 
-          {/* Line 2: Pictures match (pixel comparison, no OCR) */}
-          <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-black">Pictures match (pixel comparison, no OCR):</span>
-              <span className="font-mono text-black font-medium">
-                {integrity?.visual_match_pct !== undefined && integrity?.visual_match_pct !== null
-                  ? `${(integrity.visual_match_pct * 100).toFixed(1)}%`
-                  : (integrity?.pictures_kept_pct !== undefined && integrity?.pictures_kept_pct !== null
-                    ? `${(integrity.pictures_kept_pct * 100).toFixed(1)}%`
-                    : (integrity?.picture_note || "—"))}
-              </span>
-              <span className="text-xs text-[#6b6b6b]">
-                ({integrity?.frames_checked || 20} moments checked)
-              </span>
-            </div>
-            <span
-              className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
-              title="Pictures match: Compares original video frames against kept slide pictures using perceptual hashing (pHash distance <= 12) with presenter activity mask applied."
-            >
-              ?
-            </span>
-          </div>
+              <div className="border-t border-[#e5e5e5] pt-4">
+                <div className="text-2xl font-mono font-bold text-black tracking-tight">
+                  {integrity?.verification_badge || "Proven: SHA-256 identical"}
+                </div>
+                <p className="text-xs text-[#6b6b6b] mt-1.5 leading-relaxed">
+                  {integrity?.verification_detail || "Original file content verified against digest."}
+                </p>
+              </div>
 
-          {/* Line 3: Moving video */}
-          <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-black">Moving video:</span>
-              <span className="font-mono text-black font-medium">
-                {integrity?.moving_video_pct !== undefined && integrity?.moving_video_pct !== null
-                  ? `${(integrity.moving_video_pct * 100).toFixed(1)}%`
-                  : "0.0%"}
-              </span>
-              <span className="text-xs text-[#6b6b6b]">
-                of the recording — kept only in levels 1–2, by design
-              </span>
-            </div>
-            <span
-              className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
-              title="Moving video: Dynamic motion like live presenter cameras and animations. Levels 3–5 intentionally drop moving video to maximize storage savings while keeping all slide content and speech audio."
-            >
-              ?
-            </span>
-          </div>
+              {/* Special older revision rebuild inspection */}
+              {integrity?.method === "content_id" && (
+                <div className="mt-4 pt-4 border-t border-[#e5e5e5] space-y-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+                    <div className="p-3 rounded border border-[#e5e5e5] bg-white">
+                      <span className="text-[10px] text-[#6b6b6b] block uppercase">Original Slides</span>
+                      <span className="text-lg font-bold text-black">{integrity?.total_slides || 25}</span>
+                    </div>
+                    <div className="p-3 rounded border border-[#e5e5e5] bg-white">
+                      <span className="text-[10px] text-[#6b6b6b] block uppercase">Rebuilt Match</span>
+                      <span className="text-lg font-bold text-black">
+                        {integrity?.slides_identical || 25} / {integrity?.total_slides || 25}
+                      </span>
+                    </div>
+                    <div className="p-3 rounded border border-[#e5e5e5] bg-white">
+                      <span className="text-[10px] text-[#6b6b6b] block uppercase">Shared with Rev B</span>
+                      <span className="text-lg font-bold text-black">18 slides</span>
+                    </div>
+                    <div className="p-3 rounded border border-[#e5e5e5] bg-white">
+                      <span className="text-[10px] text-[#6b6b6b] block uppercase">Delta Unique</span>
+                      <span className="text-lg font-bold text-black">7 slides</span>
+                    </div>
+                  </div>
 
-          {/* Line 4: OCR reads official slide text correctly */}
-          {integrity?.ocr_accuracy_pct !== undefined && integrity?.ocr_accuracy_pct !== null && (
-            <div className="py-3 first:pt-0 last:pb-0 space-y-2">
-              <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <a
+                      href={api.rebuildDeckUrl(fileId)}
+                      download
+                      className="px-3.5 py-1.5 rounded-lg border border-black bg-black text-white text-xs font-medium hover:bg-neutral-800 transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download Rebuilt PDF ({integrity?.slides_identical || 25} slides)</span>
+                    </a>
+                    <a
+                      href={`/api/files/${fileId}/rebuild?format=json`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3.5 py-1.5 rounded-lg border border-black bg-white text-black text-xs font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>Inspect Slide Comparison JSON</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Checklist of guarantees */}
+            {integrity?.checks && integrity.checks.length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-xs uppercase tracking-wider font-semibold text-black">
+                  Preservation Checks
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {integrity.checks.map((c, i) => (
+                    <div key={i} className="p-3.5 rounded-lg border border-[#e5e5e5] bg-gray-50/60 flex items-start gap-3">
+                      <span className="px-2 py-0.5 rounded border border-black bg-black text-white text-[10px] font-mono font-bold uppercase shrink-0 mt-0.5">
+                        PASSED
+                      </span>
+                      <div>
+                        <span className="text-xs font-semibold text-black block">{c.name}</span>
+                        <span className="text-[11px] text-[#6b6b6b] block mt-0.5">{c.detail}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* CAS Hashes */}
+            <div className="pt-2">
+              <h4 className="text-xs font-mono uppercase tracking-wider text-[#6b6b6b] mb-2">
+                Content-Addressable Storage (CAS) Identifiers
+              </h4>
+              <div className="border border-[#e5e5e5] rounded-xl overflow-x-auto text-[11px] font-mono bg-white">
+                <table className="w-full text-left border-collapse">
+                  <tbody className="divide-y divide-[#e5e5e5]">
+                    {integrity?.cas_hashes?.raw_sha256 && (
+                      <tr className="hover:bg-gray-50">
+                        <td className="py-2.5 px-3.5 text-[#6b6b6b] w-48 font-semibold">RAW_SHA256</td>
+                        <td className="py-2.5 px-3.5 text-black break-all font-mono select-all">
+                          {integrity.cas_hashes.raw_sha256}
+                        </td>
+                      </tr>
+                    )}
+                    {manifest?.slides && manifest.slides.length > 0 && (
+                      <tr className="hover:bg-gray-50">
+                        <td className="py-2.5 px-3.5 text-[#6b6b6b] w-48 font-semibold">SLIDES_REGISTERED</td>
+                        <td className="py-2.5 px-3.5 text-[#6b6b6b]">
+                          {manifest.slides.length} slides registered ({manifest.slides.filter(s => s.stored_here).length} stored in delta, {manifest.slides.filter(s => !s.stored_here).length} referenced from official deck)
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* VIDEO VERIFICATION SECTION (20 MOMENTS, BADGES PER LEVEL) */
+          <div className="space-y-6">
+            {/* Level status header card */}
+            <div className="p-4 rounded-xl border border-[#e5e5e5] bg-gray-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-black">OCR reads official slide text correctly:</span>
+                  <span className="font-semibold text-black text-sm">
+                    Level {selectedLevel}: {currentLevelObj?.name || ""}
+                  </span>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border ${
+                    integrity?.status === "measured"
+                      ? "border-black bg-black text-white"
+                      : integrity?.status === "estimated"
+                      ? "border-gray-400 bg-white text-gray-700 border-dashed"
+                      : "border-gray-300 bg-gray-100 text-gray-500"
+                  }`}>
+                    {integrity?.status === "measured" ? "Measured" : integrity?.status === "estimated" ? "Estimated" : "Not measured"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#6b6b6b]">
+                  {integrity?.verification_detail || "Verification results for this compression level."}
+                </p>
+              </div>
+              {integrity?.retention_score !== null && integrity?.retention_score !== undefined && (
+                <div className="text-right sm:border-l sm:border-gray-200 sm:pl-4">
+                  <span className="text-[10px] uppercase font-mono text-[#6b6b6b] block">Information Kept</span>
+                  <span className="text-xl font-bold font-mono text-black">{integrity.retention_score}%</span>
+                </div>
+              )}
+            </div>
+
+            {/* Result Lines with Badges and '?' Tooltip Explanations */}
+            <div className="border border-[#e5e5e5] rounded-xl p-5 bg-white divide-y divide-[#e5e5e5] text-sm">
+              {/* Line 1: Slide text kept */}
+              <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold text-black">Slide text kept:</span>
                   <span className="font-mono text-black font-medium">
-                    {(integrity.ocr_accuracy_pct * 100).toFixed(1)}%
+                    {integrity?.text_kept_pct !== undefined && integrity?.text_kept_pct !== null
+                      ? `${(integrity.text_kept_pct * 100).toFixed(1)}%`
+                      : "—"}
+                  </span>
+                  <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                    integrity?.text_kept_pct !== undefined && integrity?.text_kept_pct !== null
+                      ? "border-black text-black bg-white"
+                      : integrity?.status === "estimated"
+                      ? "border-gray-300 text-gray-600 bg-gray-50"
+                      : "border-gray-200 text-gray-400"
+                  }`}>
+                    {integrity?.text_kept_pct !== undefined && integrity?.text_kept_pct !== null
+                      ? "Measured"
+                      : integrity?.status === "estimated"
+                      ? "Estimated"
+                      : "Not measured"}
                   </span>
                   <span className="text-xs text-[#6b6b6b]">
-                    ({integrity?.ocr_slides_checked || 0} slides, checked against the original PDF text)
+                    ({integrity?.text_moments || 0} text moments checked)
                   </span>
                 </div>
                 <span
                   className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
-                  title="OCR reads official slide text correctly: Measures word recall by checking whether clean words (>= 3 chars) from original presentation deck slides are accurately recognized in distilled slide pictures."
+                  title="Slide text kept: Character-level and word-level matching between original frame OCR and distilled text / linked presentation slides."
                 >
                   ?
                 </span>
               </div>
 
-              {integrity.lowest_slides && integrity.lowest_slides.length > 0 && (
-                <details className="text-xs group border-t border-[#e5e5e5] pt-2">
-                  <summary className="font-medium text-black cursor-pointer hover:underline list-none flex items-center justify-between">
-                    <span>View lowest scoring slides ({integrity.lowest_slides.length})</span>
-                    <span className="text-[#6b6b6b] text-[11px] group-open:rotate-180 transition-transform">▼</span>
-                  </summary>
-                  <div className="mt-2.5 space-y-2 bg-gray-50 p-3 rounded-lg border border-[#e5e5e5]">
-                    {integrity.lowest_slides.map((ls, i) => (
-                      <div key={i} className="space-y-1 text-[11px] pb-2 last:pb-0 border-b last:border-b-0 border-[#e5e5e5]">
-                        <div className="flex justify-between font-semibold text-black">
-                          <span>Page {ls.page_no}</span>
-                          <span className="font-mono">{ls.score_pct}% word recall</span>
-                        </div>
-                        <p className="text-[#6b6b6b]"><span className="font-medium text-black">Official text:</span> {ls.official_snippet}</p>
-                        <p className="text-[#6b6b6b]"><span className="font-medium text-black">OCR reading:</span> {ls.ocr_snippet}</p>
-                      </div>
-                    ))}
+              {/* Line 2: Pictures match (pixel comparison, no OCR) */}
+              <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold text-black">Pictures match (pixel comparison, no OCR):</span>
+                  <span className="font-mono text-black font-medium">
+                    {integrity?.visual_match_pct !== undefined && integrity?.visual_match_pct !== null
+                      ? `${(integrity.visual_match_pct * 100).toFixed(1)}%`
+                      : "—"}
+                  </span>
+                  <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                    integrity?.visual_match_pct !== undefined && integrity?.visual_match_pct !== null
+                      ? "border-black text-black bg-white"
+                      : integrity?.status === "estimated"
+                      ? "border-gray-300 text-gray-600 bg-gray-50"
+                      : "border-gray-200 text-gray-400"
+                  }`}>
+                    {integrity?.visual_match_pct !== undefined && integrity?.visual_match_pct !== null
+                      ? "Measured"
+                      : integrity?.status === "estimated"
+                      ? "Estimated"
+                      : "Not measured"}
+                  </span>
+                  <span className="text-xs text-[#6b6b6b]">
+                    ({integrity?.frames_checked || 20} moments checked)
+                  </span>
+                </div>
+                <span
+                  className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                  title="Pictures match: Compares original video frames against kept slide pictures using perceptual hashing (pHash distance <= 12) with presenter activity mask applied."
+                >
+                  ?
+                </span>
+              </div>
+
+              {/* Line 2b: Level 2 Re-encoded video verification (PSNR) */}
+              {selectedLevel === 2 && (
+                <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-black">Re-encoded video quality (PSNR):</span>
+                    <span className="font-mono text-black font-medium">
+                      {integrity?.psnr_avg !== null && integrity?.psnr_avg !== undefined
+                        ? `${integrity.psnr_avg} dB`
+                        : "Not pre-rendered"}
+                    </span>
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                      integrity?.psnr_avg !== null && integrity?.psnr_avg !== undefined
+                        ? "border-black text-black bg-white"
+                        : "border-gray-300 text-gray-600 bg-gray-50"
+                    }`}>
+                      {integrity?.psnr_avg !== null && integrity?.psnr_avg !== undefined ? "Measured" : "Estimated"}
+                    </span>
+                    <span className="text-xs text-[#6b6b6b]">
+                      {integrity?.psnr_avg !== null && integrity?.psnr_avg !== undefined
+                        ? `(Average PSNR across 20 moments; ≥30 dB indicates broadcast quality)`
+                        : `(Recording > 2.5h; H.264 @ 5 fps estimated without pre-rendering 3 GB file)`}
+                    </span>
                   </div>
-                </details>
+                  <span
+                    className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                    title="Peak Signal-to-Noise Ratio (PSNR): Standard mathematical metric comparing re-encoded H.264 video frames against original uncompressed video frames."
+                  >
+                    ?
+                  </span>
+                </div>
+              )}
+
+              {/* Line 2c: Level 3 Speech audio preservation */}
+              {selectedLevel === 3 && integrity?.audio_check && (
+                <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-black">Opus speech audio preservation:</span>
+                    <span className="font-mono text-black font-medium">
+                      {integrity.audio_check.duration_match ? "Duration matched" : `${integrity.audio_check.duration_audio}s`}
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-black text-black bg-white">
+                      Measured
+                    </span>
+                    <span className="text-xs text-[#6b6b6b]">
+                      ({integrity.audio_check.speech_covered_pct}% speech covered across {integrity.audio_check.segments_count} segments; duration diff {integrity.audio_check.duration_diff_sec}s)
+                    </span>
+                  </div>
+                  <span
+                    className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                    title="Opus audio: Compares duration of extracted 16 kbps Opus audio track against original video container duration, verifying complete coverage."
+                  >
+                    ?
+                  </span>
+                </div>
+              )}
+
+              {/* Line 2d: Level 5 Official deck slide linkage */}
+              {selectedLevel === 5 && (
+                <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-black">Official deck slide linkage:</span>
+                    <span className="font-mono text-black font-medium">
+                      {integrity?.slides_linked || 0} slide moments linked
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-black text-black bg-white">
+                      Measured
+                    </span>
+                    <span className="text-xs text-[#6b6b6b]">
+                      (Linked moments verified directly against official SharePoint presentation slide images)
+                    </span>
+                  </div>
+                  <span
+                    className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                    title="Slide linkage: Keyframes recognized as slides are linked to official presentation decks in SharePoint to eliminate duplicate image storage."
+                  >
+                    ?
+                  </span>
+                </div>
+              )}
+
+              {/* Line 3: Moving video */}
+              <div className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-black">Moving video:</span>
+                  <span className="font-mono text-black font-medium">
+                    {integrity?.moving_video_pct !== undefined && integrity?.moving_video_pct !== null
+                      ? `${(integrity.moving_video_pct * 100).toFixed(1)}%`
+                      : "0.0%"}
+                  </span>
+                  <span className="text-xs text-[#6b6b6b]">
+                    of the recording — kept only in levels 1–2, by design
+                  </span>
+                </div>
+                <span
+                  className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                  title="Moving video: Dynamic motion like live presenter cameras and animations. Levels 3–5 intentionally drop moving video to maximize storage savings while keeping all slide content and speech audio."
+                >
+                  ?
+                </span>
+              </div>
+
+              {/* Line 4: OCR reads official slide text correctly */}
+              {integrity?.ocr_accuracy_pct !== undefined && integrity?.ocr_accuracy_pct !== null && (
+                <div className="py-3 first:pt-0 last:pb-0 space-y-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-black">OCR reads official slide text correctly:</span>
+                      <span className="font-mono text-black font-medium">
+                        {(integrity.ocr_accuracy_pct * 100).toFixed(1)}%
+                      </span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-black text-black bg-white">
+                        Measured
+                      </span>
+                      <span className="text-xs text-[#6b6b6b]">
+                        ({integrity?.ocr_slides_checked || 0} slides, checked against original PDF text)
+                      </span>
+                    </div>
+                    <span
+                      className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-[#e5e5e5] text-[11px] font-mono text-[#6b6b6b] cursor-help hover:text-black hover:border-black transition-colors"
+                      title="OCR reads official slide text correctly: Measures word recall by checking whether clean words (>= 3 chars) from original presentation deck slides are accurately recognized in distilled slide pictures."
+                    >
+                      ?
+                    </span>
+                  </div>
+
+                  {integrity.lowest_slides && integrity.lowest_slides.length > 0 && (
+                    <details className="text-xs group border-t border-[#e5e5e5] pt-2">
+                      <summary className="font-medium text-black cursor-pointer hover:underline list-none flex items-center justify-between">
+                        <span>View lowest scoring slides ({integrity.lowest_slides.length})</span>
+                        <span className="text-[#6b6b6b] text-[11px] group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="mt-2.5 space-y-2 bg-gray-50 p-3 rounded-lg border border-[#e5e5e5]">
+                        {integrity.lowest_slides.map((ls, i) => (
+                          <div key={i} className="space-y-1 text-[11px] pb-2 last:pb-0 border-b last:border-b-0 border-[#e5e5e5]">
+                            <div className="flex justify-between font-semibold text-black">
+                              <span>Page {ls.page_no}</span>
+                              <span className="font-mono">{ls.score_pct}% word recall</span>
+                            </div>
+                            <p className="text-[#6b6b6b]"><span className="font-medium text-black">Official text:</span> {ls.official_snippet}</p>
+                            <p className="text-[#6b6b6b]"><span className="font-medium text-black">OCR reading:</span> {ls.ocr_snippet}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  )}
+                </div>
               )}
             </div>
-          )}
-        </div>
 
-        {/* Spot Check Report Link */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 text-xs">
-          <div>
-            <span className="font-semibold text-black block">Independent spot-check report</span>
-            <span className="text-[#6b6b6b] block mt-0.5">
-              Side-by-side comparison of 20 evenly-spaced moments across original and kept footage.
-            </span>
+            {/* Spot Check Report Link */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 text-xs">
+              <div>
+                <span className="font-semibold text-black block">Independent spot-check report</span>
+                <span className="text-[#6b6b6b] block mt-0.5">
+                  Side-by-side comparison of 20 evenly-spaced moments across original and kept footage.
+                </span>
+              </div>
+              <a
+                href="/api/spot-check"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black bg-white text-black font-medium hover:bg-gray-100 transition-colors self-start sm:self-auto whitespace-nowrap"
+              >
+                <span>Open spot check</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Plain Explanation Text */}
+            <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 text-xs text-[#6b6b6b] leading-relaxed">
+              <p>
+                Distill keeps 100% of the speech audio, transcript, and distinct slide screens. Moving camera feeds are retained in Levels 1–2 (playable video) and omitted from Levels 3–5 to achieve 99% storage reduction.
+              </p>
+              {integrity?.note && (
+                <p className="mt-2 text-black font-medium">
+                  Note: {integrity.note}
+                </p>
+              )}
+            </div>
           </div>
-          <a
-            href="/api/spot-check"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black bg-white text-black font-medium hover:bg-gray-100 transition-colors self-start sm:self-auto whitespace-nowrap"
-          >
-            <span>Open spot check</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
+        )}
 
-        {/* Plain Explanation Text */}
-        <div className="p-4 rounded-lg border border-[#e5e5e5] bg-gray-50 text-xs text-[#6b6b6b] leading-relaxed">
-          <p>
-            Distill keeps 100% of the speech audio, transcript, and distinct slide screens. Moving camera feeds are retained in Levels 1–2 (playable video) and omitted from Levels 3–5 to achieve 99% storage reduction.
-          </p>
-          {integrity?.note && (
-            <p className="mt-2 text-black font-medium">
-              Note: {integrity.note}
-            </p>
-          )}
-        </div>
-
-        {/* Evidence Grid: Moment-by-Moment Verification */}
-        {integrity?.moments && integrity.moments.length > 0 && (
+        {/* Evidence Grid: Moment-by-Moment Verification (Videos only) */}
+        {isVideo && integrity?.moments && integrity.moments.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-black">

@@ -1,0 +1,427 @@
+{
+  "schema": "distill.knowledge-packet/1.0",
+  "pipeline": "distill-1.0",
+  "created": "2026-11-13T18:12:26",
+  "source": {
+    "name": "Jury and prizes.mp4",
+    "path": "C:\\Users\\Vishnu\\Downloads\\Hackthon\\sample_data\\Ericsson_Challenge_Dataset\\EricssonPlay\\Jury and prizes.mp4",
+    "sha256": "db6408087253d62fb454441192425c3bde4a65a58d17dfa0a7394ab38b000e72",
+    "bytes": 88654139
+  },
+  "media": {
+    "duration": 362.9375,
+    "width": 1280,
+    "height": 720,
+    "fps": 16.0
+  },
+  "transcript": {
+    "source": "whisper",
+    "language": "en",
+    "language_prob": 0.971,
+    "mean_confidence": 0.867,
+    "model": "base",
+    "segments": 27,
+    "speakers": [
+      "Speaker 1",
+      "Speaker 2"
+    ]
+  },
+  "voices": {
+    "Speaker 2": "voices/voice_speaker_2.opus",
+    "Speaker 1": "voices/voice_speaker_1.opus"
+  },
+  "keyframes": [
+    {
+      "n": 1,
+      "file": "slides/001.webp",
+      "intervals": [
+        [
+          0.0,
+          2.0
+        ]
+      ],
+      "title": "Microsoft Teams",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "863cf119fbe46201a11e989ac0c1e6b303dc1c08726e7b6aa0957b57e8f7fa67"
+    },
+    {
+      "n": 2,
+      "file": "slides/002.webp",
+      "intervals": [
+        [
+          2.0,
+          6.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "738f7342be10b51bc27c89ee8969eea30d8c5965edac932f8f1e7f7db2d351cd"
+    },
+    {
+      "n": 3,
+      "file": "slides/003.webp",
+      "intervals": [
+        [
+          6.0,
+          94.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "8f6c6259a0c5f029859822147dfbf19883f79862e2d097a38a0dee6a70adfbf5"
+    },
+    {
+      "n": 4,
+      "file": "slides/004.webp",
+      "intervals": [
+        [
+          95.0,
+          105.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "80a3bf2b88fa4d6bd780291e39918db3630838d650a5289a2eda87cbddadc27d"
+    },
+    {
+      "n": 5,
+      "file": "slides/005.webp",
+      "intervals": [
+        [
+          105.0,
+          119.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "66f21bc15ab496525391781ca2c83a22bf0af02476feb114308b30b3541d4461"
+    },
+    {
+      "n": 6,
+      "file": "slides/006.webp",
+      "intervals": [
+        [
+          119.0,
+          121.0
+        ]
+      ],
+      "title": "Stefan wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "f830474c7e20c8787c81cc03aad89f4abb33a28447649b98f04a4bf49dfdad06"
+    },
+    {
+      "n": 7,
+      "file": "slides/007.webp",
+      "intervals": [
+        [
+          121.0,
+          135.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "bba98bd4475f83334d2592df274ebc2f9c96b210ae2c33dd371c7eb237aacce5"
+    },
+    {
+      "n": 8,
+      "file": "slides/008.webp",
+      "intervals": [
+        [
+          136.0,
+          142.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "2b15683f83aa28e346480bb6e5a4e39522503203b3e1a7ac083b831eeb8d1878"
+    },
+    {
+      "n": 9,
+      "file": "slides/009.webp",
+      "intervals": [
+        [
+          145.0,
+          185.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "bef9c7126e8cb6be4f83c4874ead55dc36751afe7c3c45111815efbc25effcfe"
+    },
+    {
+      "n": 10,
+      "file": "slides/010.webp",
+      "intervals": [
+        [
+          185.0,
+          194.0
+        ]
+      ],
+      "title": "Torbjom Althini",
+      "is_slide": false,
+      "source_slide": null,
+      "sha256_webp": "2f620545c313acb08e1299683dc7f52432fa6f5821d88f0e6b402251a9f38f59"
+    },
+    {
+      "n": 11,
+      "file": "slides/011.webp",
+      "intervals": [
+        [
+          194.0,
+          198.0
+        ]
+      ],
+      "title": "Torbjom Althini",
+      "is_slide": false,
+      "source_slide": null,
+      "sha256_webp": "16874a1448b4894a4f30d98cb82852726262f34a0efc6ce7daaedf3411056d53"
+    },
+    {
+      "n": 12,
+      "file": "slides/012.webp",
+      "intervals": [
+        [
+          198.0,
+          202.0
+        ]
+      ],
+      "title": "Torbjom Althini",
+      "is_slide": false,
+      "source_slide": null,
+      "sha256_webp": "e52ef6d1bb1a877a76992b6f97972a13d05f1a3e3fe59b6b2ac4f29c7cae4577"
+    },
+    {
+      "n": 13,
+      "file": "slides/013.webp",
+      "intervals": [
+        [
+          202.0,
+          209.0
+        ]
+      ],
+      "title": "Torbjom Althini",
+      "is_slide": false,
+      "source_slide": null,
+      "sha256_webp": "430e3db4325b51907dfcd5363f521d377c06ebd851e4e0930ea8c5c7ce71635f"
+    },
+    {
+      "n": 14,
+      "file": "slides/014.webp",
+      "intervals": [
+        [
+          209.0,
+          214.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1ac1fd7b3f64721207da77b62f7eacf42079f09ee246f8cfdb44dc4f50a7f899"
+    },
+    {
+      "n": 15,
+      "file": "slides/015.webp",
+      "intervals": [
+        [
+          214.0,
+          217.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "e0a7c665bece9d3b21e6d59776f38020f24baf5c2a0ac256f2128cd4bb625b4c"
+    },
+    {
+      "n": 16,
+      "file": "slides/016.webp",
+      "intervals": [
+        [
+          217.0,
+          237.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "831eda0bc436758e5629705b6393dc9140b0c0e112035a93a339893fa95c966a"
+    },
+    {
+      "n": 17,
+      "file": "slides/017.webp",
+      "intervals": [
+        [
+          237.0,
+          245.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c9389e94004ac90f1b216abf14193a1d2105c4c9d32c6e0423c2cab83f1f547c"
+    },
+    {
+      "n": 18,
+      "file": "slides/018.webp",
+      "intervals": [
+        [
+          245.0,
+          247.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "5f9f7a1bfa1ea26e07d4498a5e4dfa4076175a3e61ea6ff753fa7120f4bd4682"
+    },
+    {
+      "n": 19,
+      "file": "slides/019.webp",
+      "intervals": [
+        [
+          247.0,
+          249.0
+        ]
+      ],
+      "title": "Torbjim AItini",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d9470f3ce8b02a17f137067f3c3fdf1d83586bc2964b9ae21afb79cc35a17d98"
+    },
+    {
+      "n": 20,
+      "file": "slides/020.webp",
+      "intervals": [
+        [
+          249.0,
+          298.0
+        ]
+      ],
+      "title": "Torbjom AItrini",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "f0792acccb32fdcc8bb8b70c0b98db489aaa59c5b306d31b2acc88dff3d237ea"
+    },
+    {
+      "n": 21,
+      "file": "slides/021.webp",
+      "intervals": [
+        [
+          299.0,
+          303.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "92d079525a0739fb6fa8ed6ba495e2db41bc6531c270be4fa86242006d8d0f79"
+    },
+    {
+      "n": 22,
+      "file": "slides/022.webp",
+      "intervals": [
+        [
+          304.0,
+          353.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "8754ffb974a66123d39fc1137aa0ec101296f8a0c9953967b2f524273b2c3d39"
+    },
+    {
+      "n": 23,
+      "file": "slides/023.webp",
+      "intervals": [
+        [
+          353.0,
+          363.0
+        ]
+      ],
+      "title": "Gonzalo Suardiaz",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "3c273b2c02718b4e3d7ad6d8134a2dc3986a5ad11d0c7a99961fe7a9124be786"
+    }
+  ],
+  "presented_deck_file_id": null,
+  "summary": "Nevertheless, let me announce the winner of the technical category which is You're ready to hear team number 10 edge of all. With the S-computing Red have in dynamic resource allocation on predictive learning and search engine, which is also offering quizzes and all the benefits. I see a thumbs up there. Then I guess we're ready to introduce the winner for the second category, which is the the business category and you guys ready to hear this. The winner team for the business category is team number eight sustained connectivity congratulations. It was a real pleasure to be here. And once again, I kind of hear you guys. But have a great evening. Thank you so much.",
+  "files": {
+    "transcript_txt": "transcript.txt",
+    "transcript_vtt": "transcript.vtt",
+    "notes": "notes.md",
+    "chunks": "chunks.jsonl",
+    "slide_prompts": "slide_prompts.md",
+    "audio": "audio.opus"
+  },
+  "storage_tiers": {
+    "original": 88654139,
+    "tiers": [
+      {
+        "name": "T0 Original",
+        "bytes": 88654139,
+        "saving": 0.0,
+        "desc": "Original recording",
+        "measured": true
+      },
+      {
+        "name": "T1 Smart re-encode",
+        "bytes": 14514781,
+        "saving": 0.83628,
+        "desc": "Same video, re-encoded for screen content",
+        "measured": true
+      },
+      {
+        "name": "T2 Audio + slides + text",
+        "bytes": 1509249,
+        "saving": 0.98298,
+        "desc": "Opus speech audio, WebP keyframes, transcript, notes",
+        "measured": true
+      },
+      {
+        "name": "T3 Slides + text",
+        "bytes": 987780,
+        "saving": 0.98886,
+        "desc": "Keyframes + speaker transcript + voice samples",
+        "measured": true
+      },
+      {
+        "name": "T4 Text + slide links",
+        "bytes": 987780,
+        "saving": 0.98886,
+        "desc": "Transcript; slides replaced by links to source-of-truth decks",
+        "measured": true
+      }
+    ],
+    "breakdown": {
+      "audio": 521469,
+      "slides": 951926,
+      "slides_linked": 0,
+      "text_raw": 37172,
+      "text_gzip": 11131,
+      "voices": 24723,
+      "packet_total": 1535290
+    }
+  },
+  "information_retention": {
+    "screen_text_retained": 0.667,
+    "frames_checked": 6,
+    "timeline_covered_by_keyframes": 0.981,
+    "keyframes": 23,
+    "linked_to_source_deck": 0,
+    "transcript_words": 564,
+    "speech_confidence": 0.867,
+    "speakers": 2,
+    "live_video_area": 0.596
+  }
+}

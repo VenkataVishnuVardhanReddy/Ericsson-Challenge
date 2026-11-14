@@ -58,7 +58,11 @@ export const api = {
 
   getFileStages: (id: number) => fetchJson<FileStages>(`/api/files/${id}/stages`),
 
-  getFileIntegrity: (id: number) => fetchJson<FileIntegrity>(`/api/files/${id}/integrity`),
+  getFileIntegrity: (id: number, level?: number) =>
+    fetchJson<FileIntegrity>(`/api/files/${id}/integrity${level !== undefined ? `?level=${level}` : ""}`),
+
+  rebuildFile: (id: number, format = "json") =>
+    fetchJson<any>(`/api/files/${id}/rebuild?format=${format}`),
 
   getRecording: (id: number) => fetchJson<RecordingDetail>(`/api/recordings/${id}`),
 

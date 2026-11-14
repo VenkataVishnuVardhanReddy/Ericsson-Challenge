@@ -1,0 +1,2767 @@
+{
+  "schema": "distill.knowledge-packet/1.0",
+  "pipeline": "distill-1.0",
+  "created": "2026-11-13T17:38:42",
+  "source": {
+    "name": "Tech Concept Hack - Intoduction-20230329_153503-Meeting Recording.mp4",
+    "path": "C:\\Users\\Vishnu\\Downloads\\Hackthon\\sample_data\\Ericsson_Challenge_Dataset\\SharePoint_Response_C2L\\Tech Concept Hack - Intoduction-20230329_153503-Meeting Recording.mp4",
+    "sha256": "e970fee4cdc008b078ca0de5ec092f540bfe3bb2926172b20a01f8ed7ca37b79",
+    "bytes": 1223051782
+  },
+  "media": {
+    "duration": 9318.784,
+    "width": 1920,
+    "height": 1080,
+    "fps": 15.999834313146437
+  },
+  "transcript": {
+    "source": "whisper",
+    "language": "en",
+    "language_prob": 0.951,
+    "mean_confidence": 0.86,
+    "model": "base",
+    "segments": 1006,
+    "speakers": [
+      "Speaker 1",
+      "Speaker 10",
+      "Speaker 11",
+      "Speaker 12",
+      "Speaker 13",
+      "Speaker 14",
+      "Speaker 15",
+      "Speaker 16",
+      "Speaker 17",
+      "Speaker 18",
+      "Speaker 19",
+      "Speaker 2",
+      "Speaker 20",
+      "Speaker 21",
+      "Speaker 22",
+      "Speaker 23",
+      "Speaker 24",
+      "Speaker 25",
+      "Speaker 26",
+      "Speaker 27",
+      "Speaker 28",
+      "Speaker 29",
+      "Speaker 3",
+      "Speaker 31",
+      "Speaker 32",
+      "Speaker 34",
+      "Speaker 36",
+      "Speaker 37",
+      "Speaker 38",
+      "Speaker 39",
+      "Speaker 4",
+      "Speaker 6",
+      "Speaker 7",
+      "Speaker 8",
+      "Speaker 9"
+    ]
+  },
+  "voices": {
+    "Speaker 1": "voices/voice_speaker_1.opus",
+    "Speaker 4": "voices/voice_speaker_4.opus",
+    "Speaker 6": "voices/voice_speaker_6.opus",
+    "Speaker 7": "voices/voice_speaker_7.opus",
+    "Speaker 8": "voices/voice_speaker_8.opus",
+    "Speaker 10": "voices/voice_speaker_10.opus",
+    "Speaker 12": "voices/voice_speaker_12.opus",
+    "Speaker 13": "voices/voice_speaker_13.opus",
+    "Speaker 14": "voices/voice_speaker_14.opus",
+    "Speaker 15": "voices/voice_speaker_15.opus",
+    "Speaker 16": "voices/voice_speaker_16.opus",
+    "Speaker 9": "voices/voice_speaker_9.opus",
+    "Speaker 3": "voices/voice_speaker_3.opus",
+    "Speaker 17": "voices/voice_speaker_17.opus",
+    "Speaker 2": "voices/voice_speaker_2.opus",
+    "Speaker 18": "voices/voice_speaker_18.opus",
+    "Speaker 19": "voices/voice_speaker_19.opus",
+    "Speaker 11": "voices/voice_speaker_11.opus",
+    "Speaker 20": "voices/voice_speaker_20.opus",
+    "Speaker 21": "voices/voice_speaker_21.opus",
+    "Speaker 22": "voices/voice_speaker_22.opus",
+    "Speaker 23": "voices/voice_speaker_23.opus",
+    "Speaker 24": "voices/voice_speaker_24.opus",
+    "Speaker 25": "voices/voice_speaker_25.opus",
+    "Speaker 27": "voices/voice_speaker_27.opus",
+    "Speaker 26": "voices/voice_speaker_26.opus",
+    "Speaker 29": "voices/voice_speaker_29.opus",
+    "Speaker 31": "voices/voice_speaker_31.opus",
+    "Speaker 28": "voices/voice_speaker_28.opus",
+    "Speaker 32": "voices/voice_speaker_32.opus",
+    "Speaker 34": "voices/voice_speaker_34.opus",
+    "Speaker 36": "voices/voice_speaker_36.opus",
+    "Speaker 37": "voices/voice_speaker_37.opus",
+    "Speaker 38": "voices/voice_speaker_38.opus",
+    "Speaker 39": "voices/voice_speaker_39.opus"
+  },
+  "keyframes": [
+    {
+      "n": 1,
+      "file": "slides/001.webp",
+      "intervals": [
+        [
+          0.0,
+          2.0
+        ]
+      ],
+      "title": "Microsoft Teams",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "7dcfa35dff50da2c55698cbdafd77bb8586b3d7ddcb2eaf89005fce842c263b0"
+    },
+    {
+      "n": 2,
+      "file": "slides/002.webp",
+      "intervals": [
+        [
+          2.0,
+          4.0
+        ]
+      ],
+      "title": "Gonzalo Suardiaz",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "3383c206edf274ba7c6ef4f38d98a38ec8a9c55c0884ffcfda05df07502e2004"
+    },
+    {
+      "n": 3,
+      "file": "slides/003.webp",
+      "intervals": [
+        [
+          4.0,
+          559.0
+        ]
+      ],
+      "title": "Concept",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "91fd09fd03ec85bff76ad4a096a2aec257715673045e8dc05da37ac3fe3cc8a4"
+    },
+    {
+      "n": 4,
+      "file": "slides/004.webp",
+      "intervals": [
+        [
+          560.0,
+          562.0
+        ]
+      ],
+      "title": "Imagine a world",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "29d4a2ae8beb97dd407cd6e2319620ef1fe156c7060630f3315d3201e75f5f33"
+    },
+    {
+      "n": 5,
+      "file": "slides/005.webp",
+      "intervals": [
+        [
+          563.0,
+          565.0
+        ]
+      ],
+      "title": "where limitless connectivity",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "b3c45afd3f4bf9275b81d65f85d85a8cd22c1ddd14c175c5060a2fc6f5921c12"
+    },
+    {
+      "n": 6,
+      "file": "slides/006.webp",
+      "intervals": [
+        [
+          565.0,
+          567.0
+        ],
+        [
+          628.0,
+          631.0
+        ]
+      ],
+      "title": "means",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "4e3e84b6b6a7e82dcff65f858ab980e440e9f439a164aebc35adcea4f6721a62"
+    },
+    {
+      "n": 7,
+      "file": "slides/007.webp",
+      "intervals": [
+        [
+          568.0,
+          571.0
+        ]
+      ],
+      "title": "limitless",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "da7bb8caadd2dfb6bbd57f64e9d93c1e15b55fc401100a7b4454b555e1220fe4"
+    },
+    {
+      "n": 8,
+      "file": "slides/008.webp",
+      "intervals": [
+        [
+          573.0,
+          580.0
+        ]
+      ],
+      "title": "Our purpose is to create connections",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "2c8d98f1a3f6bb097df3757bbe066bbda2d644a5f90592b7b028d44b61078d7a"
+    },
+    {
+      "n": 9,
+      "file": "slides/009.webp",
+      "intervals": [
+        [
+          580.0,
+          620.0
+        ]
+      ],
+      "title": "It's why we exist",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "95242c023be1329c911d519d92c2dd69b35f183494ce679a54e1142580a83e73"
+    },
+    {
+      "n": 10,
+      "file": "slides/010.webp",
+      "intervals": [
+        [
+          620.0,
+          623.0
+        ]
+      ],
+      "title": "And it's",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "9a57e3cd3baa6d361a53b559a736118f0bfa1e926e6a79e7f99b9a6df548283d"
+    },
+    {
+      "n": 11,
+      "file": "slides/011.webp",
+      "intervals": [
+        [
+          623.0,
+          628.0
+        ]
+      ],
+      "title": "AIways",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "a45fe5d6dac13a7b519f5c8bc6ce44c1674c8b1e9f295a2a7b936829f29bf5d6"
+    },
+    {
+      "n": 12,
+      "file": "slides/012.webp",
+      "intervals": [
+        [
+          633.0,
+          644.0
+        ]
+      ],
+      "title": "Imagine Possible",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "befdb1ebec3655171a2e38b2ef28b82bea9f4bd9ac8ff8e8a5378b6d126a6ba5"
+    },
+    {
+      "n": 13,
+      "file": "slides/013.webp",
+      "intervals": [
+        [
+          644.0,
+          688.0
+        ]
+      ],
+      "title": "connectivity means limitless possibility",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "5be6969ee4f65c3d329f77fe9d378388a333ea465c007cba61a3663baa458282"
+    },
+    {
+      "n": 14,
+      "file": "slides/014.webp",
+      "intervals": [
+        [
+          689.0,
+          693.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d18786f1d23d0e0d95786db3fb3ee9c62423728dfec9534b5a363b549f71d946"
+    },
+    {
+      "n": 15,
+      "file": "slides/015.webp",
+      "intervals": [
+        [
+          693.0,
+          695.0
+        ],
+        [
+          725.0,
+          727.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "b0ca08de79380d2828a386af82aaf9304c15785f149bbcab3d5e625711f309dc"
+    },
+    {
+      "n": 16,
+      "file": "slides/016.webp",
+      "intervals": [
+        [
+          695.0,
+          705.0
+        ]
+      ],
+      "title": "Gonzalo Suardiaz",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "40c045e42a821ee3650dd69740e6e7550bfd495a858e34da74b216a013024612"
+    },
+    {
+      "n": 17,
+      "file": "slides/017.webp",
+      "intervals": [
+        [
+          705.0,
+          725.0
+        ]
+      ],
+      "title": "=",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "ddc3f59705afda4fbaa2b789729e55a0ed52c7988e5c66ff92411cdfd96566e1"
+    },
+    {
+      "n": 18,
+      "file": "slides/018.webp",
+      "intervals": [
+        [
+          727.0,
+          729.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c433fda31abb1027475015f3ed66ab5944cb5ce6a29ba1546797302b6cb7f30a"
+    },
+    {
+      "n": 19,
+      "file": "slides/019.webp",
+      "intervals": [
+        [
+          729.0,
+          736.0
+        ]
+      ],
+      "title": "Gonzalo Suardiaz",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "4e531dd9db359060d305690f68dbc567ab67652f80880379cdf4a86ff15e6eb8"
+    },
+    {
+      "n": 20,
+      "file": "slides/020.webp",
+      "intervals": [
+        [
+          736.0,
+          739.0
+        ]
+      ],
+      "title": "=",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c70d0a678a4dea938b6367543282ce5df76d91fe1bb7957f2d31de23b48cb241"
+    },
+    {
+      "n": 21,
+      "file": "slides/021.webp",
+      "intervals": [
+        [
+          739.0,
+          749.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1dc33eff06ebcb9c663a017bb24e66c451a5fe7933b0ced50904a8ea52faa08b"
+    },
+    {
+      "n": 22,
+      "file": "slides/022.webp",
+      "intervals": [
+        [
+          749.0,
+          783.0
+        ]
+      ],
+      "title": "00:00:27",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "3d46f86b6f09f91769163e4d1391cc8dc9d8c5352deb0d81485c13b642d11a65"
+    },
+    {
+      "n": 23,
+      "file": "slides/023.webp",
+      "intervals": [
+        [
+          784.0,
+          886.0
+        ]
+      ],
+      "title": "Driving mobile networks for new waves of innovation",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "11473f5d705f1a1c4a96d1231a625d393f8f0b542d2acffad91e79df7b3143a4"
+    },
+    {
+      "n": 24,
+      "file": "slides/024.webp",
+      "intervals": [
+        [
+          886.0,
+          926.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "ea3f40c2cfc7ee26a14b55125161ac73e9345637a8697dec5eff892cf8034519"
+    },
+    {
+      "n": 25,
+      "file": "slides/025.webp",
+      "intervals": [
+        [
+          926.0,
+          938.0
+        ]
+      ],
+      "title": "\"Sustainability and corporate responsibility are",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "722b849c94050c9c9bbcfe53f9e1a6a911960841bd7e74ec1ab309b4d9eafee6"
+    },
+    {
+      "n": 26,
+      "file": "slides/026.webp",
+      "intervals": [
+        [
+          938.0,
+          976.0
+        ]
+      ],
+      "title": "Empowering digital inclusion",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "66263a535d14d38bc7176d0554dc3af57ee264c55f4206c7501a1457d9f5e51b"
+    },
+    {
+      "n": 27,
+      "file": "slides/027.webp",
+      "intervals": [
+        [
+          976.0,
+          1055.0
+        ],
+        [
+          1059.0,
+          1092.0
+        ]
+      ],
+      "title": "Ericsson Response",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c7cedcde5a676b21662a5f611c59de7f74b744e497e93bbbd86cd439f8bb3af3"
+    },
+    {
+      "n": 28,
+      "file": "slides/028.webp",
+      "intervals": [
+        [
+          1055.0,
+          1059.0
+        ],
+        [
+          1092.0,
+          1114.0
+        ]
+      ],
+      "title": "Ericsson Sustainability",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 2,
+        "slide_id": "SLD-A29DB1308B",
+        "score": 0.743
+      },
+      "sha256_webp": "f3e4226104411b146caa071e2de7a953200a1637a91c22bf28f57202a51fc860"
+    },
+    {
+      "n": 29,
+      "file": "slides/029.webp",
+      "intervals": [
+        [
+          1114.0,
+          1181.0
+        ]
+      ],
+      "title": "Ericsson Response in brief",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 3,
+        "slide_id": "SLD-3BCAFD2504",
+        "score": 0.603
+      },
+      "sha256_webp": "5ef603eb66812c26e22fd29f35a5d793812b2abd92f4aebb0ac09a75c242898e"
+    },
+    {
+      "n": 30,
+      "file": "slides/030.webp",
+      "intervals": [
+        [
+          1181.0,
+          1284.0
+        ]
+      ],
+      "title": "Three key elements",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 4,
+        "slide_id": "SLD-E2F83F306E",
+        "score": 0.724
+      },
+      "sha256_webp": "bdab62a8da69b954dc53fbeffd7a040ec59589b3a5b11d826e3f5d09cef085ff"
+    },
+    {
+      "n": 31,
+      "file": "slides/031.webp",
+      "intervals": [
+        [
+          1284.0,
+          1333.0
+        ]
+      ],
+      "title": "Ericsson Response Telco Solutions",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 5,
+        "slide_id": "SLD-477DBD5291",
+        "score": 0.586
+      },
+      "sha256_webp": "c3ab1bbad7cd5c29ac0f20377061028483bd911b462e99d218cbc6457cecc8af"
+    },
+    {
+      "n": 32,
+      "file": "slides/032.webp",
+      "intervals": [
+        [
+          1333.0,
+          1419.0
+        ]
+      ],
+      "title": "WIDER: WiFi in Disaster and Emergency Response",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 6,
+        "slide_id": "SLD-BEE9DB1854",
+        "score": 0.732
+      },
+      "sha256_webp": "6e44649922051b75a4955fc8b3c89b0f37f74836f993c284b5b932b8ed25c2a3"
+    },
+    {
+      "n": 33,
+      "file": "slides/033.webp",
+      "intervals": [
+        [
+          1419.0,
+          1694.0
+        ]
+      ],
+      "title": "The problems we face",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "541f726ca7fab0545d9f61c773765f4577dc640c2f9a1031258892befdf59eb6"
+    },
+    {
+      "n": 34,
+      "file": "slides/034.webp",
+      "intervals": [
+        [
+          1694.0,
+          1738.0
+        ]
+      ],
+      "title": "Evolving...",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "16c0007737c43e787531b43bc6b992daad7737dbf2a257637e00bfdd1f5b940a"
+    },
+    {
+      "n": 35,
+      "file": "slides/035.webp",
+      "intervals": [
+        [
+          1738.0,
+          1751.0
+        ]
+      ],
+      "title": "Highlight of missions 2000 - 2021",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 9,
+        "slide_id": "SLD-0451E7EB17",
+        "score": 0.561
+      },
+      "sha256_webp": "66ea29efdfbbdb09037de987b0c72de5db608ab9aa111c9caa400733a9fdc2fe"
+    },
+    {
+      "n": 36,
+      "file": "slides/036.webp",
+      "intervals": [
+        [
+          1751.0,
+          1790.0
+        ]
+      ],
+      "title": "Turkiye 2023",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 10,
+        "slide_id": "SLD-5FFA531989",
+        "score": 0.751
+      },
+      "sha256_webp": "80084d13875557e0d7083ac83fb1518b64cde4aede9116b0d29bc0e1c13943af"
+    },
+    {
+      "n": 37,
+      "file": "slides/037.webp",
+      "intervals": [
+        [
+          1790.0,
+          1828.0
+        ]
+      ],
+      "title": "Moldova 2022",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 11,
+        "slide_id": "SLD-E03204CC11",
+        "score": 0.674
+      },
+      "sha256_webp": "04b6b282c95a786373daeaeef4321dfee21e6f70455ba8ca14334abdc77ba83f"
+    },
+    {
+      "n": 38,
+      "file": "slides/038.webp",
+      "intervals": [
+        [
+          1828.0,
+          1851.0
+        ]
+      ],
+      "title": "Colombia 2021/2022",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 12,
+        "slide_id": "SLD-E170586931",
+        "score": 0.75
+      },
+      "sha256_webp": "f91e1f75889b7e746a76f1b7df6eab1e9ed67e5c0af56f3039943fc53a75efdb"
+    },
+    {
+      "n": 39,
+      "file": "slides/039.webp",
+      "intervals": [
+        [
+          1851.0,
+          1910.0
+        ]
+      ],
+      "title": "Bangladesh 2019",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 13,
+        "slide_id": "SLD-B37FF064DC",
+        "score": 0.809
+      },
+      "sha256_webp": "151aa77bffaa7d77f2a95adc45adda1f03bd47efae88376810e3531fc22490fd"
+    },
+    {
+      "n": 40,
+      "file": "slides/040.webp",
+      "intervals": [
+        [
+          1910.0,
+          1969.0
+        ],
+        [
+          1971.0,
+          1973.0
+        ]
+      ],
+      "title": "TG-",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 14,
+        "slide_id": "SLD-39878BD761",
+        "score": 0.819
+      },
+      "sha256_webp": "65e1fbe3a6f994052a480b5ca941684364ad366b1a1a773176a91cb8a707975f"
+    },
+    {
+      "n": 41,
+      "file": "slides/041.webp",
+      "intervals": [
+        [
+          1969.0,
+          1971.0
+        ]
+      ],
+      "title": "TG-",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c4936c02f7f29d9797ddea26d9b980cbe0be64950261b094e4313c2b556cdf56"
+    },
+    {
+      "n": 42,
+      "file": "slides/042.webp",
+      "intervals": [
+        [
+          1973.0,
+          1980.0
+        ]
+      ],
+      "title": "TG-",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c6f7337064412bd7b3209e3910b258186ce894ad56fdb6b623d696f666fe7dfb"
+    },
+    {
+      "n": 43,
+      "file": "slides/043.webp",
+      "intervals": [
+        [
+          1981.0,
+          1983.0
+        ]
+      ],
+      "title": "EricssonResponseDominica",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "e080c114afd6532b5472b9e41e03f9e8e29b9ea64d76cbedc16791ecc617a463"
+    },
+    {
+      "n": 44,
+      "file": "slides/044.webp",
+      "intervals": [
+        [
+          1983.0,
+          1991.0
+        ]
+      ],
+      "title": "Ericsson Response Dominica",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "fcb6d8081d6a467fb340cca446bc6846fc6e6907b80186da1611d9fc34365c6a"
+    },
+    {
+      "n": 45,
+      "file": "slides/045.webp",
+      "intervals": [
+        [
+          1991.0,
+          1993.0
+        ]
+      ],
+      "title": "Ericsson Response Dominica",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "0971110c589899d81ded465cae999fc0fbb58bf8c63f28b20367392180251c43"
+    },
+    {
+      "n": 46,
+      "file": "slides/046.webp",
+      "intervals": [
+        [
+          1993.0,
+          2011.0
+        ]
+      ],
+      "title": "The government really needed",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "a4eabea150ce170c86fc6d8e0c26c5b1001a799e74395bc1b9453828f8ec0197"
+    },
+    {
+      "n": 47,
+      "file": "slides/047.webp",
+      "intervals": [
+        [
+          2011.0,
+          2013.0
+        ]
+      ],
+      "title": "World Food Programme",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1a41771c3b6b0a65d484d6253318e6c11f014ff28c6121bcfa0763f2cce3166a"
+    },
+    {
+      "n": 48,
+      "file": "slides/048.webp",
+      "intervals": [
+        [
+          2013.0,
+          2038.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "4aa1532ddfb932076ba8cc8ccfe15682e136064efde8ec43bc57fe5248344a56"
+    },
+    {
+      "n": 49,
+      "file": "slides/049.webp",
+      "intervals": [
+        [
+          2038.0,
+          2040.0
+        ]
+      ],
+      "title": "Maya Faisal",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c19bcb8f3818d02a4355eea4a7dcfc4ae3d324022c3e1bdf5ad21c79d4c63f78"
+    },
+    {
+      "n": 50,
+      "file": "slides/050.webp",
+      "intervals": [
+        [
+          2040.0,
+          2094.0
+        ]
+      ],
+      "title": "Soavethe Chld",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "537fe04f176734cebcf5516e0a32cac4e13129480f4c4d5bc6ad102755d7f0f1"
+    },
+    {
+      "n": 51,
+      "file": "slides/051.webp",
+      "intervals": [
+        [
+          2094.0,
+          2096.0
+        ]
+      ],
+      "title": "we've hooked up the airport close by",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "40a0927fa4a09fab90dc369ed6943ef257c357d49e4bc4fad3b9a12e1d606c79"
+    },
+    {
+      "n": 52,
+      "file": "slides/052.webp",
+      "intervals": [
+        [
+          2096.0,
+          2127.0
+        ]
+      ],
+      "title": "Digicel",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "0d63e2c5714819d9936d4ead98f73cbec7526243973680eb5de8959dfee51b71"
+    },
+    {
+      "n": 53,
+      "file": "slides/053.webp",
+      "intervals": [
+        [
+          2127.0,
+          2129.0
+        ]
+      ],
+      "title": "ERICSSON",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "14e084a778556a2dbc467cd2314fb1f5994b924fb46ccd43c08229e217a86fcc"
+    },
+    {
+      "n": 54,
+      "file": "slides/054.webp",
+      "intervals": [
+        [
+          2129.0,
+          2153.0
+        ]
+      ],
+      "title": "out of the country we're trying to see their loved ones were okay.",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1d347b2b7d758230ffbed0a920011cb6f30b9a8564d8d93c390f0d4b85778233"
+    },
+    {
+      "n": 55,
+      "file": "slides/055.webp",
+      "intervals": [
+        [
+          2153.0,
+          2155.0
+        ]
+      ],
+      "title": "Gonzalo Suardiaz",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "312a67aefcae6bfac5dd1c93ff5236e7989f1f760982ef68b8876d7127c9207d"
+    },
+    {
+      "n": 56,
+      "file": "slides/056.webp",
+      "intervals": [
+        [
+          2155.0,
+          2191.0
+        ]
+      ],
+      "title": "RESPONSO",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "9d91b0714112fa30d20e5dd192c77af3a5011a9da8ce9839b68cd5819a327328"
+    },
+    {
+      "n": 57,
+      "file": "slides/057.webp",
+      "intervals": [
+        [
+          2191.0,
+          2198.0
+        ]
+      ],
+      "title": "In September 2017, following Hurricanes",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "872648cab6cdf04491a2a7b3b5e29afefe5a0c6d1b204caffd790445822e1e1e"
+    },
+    {
+      "n": 58,
+      "file": "slides/058.webp",
+      "intervals": [
+        [
+          2198.0,
+          2203.0
+        ]
+      ],
+      "title": "etc",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "e5da2ea2aa6713f39369afe2305419f07023013c90343934cbdf67a007cca306"
+    },
+    {
+      "n": 59,
+      "file": "slides/059.webp",
+      "intervals": [
+        [
+          2204.0,
+          2206.0
+        ]
+      ],
+      "title": "Startarom3",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "7cd52b85d785f03f4c4d2c2ca639211a2c674b39af70a2aea954e16bf753f522"
+    },
+    {
+      "n": 60,
+      "file": "slides/060.webp",
+      "intervals": [
+        [
+          2206.0,
+          2208.0
+        ]
+      ],
+      "title": "technologyexperts live from...",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "822bfec41a48fdcc8dc92000afd017145244aca5ff93c738af53475ea73d5110"
+    },
+    {
+      "n": 61,
+      "file": "slides/061.webp",
+      "intervals": [
+        [
+          2208.0,
+          2217.0
+        ],
+        [
+          2224.0,
+          2238.0
+        ]
+      ],
+      "title": "TG-",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 14,
+        "slide_id": "SLD-39878BD761",
+        "score": 0.787
+      },
+      "sha256_webp": "7eeecfd5e21e02579548bd586beda5346a32723933392a77cb4409349753dcfd"
+    },
+    {
+      "n": 62,
+      "file": "slides/062.webp",
+      "intervals": [
+        [
+          2218.0,
+          2224.0
+        ]
+      ],
+      "title": "YouTube",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "a41ba4ad164cc7e5db11b0494dba44da62c14a2996516ff2f9427bebdafece39"
+    },
+    {
+      "n": 63,
+      "file": "slides/063.webp",
+      "intervals": [
+        [
+          2238.0,
+          2245.0
+        ]
+      ],
+      "title": "Haiti 2016",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 15,
+        "slide_id": "SLD-3D845D7951",
+        "score": 0.738
+      },
+      "sha256_webp": "3ef8def259b6902ece2a1f80f7126e4632c516d5d583d8c75929106d86c188aa"
+    },
+    {
+      "n": 64,
+      "file": "slides/064.webp",
+      "intervals": [
+        [
+          2245.0,
+          2279.0
+        ],
+        [
+          2506.0,
+          2510.0
+        ]
+      ],
+      "title": "Nepal 2015",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 16,
+        "slide_id": "SLD-32F7242305",
+        "score": 0.859
+      },
+      "sha256_webp": "bc3fd737637d6252cd05dcecb69b1575acb838efa723ee8e9df4365fdab4188c"
+    },
+    {
+      "n": 65,
+      "file": "slides/065.webp",
+      "intervals": [
+        [
+          2280.0,
+          2301.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "468dd423478f3653fcfc499dbf9c288db6ac7b9ff3a67a7aa24badb0cb1d677b"
+    },
+    {
+      "n": 66,
+      "file": "slides/066.webp",
+      "intervals": [
+        [
+          2301.0,
+          2303.0
+        ]
+      ],
+      "title": "Ericsson Response in Nepal",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "f2a2ae3e57d4e8a73f957508b9fbdff37b8c829e8bb8e9e22b5361d855193d4d"
+    },
+    {
+      "n": 67,
+      "file": "slides/067.webp",
+      "intervals": [
+        [
+          2303.0,
+          2305.0
+        ]
+      ],
+      "title": "to exit full screen",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "12f7af39c4fd440d1e8114b7f1b3f53de69d080558f4cfc1aa5c944c205c8d4d"
+    },
+    {
+      "n": 68,
+      "file": "slides/068.webp",
+      "intervals": [
+        [
+          2305.0,
+          2313.0
+        ]
+      ],
+      "title": "killing over 8,ooo. Many more were injured and made homeless.",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "498db871751e45d83e31535d1732852c5ffbcf9efb2b0422c8a811dba01858ef"
+    },
+    {
+      "n": 69,
+      "file": "slides/069.webp",
+      "intervals": [
+        [
+          2313.0,
+          2317.0
+        ]
+      ],
+      "title": "米",
+      "is_slide": false,
+      "source_slide": null,
+      "sha256_webp": "0ff9b21bc93d5fb53dc38336cfa91e33e9bc39e2376aef46f0fa5b115f864017"
+    },
+    {
+      "n": 70,
+      "file": "slides/070.webp",
+      "intervals": [
+        [
+          2317.0,
+          2325.0
+        ]
+      ],
+      "title": "EricssonResponseinNepal",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d22a51fdc52a0a3776398500ea97a1d1686519811756a5e402aa8750ea20dc53"
+    },
+    {
+      "n": 71,
+      "file": "slides/071.webp",
+      "intervals": [
+        [
+          2327.0,
+          2329.0
+        ]
+      ],
+      "title": "Gonzalo Suardiaz",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "3d0dfaea45b56ab701778f2e5eceb506ee32c78155b79959f8f19c6d9a4ddd4b"
+    },
+    {
+      "n": 72,
+      "file": "slides/072.webp",
+      "intervals": [
+        [
+          2329.0,
+          2337.0
+        ]
+      ],
+      "title": "Within 24 hours of their arrival, Ericsson Response volunteers had helped",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "8c8fe6cc8ca0138a32303f840ac47f506a6c1b67585f44948ec5b23d5a4c3a19"
+    },
+    {
+      "n": 73,
+      "file": "slides/073.webp",
+      "intervals": [
+        [
+          2337.0,
+          2380.0
+        ]
+      ],
+      "title": "Month ar",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "bbd24d893933618f9c07e77b5d6fd38597f6875482aea84b96fbe6a09d223dd3"
+    },
+    {
+      "n": 74,
+      "file": "slides/074.webp",
+      "intervals": [
+        [
+          2380.0,
+          2382.0
+        ]
+      ],
+      "title": "If you can't move, nothing goes anywhere",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c9155f9517a56c97512d4635b30dbadc7c5e268fa54fc12904450d51538f1293"
+    },
+    {
+      "n": 75,
+      "file": "slides/075.webp",
+      "intervals": [
+        [
+          2382.0,
+          2384.0
+        ]
+      ],
+      "title": "EWORLD",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "8526d1b19f5fbce12f999e44cb475c6d9b5d9fd80b86647648eb3f2e207e0b71"
+    },
+    {
+      "n": 76,
+      "file": "slides/076.webp",
+      "intervals": [
+        [
+          2384.0,
+          2391.0
+        ]
+      ],
+      "title": "So, the faster that you can respond,",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "11aac0e31bc7cdfeadbe899c3ebdcc52a731c04a419dd43d7658b1725efc1ef7"
+    },
+    {
+      "n": 77,
+      "file": "slides/077.webp",
+      "intervals": [
+        [
+          2391.0,
+          2393.0
+        ]
+      ],
+      "title": "We can receive information in real time.",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "83d565265155e5d3c5f8199555e8e25dd7e14cf31c0ae9a7e4867ad9d12de061"
+    },
+    {
+      "n": 78,
+      "file": "slides/078.webp",
+      "intervals": [
+        [
+          2393.0,
+          2451.0
+        ]
+      ],
+      "title": "In this area, we have developed a cadre of professionals",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "fb2a6e89e9b9f9d5851463a3feecc252e6d641abde8a625b372993a002125707"
+    },
+    {
+      "n": 79,
+      "file": "slides/079.webp",
+      "intervals": [
+        [
+          2451.0,
+          2453.0
+        ]
+      ],
+      "title": "In thisarea,we have developed a cadreofprofessionals",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "60adb3d7a7599c33ad0c3526eb583dab6255304c2490419be5ec5ac5ee9fee72"
+    },
+    {
+      "n": 80,
+      "file": "slides/080.webp",
+      "intervals": [
+        [
+          2453.0,
+          2462.0
+        ]
+      ],
+      "title": "shierpa..",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "9fdae40f874f75cc5fbe6c272c67cbf0e854b47e957ed6a5ca408eb398f8a19e"
+    },
+    {
+      "n": 81,
+      "file": "slides/081.webp",
+      "intervals": [
+        [
+          2462.0,
+          2464.0
+        ]
+      ],
+      "title": "faster than we have in this emergency.",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "e75212db78fbbc63d7c6886afdfc820eaeb50137a8e6a15f3c5d1c2235c43a09"
+    },
+    {
+      "n": 82,
+      "file": "slides/082.webp",
+      "intervals": [
+        [
+          2464.0,
+          2479.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1740864d6a570de573302cf43d4482235977f56d90f8024b112947c0830ea144"
+    },
+    {
+      "n": 83,
+      "file": "slides/083.webp",
+      "intervals": [
+        [
+          2479.0,
+          2487.0
+        ]
+      ],
+      "title": "During the first month of the mission, Ericsson Response supported",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "7caf644e86a3b3b8700616c98a7b00651934ec35079d350c3cffebbb7a7d9ed0"
+    },
+    {
+      "n": 84,
+      "file": "slides/084.webp",
+      "intervals": [
+        [
+          2487.0,
+          2494.0
+        ]
+      ],
+      "title": "Ericsson ResponseinNepal",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "2cfc855846605cf4af549b7995d6ef1ce05ef4799cd087e5219e5120eaaec587"
+    },
+    {
+      "n": 85,
+      "file": "slides/085.webp",
+      "intervals": [
+        [
+          2494.0,
+          2506.0
+        ]
+      ],
+      "title": "YouTube",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "ad31e13882683ab5ae413ab981a7beebde9f098fefbeaae86486318e504bda1f"
+    },
+    {
+      "n": 86,
+      "file": "slides/086.webp",
+      "intervals": [
+        [
+          2510.0,
+          2556.0
+        ]
+      ],
+      "title": "Philippines 2013",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 17,
+        "slide_id": "SLD-D19AA97146",
+        "score": 0.792
+      },
+      "sha256_webp": "c4bfb460e2faefb48bd77b17184b88ba55b735cabb0fdae765c0c4b73323e0c3"
+    },
+    {
+      "n": 87,
+      "file": "slides/087.webp",
+      "intervals": [
+        [
+          2556.0,
+          2671.0
+        ],
+        [
+          2888.0,
+          2893.0
+        ]
+      ],
+      "title": "communities",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+        "doc_number": null,
+        "revision": null,
+        "page": 18,
+        "slide_id": "SLD-AC476EE005",
+        "score": 0.809
+      },
+      "sha256_webp": "9948a2b3be2e633de2ae7f09faf4982e2c7e0b5b8585484f98df277f737fa210"
+    },
+    {
+      "n": 88,
+      "file": "slides/088.webp",
+      "intervals": [
+        [
+          2671.0,
+          2683.0
+        ]
+      ],
+      "title": "VIDFORSTATECKEN",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "2c3cc97a51d3e1e4d72f5d4a1462e07389a4918338d68a1ebb13016edd05a487"
+    },
+    {
+      "n": 89,
+      "file": "slides/089.webp",
+      "intervals": [
+        [
+          2683.0,
+          2864.0
+        ]
+      ],
+      "title": "HE275",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "23adce6df7d5e486f28688975433952bc851755996dc28abbed235a258b21afb"
+    },
+    {
+      "n": 90,
+      "file": "slides/090.webp",
+      "intervals": [
+        [
+          2864.0,
+          2870.0
+        ]
+      ],
+      "title": "Many of them were able to",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "f6c9ada72c66bba95f24a25c5be1dc385daacfd81c2c21ecf7c580301f63b7ff"
+    },
+    {
+      "n": 91,
+      "file": "slides/091.webp",
+      "intervals": [
+        [
+          2871.0,
+          2878.0
+        ]
+      ],
+      "title": "Communication is the link to survival",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d11ef678d8554b69d9d2f4ef2268535596df9ae2f4061fa52e8ed32dfb709415"
+    },
+    {
+      "n": 92,
+      "file": "slides/092.webp",
+      "intervals": [
+        [
+          2878.0,
+          2882.0
+        ]
+      ],
+      "title": "ETCServicesforCommunities(S4C)inDominica",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "ba39fd9c264a79abf5bc49bc59ea5a65cc3faa3109e8b7fa63351ca2c6964374"
+    },
+    {
+      "n": 93,
+      "file": "slides/093.webp",
+      "intervals": [
+        [
+          2882.0,
+          2886.0
+        ]
+      ],
+      "title": "ETCServicesforCommunities(S4C)inDominica",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "70066ade55b03cee1103215058dbea5a455b660f5aded551dc9d16c42013f2f3"
+    },
+    {
+      "n": 94,
+      "file": "slides/094.webp",
+      "intervals": [
+        [
+          2893.0,
+          2968.0
+        ]
+      ],
+      "title": "Q&A",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "abd88c98dfbed60a0d6aded628355f99bccb6042c26776967f742c38ab78a58d"
+    },
+    {
+      "n": 95,
+      "file": "slides/095.webp",
+      "intervals": [
+        [
+          2968.0,
+          2973.0
+        ]
+      ],
+      "title": "Q&A",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "59bd2397e57ee52ad759c1c49cea4481caef5a20a13c997944171b2b3684b57a"
+    },
+    {
+      "n": 96,
+      "file": "slides/096.webp",
+      "intervals": [
+        [
+          2976.0,
+          2980.0
+        ]
+      ],
+      "title": "Meeuycliat",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "e9182c270ef2ce2c79db887c7f7165ceaf4ee46ed1d1db84ad486df378d8add7"
+    },
+    {
+      "n": 97,
+      "file": "slides/097.webp",
+      "intervals": [
+        [
+          2980.0,
+          2982.0
+        ]
+      ],
+      "title": "Microsoft TeamsEditViewWindowHelp",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1c46818ace0357e2a61d45eb772c80f705fa5a6ee9059bcee8766aa26de4f027"
+    },
+    {
+      "n": 98,
+      "file": "slides/098.webp",
+      "intervals": [
+        [
+          2983.0,
+          3052.0
+        ],
+        [
+          3074.0,
+          3084.0
+        ],
+        [
+          3084.0,
+          3091.0
+        ],
+        [
+          3110.0,
+          3119.0
+        ],
+        [
+          3119.0,
+          3133.0
+        ],
+        [
+          3133.0,
+          3279.0
+        ],
+        [
+          3279.0,
+          3598.0
+        ],
+        [
+          3598.0,
+          3725.0
+        ],
+        [
+          3736.0,
+          3740.0
+        ]
+      ],
+      "title": "Microsoft TeamsEditViewWindowHelp",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "24dd7ec82503c0c7966898cd2d09c48b05e41b0a79a006e9328f9ca4ac4fe549"
+    },
+    {
+      "n": 99,
+      "file": "slides/099.webp",
+      "intervals": [
+        [
+          3054.0,
+          3074.0
+        ],
+        [
+          3091.0,
+          3101.0
+        ],
+        [
+          3101.0,
+          3110.0
+        ]
+      ],
+      "title": "Microsoft TeamsEditViewWindowHelp",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "23cb7a68a38af52770cd6a1f27ed60148b507614d73310093f492125a66c9d7d"
+    },
+    {
+      "n": 100,
+      "file": "slides/100.webp",
+      "intervals": [
+        [
+          3725.0,
+          3731.0
+        ]
+      ],
+      "title": "13AEANE",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "3bfde2c0d3a00efd7ff040ffc3b9922e33150f5ec7e3a06992accb3d2e92ee3b"
+    },
+    {
+      "n": 101,
+      "file": "slides/101.webp",
+      "intervals": [
+        [
+          3731.0,
+          3736.0
+        ]
+      ],
+      "title": "13AEAE",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "51a8b5c31b561ef7776b8226f10ac701342103ae99ae6f2c4d0207ed70a3f7dc"
+    },
+    {
+      "n": 102,
+      "file": "slides/102.webp",
+      "intervals": [
+        [
+          3740.0,
+          3746.0
+        ]
+      ],
+      "title": "13",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "5ce6283a955fd176945388b17f53dcf206365b1a2a2187d3e47ca3d16be9ac0a"
+    },
+    {
+      "n": 103,
+      "file": "slides/103.webp",
+      "intervals": [
+        [
+          3746.0,
+          3750.0
+        ]
+      ],
+      "title": "13AEATE",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "e3a25e037f1c87908868e676dc33c2f5d94aabcfbc9d305db55b804d4fdbaeba"
+    },
+    {
+      "n": 104,
+      "file": "slides/104.webp",
+      "intervals": [
+        [
+          3750.0,
+          3942.0
+        ]
+      ],
+      "title": "10",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1548bf0a0437e5cf3370df48873bdd642acc3a16c23bcc67b9678b94a9ebfec5"
+    },
+    {
+      "n": 105,
+      "file": "slides/105.webp",
+      "intervals": [
+        [
+          3942.0,
+          4627.0
+        ]
+      ],
+      "title": "13AEAE",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "7676a2f0beda8a4922f8b0ee327a14a97ff040a8259ec1150b1c83b9b02b8469"
+    },
+    {
+      "n": 106,
+      "file": "slides/106.webp",
+      "intervals": [
+        [
+          4627.0,
+          4729.0
+        ]
+      ],
+      "title": "being recorded. Privacy policy",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "2a65e42f02ebcb3167f6378e49c309f8fe051f1d59ef7abed9fb2c771cf2ff86"
+    },
+    {
+      "n": 107,
+      "file": "slides/107.webp",
+      "intervals": [
+        [
+          4730.0,
+          4793.0
+        ]
+      ],
+      "title": "Microsoft Teams",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1377b64a55038bcd3b3150537ec303d4c6ec0badab33ce55612c3c19cd489721"
+    },
+    {
+      "n": 108,
+      "file": "slides/108.webp",
+      "intervals": [
+        [
+          4793.0,
+          4971.0
+        ]
+      ],
+      "title": "being recorded. Privacy policy",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "391da2add3eb047a8a293cf745b54f1446ed064cec59165462fc63ef814a0670"
+    },
+    {
+      "n": 109,
+      "file": "slides/109.webp",
+      "intervals": [
+        [
+          4971.0,
+          5064.0
+        ]
+      ],
+      "title": "By attending this meeting, you consent to",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d97efd10363a809a834732deede034f19db2806a90e7ef1f31d7fbe1f82d7af0"
+    },
+    {
+      "n": 110,
+      "file": "slides/110.webp",
+      "intervals": [
+        [
+          5065.0,
+          5078.0
+        ]
+      ],
+      "title": "。",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "23e075147fdaacbbf29143c42fc474382ef359eb26f86b2f62cbb63cc1245406"
+    },
+    {
+      "n": 111,
+      "file": "slides/111.webp",
+      "intervals": [
+        [
+          5078.0,
+          5085.0
+        ]
+      ],
+      "title": "。",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "cf787522a61ddd38ff8b8d4782a1abfa3ac8181975b6371d11d3aa3ea5e90b80"
+    },
+    {
+      "n": 112,
+      "file": "slides/112.webp",
+      "intervals": [
+        [
+          5085.0,
+          5111.0
+        ]
+      ],
+      "title": "Q&A",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "18dee1cfd7849be87e25381b2def6d807798ea34f043fb9426d051ac62b9f579"
+    },
+    {
+      "n": 113,
+      "file": "slides/113.webp",
+      "intervals": [
+        [
+          5111.0,
+          5146.0
+        ]
+      ],
+      "title": "Connect to Learn",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 1,
+        "slide_id": "SLD-D6F3541FEB",
+        "score": 0.741
+      },
+      "sha256_webp": "236a02b3a970e09bbadad18737a3dc6b5a1f6e7e63350cba146b7bb07de54f11"
+    },
+    {
+      "n": 114,
+      "file": "slides/114.webp",
+      "intervals": [
+        [
+          5146.0,
+          5234.0
+        ]
+      ],
+      "title": "weapon which you.can use to",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 2,
+        "slide_id": "SLD-BC3857422A",
+        "score": 0.764
+      },
+      "sha256_webp": "b55f385fe8d5278e112296c26dd11621046b3253e90704fe996951ff62d099e5"
+    },
+    {
+      "n": 115,
+      "file": "slides/115.webp",
+      "intervals": [
+        [
+          5234.0,
+          5377.0
+        ]
+      ],
+      "title": "About the presenter",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "9998efbdcacc338af2031cf9d44710cb0c09320e7524dc1b0279813d67afa0e1"
+    },
+    {
+      "n": 116,
+      "file": "slides/116.webp",
+      "intervals": [
+        [
+          5377.0,
+          5537.0
+        ]
+      ],
+      "title": "Ericsson - Sustainability and Corporate Responsibility",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 3,
+        "slide_id": "SLD-1E94426F89",
+        "score": 0.784
+      },
+      "sha256_webp": "caddbe1b1084a3cf7546d9f66e76e8e57512ba19a18d90aa168ff3a1ab80d20e"
+    },
+    {
+      "n": 117,
+      "file": "slides/117.webp",
+      "intervals": [
+        [
+          5537.0,
+          5662.0
+        ]
+      ],
+      "title": "Ericsson's action for digital education",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 4,
+        "slide_id": "SLD-0250118831",
+        "score": 0.61
+      },
+      "sha256_webp": "eb9751ee40328d4c541523d3aad7bf251c0fdf84f09a194106ab4da68913c3b6"
+    },
+    {
+      "n": 118,
+      "file": "slides/118.webp",
+      "intervals": [
+        [
+          5662.0,
+          5745.0
+        ],
+        [
+          7664.0,
+          8077.0
+        ],
+        [
+          8504.0,
+          8775.0
+        ]
+      ],
+      "title": "Education and Digital Inclusion",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "303bd76614ecb9f29ceea4bc21273bd02b4e78b5b584b6b341de1dd43d6286b0"
+    },
+    {
+      "n": 119,
+      "file": "slides/119.webp",
+      "intervals": [
+        [
+          5745.0,
+          5748.0
+        ],
+        [
+          5830.0,
+          5833.0
+        ],
+        [
+          5835.0,
+          5901.0
+        ],
+        [
+          8077.0,
+          8083.0
+        ],
+        [
+          8502.0,
+          8504.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c4a1547c287e57ae16c5dbf242c0f2fd9fdbccd2fd4f68346351807bda18a9de"
+    },
+    {
+      "n": 120,
+      "file": "slides/120.webp",
+      "intervals": [
+        [
+          5748.0,
+          5772.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "3f1d0fe5ed17ef0dd70fb5a68b280b8676a94afa83a98ce5456d2ab5aca05518"
+    },
+    {
+      "n": 121,
+      "file": "slides/121.webp",
+      "intervals": [
+        [
+          5772.0,
+          5775.0
+        ]
+      ],
+      "title": "But, not everyone has access.",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "90d682647a44e01179eddc51689dae57865a1425a5556275c064c7206f425b08"
+    },
+    {
+      "n": 122,
+      "file": "slides/122.webp",
+      "intervals": [
+        [
+          5775.0,
+          5819.0
+        ]
+      ],
+      "title": "The next engineer",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "a470bcfcf0dc70a6c39150860d44c314464dc22ce2b66a304a85ff6980afec7a"
+    },
+    {
+      "n": 123,
+      "file": "slides/123.webp",
+      "intervals": [
+        [
+          5819.0,
+          5822.0
+        ]
+      ],
+      "title": "Together, we empower",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "0cbd3871028da4b9b55e5223240247ab024619cc9b79dc326f1b5d014af037bd"
+    },
+    {
+      "n": 124,
+      "file": "slides/124.webp",
+      "intervals": [
+        [
+          5822.0,
+          5826.0
+        ]
+      ],
+      "title": "Help bridge the digital divide",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "6c7c7949f63310450706f19e42db0123ae99ca7899b4d5e52b89c7d827e90697"
+    },
+    {
+      "n": 125,
+      "file": "slides/125.webp",
+      "intervals": [
+        [
+          5826.0,
+          5830.0
+        ]
+      ],
+      "title": "unicef",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d413105c951c7e2d284e04bc36bfed1629ae3a7e2f9e8ea3ddfe347cbb6f6177"
+    },
+    {
+      "n": 126,
+      "file": "slides/126.webp",
+      "intervals": [
+        [
+          5833.0,
+          5835.0
+        ],
+        [
+          5901.0,
+          5907.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "49da7389e42ef76fcd273c5b7403bfab1c4aa84c89c6a04d1ffbaa77c0c66a50"
+    },
+    {
+      "n": 127,
+      "file": "slides/127.webp",
+      "intervals": [
+        [
+          5907.0,
+          5909.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "12d4a8d71f26df965ff3bd07dc780f428ae2deaf6a9b5cfcca4fad647e3cfc19"
+    },
+    {
+      "n": 128,
+      "file": "slides/128.webp",
+      "intervals": [
+        [
+          5911.0,
+          6067.0
+        ],
+        [
+          7201.0,
+          7627.0
+        ],
+        [
+          8084.0,
+          8499.0
+        ]
+      ],
+      "title": "Ericsson Educate Portfolio",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 8,
+        "slide_id": "SLD-ECFAF32158",
+        "score": 0.735
+      },
+      "sha256_webp": "2e7aacc4482c882e54641c53282f4cb6d8e7e680ad3c383154536c2a64458b2f"
+    },
+    {
+      "n": 129,
+      "file": "slides/129.webp",
+      "intervals": [
+        [
+          6067.0,
+          6095.0
+        ],
+        [
+          8499.0,
+          8501.0
+        ]
+      ],
+      "title": "Connect to Learn - Current Deployments",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 9,
+        "slide_id": "SLD-E07387B894",
+        "score": 0.697
+      },
+      "sha256_webp": "982071827bc307a36008de2139b8e303a03666483d6f741b25cfce9178456533"
+    },
+    {
+      "n": 130,
+      "file": "slides/130.webp",
+      "intervals": [
+        [
+          6096.0,
+          6113.0
+        ]
+      ],
+      "title": "GIGA Partnership with",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 10,
+        "slide_id": "SLD-EEB6B23F8F",
+        "score": 0.68
+      },
+      "sha256_webp": "a88a396e7244c4bf9330332093ef1aab30cca63ea47e38b3a03addd847d6903e"
+    },
+    {
+      "n": 131,
+      "file": "slides/131.webp",
+      "intervals": [
+        [
+          6113.0,
+          6191.0
+        ]
+      ],
+      "title": "Ericsson - UNICEF Partnership for GIGA",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 11,
+        "slide_id": "SLD-F7984586DD",
+        "score": 0.681
+      },
+      "sha256_webp": "3b38e12a890273d586da57a66724101966c605b2210ae41c0934549ed3969320"
+    },
+    {
+      "n": 132,
+      "file": "slides/132.webp",
+      "intervals": [
+        [
+          6192.0,
+          6220.0
+        ]
+      ],
+      "title": "Mapping school",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "86eee67fc988c2fa5bc7cd5aa9114895a069651de1c7fffbe16b239bc3a7a723"
+    },
+    {
+      "n": 133,
+      "file": "slides/133.webp",
+      "intervals": [
+        [
+          6220.0,
+          6289.0
+        ],
+        [
+          6346.0,
+          6386.0
+        ],
+        [
+          6389.0,
+          6409.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 14,
+        "slide_id": "SLD-169D12D706",
+        "score": 0.617
+      },
+      "sha256_webp": "538c3cec78342048395fe683f6fda024892b95616188032b6526f1363f9cb168"
+    },
+    {
+      "n": 134,
+      "file": "slides/134.webp",
+      "intervals": [
+        [
+          6289.0,
+          6345.0
+        ]
+      ],
+      "title": "Three types of mapping",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 12,
+        "slide_id": "SLD-55AC835B4B",
+        "score": 0.797
+      },
+      "sha256_webp": "8034b279c57dee8b2c6905e1a3b598bdb36da837502aef0a770e5938787f9353"
+    },
+    {
+      "n": 135,
+      "file": "slides/135.webp",
+      "intervals": [
+        [
+          6386.0,
+          6389.0
+        ],
+        [
+          6409.0,
+          6416.0
+        ],
+        [
+          7627.0,
+          7634.0
+        ]
+      ],
+      "title": "connectivity for",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 15,
+        "slide_id": "SLD-0565B5A0A4",
+        "score": 0.719
+      },
+      "sha256_webp": "baf500d4e0ef4339d41303acaf141a3fd38db480dc7b29a612e1799fe9611114"
+    },
+    {
+      "n": 136,
+      "file": "slides/136.webp",
+      "intervals": [
+        [
+          6416.0,
+          6508.0
+        ]
+      ],
+      "title": "FWA - What is it?",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 16,
+        "slide_id": "SLD-65645D0E5D",
+        "score": 0.861
+      },
+      "sha256_webp": "70d79522f1f77ceb20514964b5d4b94ef94f1f0b31c79eee4ef62b9e312d51a2"
+    },
+    {
+      "n": 137,
+      "file": "slides/137.webp",
+      "intervals": [
+        [
+          6508.0,
+          6632.0
+        ],
+        [
+          7634.0,
+          7636.0
+        ]
+      ],
+      "title": "FWA - Key characteristics",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 17,
+        "slide_id": "SLD-E6BDF83A87",
+        "score": 0.669
+      },
+      "sha256_webp": "5cfcb131f710dbbbb6f5e38972fbb35d39b6a233f69e4fdf22cbf35f8a00a41f"
+    },
+    {
+      "n": 138,
+      "file": "slides/138.webp",
+      "intervals": [
+        [
+          6632.0,
+          6676.0
+        ],
+        [
+          6679.0,
+          6774.0
+        ]
+      ],
+      "title": "An image is worth",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 18,
+        "slide_id": "SLD-50F8F63172",
+        "score": 0.664
+      },
+      "sha256_webp": "088537643b41bc69f1dd875520f00a9e25d965311f1efb78fdadcd0ca8152c9c"
+    },
+    {
+      "n": 139,
+      "file": "slides/139.webp",
+      "intervals": [
+        [
+          6676.0,
+          6679.0
+        ],
+        [
+          6774.0,
+          6782.0
+        ],
+        [
+          7192.0,
+          7194.0
+        ]
+      ],
+      "title": "Advocacy",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 19,
+        "slide_id": "SLD-7CD42CD8DA",
+        "score": 0.555
+      },
+      "sha256_webp": "4c91d95d1ef5803d150aeacab7f129b265b97b6c6a9e91441216c06d3c8f5899"
+    },
+    {
+      "n": 140,
+      "file": "slides/140.webp",
+      "intervals": [
+        [
+          6782.0,
+          6819.0
+        ]
+      ],
+      "title": "Global influencial reports",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 20,
+        "slide_id": "SLD-03D7C4EAB3",
+        "score": 0.558
+      },
+      "sha256_webp": "0ea35c021aa876ef9572d23bed4ebe90c5b6b857dd49ebc7a2a0da28513b7803"
+    },
+    {
+      "n": 141,
+      "file": "slides/141.webp",
+      "intervals": [
+        [
+          6819.0,
+          6823.0
+        ],
+        [
+          7189.0,
+          7191.0
+        ]
+      ],
+      "title": "The Economist program overview",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "f38c2174bd836cca26fd5cfdba7ba5385006490d12d0f97fe606a5defc1df5ab"
+    },
+    {
+      "n": 142,
+      "file": "slides/142.webp",
+      "intervals": [
+        [
+          6823.0,
+          6829.0
+        ],
+        [
+          8787.0,
+          8789.0
+        ]
+      ],
+      "title": "Digital Learning Report",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "8509624660ec2b8015c65a6a0b7f7c29ac2e3d38275125e54b62f2f161d3ebed"
+    },
+    {
+      "n": 143,
+      "file": "slides/143.webp",
+      "intervals": [
+        [
+          6829.0,
+          6862.0
+        ]
+      ],
+      "title": "INESCO",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "6d6e27e9ce8332511c8dacd1523080c2d9509cb48211fc1156f04cdc157a085b"
+    },
+    {
+      "n": 144,
+      "file": "slides/144.webp",
+      "intervals": [
+        [
+          6862.0,
+          6912.0
+        ],
+        [
+          7642.0,
+          7656.0
+        ]
+      ],
+      "title": "young people by 2025 with access to digital tools,",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 24,
+        "slide_id": "SLD-3EB3B87473",
+        "score": 0.578
+      },
+      "sha256_webp": "a93b85104ffdad26d156bb348437aafae4c431519f453b24fafceb947afbf158"
+    },
+    {
+      "n": 145,
+      "file": "slides/145.webp",
+      "intervals": [
+        [
+          6912.0,
+          6934.0
+        ]
+      ],
+      "title": "Some food for thought..",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "70ec2df606a2bed84b0589cbadbb94aad11d1f4025e3c98bf4b1e3e740d8a6b0"
+    },
+    {
+      "n": 146,
+      "file": "slides/146.webp",
+      "intervals": [
+        [
+          6934.0,
+          7127.0
+        ]
+      ],
+      "title": "Just a simple example..",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "6880de6d8a9e43a1d5204557ca85a5d26373ee2d879bfcca4cb0a7c884150c58"
+    },
+    {
+      "n": 147,
+      "file": "slides/147.webp",
+      "intervals": [
+        [
+          7127.0,
+          7184.0
+        ]
+      ],
+      "title": "Just,a simple example...",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "f3426fe672fc255d05375a94bc711abbc0c103c03e470d6ffa559e412fe04a13"
+    },
+    {
+      "n": 148,
+      "file": "slides/148.webp",
+      "intervals": [
+        [
+          7184.0,
+          7186.0
+        ],
+        [
+          8792.0,
+          8795.0
+        ]
+      ],
+      "title": "三",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d4866e00df6a4751e3f9aef422168cab156c5b78729302832cc7d7ac9a8ecabe"
+    },
+    {
+      "n": 149,
+      "file": "slides/149.webp",
+      "intervals": [
+        [
+          7194.0,
+          7201.0
+        ]
+      ],
+      "title": "Ericsson - UNICEF Partnership for GIGA",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 11,
+        "slide_id": "SLD-F7984586DD",
+        "score": 0.688
+      },
+      "sha256_webp": "868134baf2197636adf854fe0ea442d8d220c8099104b4b19f5ac66f27cdeb45"
+    },
+    {
+      "n": 150,
+      "file": "slides/150.webp",
+      "intervals": [
+        [
+          7636.0,
+          7642.0
+        ]
+      ],
+      "title": "The,Economist program overview",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1816f7a8398aa23a4bb1aebb9c60d9ac2d50e37d58977da463c2b52a69ce2ea9"
+    },
+    {
+      "n": 151,
+      "file": "slides/151.webp",
+      "intervals": [
+        [
+          7656.0,
+          7662.0
+        ]
+      ],
+      "title": "Three types of mapping",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 12,
+        "slide_id": "SLD-55AC835B4B",
+        "score": 0.805
+      },
+      "sha256_webp": "464f59b487414008a4a9e7a429f1750b27e539471f337df00b827f5edc3b4f9e"
+    },
+    {
+      "n": 152,
+      "file": "slides/152.webp",
+      "intervals": [
+        [
+          7662.0,
+          7664.0
+        ]
+      ],
+      "title": "Stefan Wilke",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "b8e75f3848927a6973dd3bfc16e561cfb3be066924282be0ab32bff02fff6344"
+    },
+    {
+      "n": 153,
+      "file": "slides/153.webp",
+      "intervals": [
+        [
+          8775.0,
+          8779.0
+        ]
+      ],
+      "title": "Microsoft TeamsEditViewWindowHelp",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "19872707ac9fa51e12593a6091451cb07d00052a072fad1f1860e82cffbabb7e"
+    },
+    {
+      "n": 154,
+      "file": "slides/154.webp",
+      "intervals": [
+        [
+          8779.0,
+          8787.0
+        ]
+      ],
+      "title": "FWA - What is it?",
+      "is_slide": true,
+      "source_slide": {
+        "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+        "doc_number": null,
+        "revision": "B",
+        "page": 16,
+        "slide_id": "SLD-65645D0E5D",
+        "score": 0.837
+      },
+      "sha256_webp": "d54d209d0c0e8e76b034da706544323fa0d7b3ba0b75d6a8efae7eb08ffa8f56"
+    },
+    {
+      "n": 155,
+      "file": "slides/155.webp",
+      "intervals": [
+        [
+          8795.0,
+          8797.0
+        ]
+      ],
+      "title": "In 24 hours you are tasked with delivering a'tech concept, an idea based on digital technology,",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "a47a6c22cb59dda04a348f1f54ad2abd930fb5ad946b35f429fbb0b643dfeca7"
+    },
+    {
+      "n": 156,
+      "file": "slides/156.webp",
+      "intervals": [
+        [
+          8797.0,
+          9319.0
+        ]
+      ],
+      "title": "In 24 hours you are tasked with delivering a'tech concept, an idea based on digital technology,",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "fef8b358ed5594f3ff19ce5e249d752c3bd5e798264304ecb707e23c5891db5f"
+    }
+  ],
+  "presented_deck_file_id": 2,
+  "summary": "Not all 140 volunteers go into the field, a lot work with shipping of equipment and back office functions but some of us then from time to time deploy out on mission. I think you can get more. But if you do it, you get a little test, test and so on. From like wfp.org, you register with that email, then you're automatically approved so there is no approval process you get immediate access then but if you come if you use for example your Google mail then then there needs an administrator intervention. Let's say they were interested in chess the same way as I am. Then, if you wanted to learn, you basically have to buy a chess book or maybe go to the public library in your city or your village and then you could read some books, some get some bibliography, there were some classic books, or additionally. That probably is going to take less time than all the preparations in this month. So, sometimes maybe people don't see, they think that it's access to internet is not for us as fast as it's for Eric's own response.",
+  "files": {
+    "transcript_txt": "transcript.txt",
+    "transcript_vtt": "transcript.vtt",
+    "notes": "notes.md",
+    "chunks": "chunks.jsonl",
+    "slide_prompts": "slide_prompts.md",
+    "audio": "audio.opus"
+  },
+  "storage_tiers": {
+    "original": 1223051782,
+    "tiers": [
+      {
+        "name": "T0 Original",
+        "bytes": 1223051782,
+        "saving": 0.0,
+        "desc": "Original recording",
+        "measured": true
+      },
+      {
+        "name": "T1 Smart re-encode",
+        "bytes": 165408416,
+        "saving": 0.86476,
+        "desc": "Same video, re-encoded for screen content",
+        "measured": false
+      },
+      {
+        "name": "T2 Audio + slides + text",
+        "bytes": 25235939,
+        "saving": 0.97937,
+        "desc": "Opus speech audio, WebP keyframes, transcript, notes",
+        "measured": true
+      },
+      {
+        "name": "T3 Slides + text",
+        "bytes": 7835045,
+        "saving": 0.99359,
+        "desc": "Keyframes + speaker transcript + voice samples",
+        "measured": true
+      },
+      {
+        "name": "T4 Text + slide links",
+        "bytes": 5752933,
+        "saving": 0.9953,
+        "desc": "Transcript; slides replaced by links to source-of-truth decks",
+        "measured": true
+      }
+    ],
+    "breakdown": {
+      "audio": 17400894,
+      "slides": 7067392,
+      "slides_linked": 2082112,
+      "text_raw": 828998,
+      "text_gzip": 237979,
+      "voices": 529674,
+      "packet_total": 25826958
+    }
+  },
+  "information_retention": {
+    "screen_text_retained": 0.903,
+    "frames_checked": 8,
+    "timeline_covered_by_keyframes": 0.996,
+    "keyframes": 156,
+    "linked_to_source_deck": 36,
+    "transcript_words": 19224,
+    "speech_confidence": 0.86,
+    "speakers": 35,
+    "live_video_area": 0.023
+  }
+}

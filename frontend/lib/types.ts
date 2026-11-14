@@ -259,11 +259,29 @@ export interface CheckedMoment {
 
 export interface FileIntegrity {
   file_id: number;
+  level?: number;
   name: string;
   original_size: number;
   distilled_size: number;
   compression_ratio: string;
   retention_score?: number | null;
+  status?: "measured" | "estimated" | "proven" | "not_measured" | "error";
+  verification_badge?: string;
+  verification_detail?: string;
+  method?: string;
+  slides_identical?: number;
+  total_slides?: number;
+  psnr_avg?: number | null;
+  audio_check?: {
+    audio_exists: boolean;
+    duration_original: number;
+    duration_audio: number;
+    duration_diff_sec: number;
+    duration_match: boolean;
+    speech_duration: number;
+    speech_covered_pct: number;
+    segments_count: number;
+  } | null;
   text_kept_pct?: number | null;
   text_moments?: number;
   text_note?: string | null;

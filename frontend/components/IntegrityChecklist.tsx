@@ -6,25 +6,42 @@ import { FileIntegrity } from "@/lib/types";
 
 interface Props {
   fileId: number;
+  level?: number;
 }
 
-export default function IntegrityChecklist({ fileId }: Props) {
+export default function IntegrityChecklist({ fileId, level }: Props) {
   const [data, setData] = useState<FileIntegrity | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     api
-      .getFileIntegrity(fileId)
+      .getFileIntegrity(fileId, level)
       .then(setData)
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
-  }, [fileId]);
+  }, [fileId, level]);
 
   if (loading) {
     return <div className="p-4 text-xs font-mono text-gray-500">Checking data integrity guarantees...</div>;
   }
 
   if (!data) return null;
+
+  const isProven = data.status === "proven";
+  const isEstimated = data.status === "estimated";
+  const isNotMeasured = data.status === "not_measured";
+  const isMeasured = data.status === "measured";
+
+  const statusLabel = isProven
+    ? "Proven"
+    : isMeasured
+    ? "Measured"
+    : isEstimated
+    ? "Estimated"
+    : isNotMeasured
+    ? "Not measured"
+    : "Verified";
 
   return (
     <div className="border border-[#e5e5e5] bg-white p-6 space-y-6">
@@ -35,16 +52,29 @@ export default function IntegrityChecklist({ fileId }: Props) {
             <h3 className="font-mono font-bold text-sm text-black uppercase tracking-wider">
               "Nothing Was Lost" Verification Protocol
             </h3>
+            <span className="px-2 py-0.5 border border-black text-black bg-white text-[10px] font-mono font-bold uppercase rounded">
+              {statusLabel}
+            </span>
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            Verification of information preservation across storage compression levels.
+            {data.verification_detail || "Verification of information preservation across storage compression levels."}
           </p>
         </div>
 
         <div className="flex items-center space-x-4 font-mono text-right">
           <div>
             <div className="text-[10px] text-gray-500 uppercase">Information Retention</div>
-            <div className="text-xl font-bold text-black">{data.retention_score}%</div>
+            <div className="text-xl font-bold text-black">
+              {isProven
+                ? data.verification_badge || "Proven (SHA-256)"
+                : isNotMeasured
+                ? "Not measured"
+                : isEstimated
+                ? "Estimated"
+                : data.retention_score != null
+                ? `${data.retention_score}%`
+                : "Measured"}
+            </div>
           </div>
           <div className="border-l border-gray-200 pl-4">
             <div className="text-[10px] text-gray-500 uppercase">Compression Ratio</div>

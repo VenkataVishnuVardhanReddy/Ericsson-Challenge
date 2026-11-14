@@ -1,0 +1,80 @@
+00:00 Speaker 1: Hello and welcome to our thesis presentation.
+00:04 Speaker 1: We're going to talk about the growl VMs ahead of time compilation, benefits and challenges in production.
+00:12 Speaker 1: It will be presented by me, Muhammad Yasmr Takhani and me, Tomy Wilson.
+00:19 Speaker 2: Here is the table of content that we cannot talk about.
+00:25 Speaker 1: And as you know, Java-based application faced challenges in a continuous environment.
+00:35 Speaker 1: And these challenges include inefficient resource usage and slow start-up time, which affects operational sustainability and efficiency.
+00:47 Speaker 1: And the goal we address Java, JVM's limitation and offering low resource consumption and faster startup times.
+00:58 Speaker 1: And it's good in cloud computing and microservices environment where rapid scaling and cost effective resource consumption are critical.
+01:11 Speaker 1: And the primary objective of this thesis is to critically examine the capabilities of VMs mainly focusing on it's ahead of time completion and native image support.
+01:29 Speaker 1: Here are some key terms that we need to explain. So, GraVM is a project by Oracle, which is basically a copy of the hotspot
+01:41 Speaker 3: JVM, but it's also included features like Justin Time compilation. or I have more optimized just in time compilation and the ability to ahead of time compile and
+01:54 Speaker 1: also running multiple languages on the same app.
+01:59 Speaker 1: So ahead of time compilation is compiling code into a native executable that can run only on the target platform and the ground VMs tool for this is native image.
+02:14 Speaker 1: and just in time compilation is compiling code at runtime, which is what the standard JVM uses.
+02:23 Speaker 1: And then PGO or profile-guided optimization is a technique used in the head of time compilation
+02:32 Speaker 1: because to optimize in a good way, you need more information. So PGO is a way to create profiles of the application and optimize from those profiles.
+02:47 Speaker 4: Yes, and here is our resource question where
+02:50 Speaker 1: the first one, how does the performance of a GLAW VM's native image compare to the standard JVM regarding execution speed?
+02:59 Speaker 1: And this is compared the just in time and the head-of-time completion. And the second one, how does native image impact resource usage compare to the standard JVM?
+03:10 Speaker 1: And the last one, how do developers and the system administrator receive the integration of the GROL VM ahead of time compilation into existing workflow and its impact on operational efficiency.
+03:25 Speaker 1: And our research questions are based on the Oracle that claim many things about GROL VM ahead of time mainly improve the performance and improved resource usage and it's a production ready.
+03:44 Speaker 1: And for the broader interest so Grower VMs helps in reducing the environmental impact by making application run more efficiently and with efficiently mean that it uses just the necessary resources and services like classes and methods.
+04:02 Speaker 1: And it will be consuming less energy and optimize the resource utilization, lead to lower operational cost and saving money on infrastructure and energy pills.
+04:18 Speaker 1: And the GradVM is a practically benefit, with beneficial for micro services architecture and improved startup times and resource efficiency, which are critical crucial for scalable and responsive applications.
+04:41 Speaker 1: And our resource methodology is the first one, quantitative data collection and qualitative data collection.
+04:50 Speaker 1: So we use the performance benchmarks and resource users metrics to provide the price and the objective data on how different JVM configuration versus the standard versus the growl VMS and it will
+05:08 Speaker 1: highlight the performance improvement or regressions and for the quality of data collection we used the semi-structured interviews
+05:22 Speaker 1: where it's a offer in depth on understanding of the practical challenges and benefits of integration, a GroldVM into existing workflow and this type of open and discussions will allow informants to the
+05:40 Speaker 1: flexibility to share their views in their own world.
+05:48 Speaker 1: So the benchmarks we decided on was to use two use cases to test an application.
+05:55 Speaker 1: The first use case we used was zero prefix haching which is a very CPU heavy use case and then we used the second use case was text prediction algorithm which uses a large data set to predict text which
+06:14 Speaker 1: is both CPU and memory intensive.
+06:18 Speaker 1: Each test was run a hundred times to get an accurate picture of both the stability of the performance and to be able to see the startup and warm up times for the JVMs.
+06:35 Speaker 1: Performance was monitored internally, but we tested them through API endpoints to make it easier to test.
+06:46 Speaker 1: And then we also measured
+06:47 Speaker 3: memory usage, both average and peak. and we also recorded the
+06:53 Speaker 1: compilation and build time, or compilation time and build size. So the builds we compared were the normal hotspot just in time, the GraVM optimized just in time and then for native images, one that had no
+07:12 Speaker 1: profilgetted optimization,
+07:15 Speaker 3: one that had on use case one, one that had PGO on use case 2 and one that had full
+07:21 Speaker 1: PGO.
+07:25 Speaker 1: So here we can see from the graphs that we can see on the yellow and red lines that those are the just in times and they start up very high, very slow and then
+07:43 Speaker 1: once they warm up they settle into a very good performance position. and we can see on the left that the growl just in time out performs the full pgeo, which is the fastest of the native images by about 16%.
+08:02 Speaker 1: And we can see on the right that the native image actually outperforms the growl just in time, which was the faster of the just in times.
+08:13 Speaker 1: So you can see here that it really depends on the use case if native image can improve performance or not.
+08:21 Speaker 1: But when it comes to the first few executions, it can be a lot faster. We can also see that PGO increases the performance by a lot.
+08:33 Speaker 1: In both use cases, when not using PGO, execution took about 1.8 to 2 times slower.
+08:46 Speaker 1: Then we can see here we can talk with memory usage the just in times were used a lot of memory we can also see that the groull just in time used more memory which is probably because of its more aggressive optimization and the sacrificing memory to get better
+09:04 Speaker 1: performance and we can also see that the native images are pretty good in memory usage but we can see that the more PGO you use the more memory it uses and we can see that the growl just in time has a lot of peak memory usage which was
+09:22 Speaker 1: during the warm up but then it settled in and stuck around the 100 mark during the execution.
+09:32 Speaker 1: And we can also see in the build size that just in times are much better on build size. It's much smaller than the native images, which were a lot bigger because they contain a lot more information and they contain the native code to execute.
+09:52 Speaker 1: And we can see in compilation time that the native images are a lot slower to compile. even though this is a very small image and the native images will never be faster because you first have to compile to a jar and
+10:10 Speaker 1: then do the native image step so it will always be slower than just compiling for adjusting time.
+10:19 Speaker 1: Yes, analysis of findings so for the performance native image can out from just the time specific specific cases with the PGO and all other
+11:10 Speaker 1: developer display spectrum of family industry with the Gral VM from basic to advanced and perceived benefits.
+11:20 Speaker 1: So faster startup time, this is especially for application that need quick responsive like serverless functions and reduced memory usage, where it's important for micro services that run in resource constraint environment
+11:38 Speaker 1: and for the changes they thought so complex configuration it requires significant efforts to configure for dynamic future like reflections and for the learning curve so developers need to train to
+11:57 Speaker 1: effectively use a head of time completion and the visual.
+12:04 Speaker 1: So the value of our work is that Gravium's ahead of time enhances JVM based applications, especially by reducing memory usage, which is important in microservices.
+12:18 Speaker 1: PGO also ensures that performance isn't much worse in key use cases and sometimes better, but it has drawbacks such as increasing memory, increasing compilation time and increasing image size and
+12:36 Speaker 1: developers are concerned about the added configuration complexity. We can also note that performance is instant there is no warm up needed so they can be good for serverless functions and there is also
+12:55 Speaker 1: a significant potential for cost and resource efficiency improvements in production environments.
+13:06 Speaker 1: Yes, for the volatility threats and future work. So, volatility threats with all that, that Grohl VMs was released in 2019, making it a relatively new industry.
+13:22 Speaker 1: Because it's a new technologies, not many companies and developers have used it extensively.
+13:31 Speaker 1: So due to its limited adoption, we had a small sample size of developers with hands-on experience using Graal VM.
+13:43 Speaker 1: And these results are specific to our software configuration used in our study.
+13:50 Speaker 1: So, broader testing is needed to validate findings in varied environments.
+13:59 Speaker 3: And then
+14:00 Speaker 1: for future work, we think that a good next step would be case studies on real-world applications to see how the performance and resource usage can be is affected by using ahead
+14:18 Speaker 1: of time completion and also explore more use cases for out of time compilation.
+14:28 Speaker 2: Yes, thank you for listening and a special thanks for Luckmall and Park.
+14:35 Speaker 1: Nice. Thank you. And a big applause for that.
+14:43 Speaker 1: And do we have any questions in the audience or online?
+15:00 Speaker 5: I think you started off with one of the ADS services, I wonder what happened to that track and what problems you encountered there.
+15:08 Speaker 1: Yeah, so during that track we got a build, we compiled to a build and we set up a test environment but we have not gotten any test to actually work.
+15:25 Speaker 1: It seems like the image is not really working.
+15:30 Speaker 1: So we have spent a lot of time trying to debug that.
+15:35 Speaker 1: But one of the things we have tried is working.
+15:41 Speaker 1: So we don't really know what to do. So it was very hard to incorporate in production environments.
+15:51 Speaker 1: questions.
+15:58 Speaker 6: Thanks again.

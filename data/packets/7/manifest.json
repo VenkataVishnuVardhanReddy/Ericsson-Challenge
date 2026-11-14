@@ -1,0 +1,327 @@
+{
+  "schema": "distill.knowledge-packet/1.0",
+  "pipeline": "distill-1.0",
+  "created": "2026-11-13T18:07:12",
+  "source": {
+    "name": "GraalVMs_Ahead-of-Time_Compilation_(Source).mp4",
+    "path": "C:\\Users\\Vishnu\\Downloads\\Hackthon\\sample_data\\Ericsson_Challenge_Dataset\\EricssonPlay\\GraalVMs_Ahead-of-Time_Compilation_(Source).mp4",
+    "sha256": "56788476f81d23dab45cde7bbf89a6f537ca1d31951567e512845690d3dd46c8",
+    "bytes": 220480662
+  },
+  "media": {
+    "duration": 960.3,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0
+  },
+  "transcript": {
+    "source": "whisper",
+    "language": "en",
+    "language_prob": 0.665,
+    "mean_confidence": 0.857,
+    "model": "base",
+    "segments": 80,
+    "speakers": [
+      "Speaker 1",
+      "Speaker 2",
+      "Speaker 3",
+      "Speaker 4",
+      "Speaker 5",
+      "Speaker 6"
+    ]
+  },
+  "voices": {
+    "Speaker 1": "voices/voice_speaker_1.opus",
+    "Speaker 2": "voices/voice_speaker_2.opus",
+    "Speaker 3": "voices/voice_speaker_3.opus",
+    "Speaker 4": "voices/voice_speaker_4.opus",
+    "Speaker 5": "voices/voice_speaker_5.opus",
+    "Speaker 6": "voices/voice_speaker_6.opus"
+  },
+  "keyframes": [
+    {
+      "n": 1,
+      "file": "slides/001.webp",
+      "intervals": [
+        [
+          0.0,
+          19.0
+        ]
+      ],
+      "title": "GraalVM",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "907cf740c1ca1fc6d066b4b5684d28234ad84822e50919c4003a769cabc7f904"
+    },
+    {
+      "n": 2,
+      "file": "slides/002.webp",
+      "intervals": [
+        [
+          19.0,
+          26.0
+        ]
+      ],
+      "title": "Table of contents",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "8cf14e7ba0cc7a3da60946a33422a125add33c66ece7531189d4520453694eb5"
+    },
+    {
+      "n": 3,
+      "file": "slides/003.webp",
+      "intervals": [
+        [
+          26.0,
+          89.0
+        ]
+      ],
+      "title": "Introduction",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "d44c1c4bfceb02bda21e2aa6ff6dc65f25848b1e570da17bb8e37ec21b8ace4d"
+    },
+    {
+      "n": 4,
+      "file": "slides/004.webp",
+      "intervals": [
+        [
+          89.0,
+          167.0
+        ]
+      ],
+      "title": "Explanation of Key Terms",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "93b09ec8245a8b814d942d41b54d16d94738db349c48c86be4ba8890aeb8e92a"
+    },
+    {
+      "n": 5,
+      "file": "slides/005.webp",
+      "intervals": [
+        [
+          167.0,
+          223.0
+        ]
+      ],
+      "title": "Research Questions",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "15c8be975987c40cb59ea91a75d07414b9d98b502317f27cd703612871b7badd"
+    },
+    {
+      "n": 6,
+      "file": "slides/006.webp",
+      "intervals": [
+        [
+          223.0,
+          280.0
+        ]
+      ],
+      "title": "Broader Interest",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "ff8153f978be5cb7265f674d50032f1c584fb2e4e5b5eee9bfcd8f5bfe14acd2"
+    },
+    {
+      "n": 7,
+      "file": "slides/007.webp",
+      "intervals": [
+        [
+          280.0,
+          347.0
+        ]
+      ],
+      "title": "Research Method",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "5a4d93a877c50394373b58a37ee4ae235b94881894cba6a9a639d3ae21cfaf04"
+    },
+    {
+      "n": 8,
+      "file": "slides/008.webp",
+      "intervals": [
+        [
+          347.0,
+          444.0
+        ]
+      ],
+      "title": "Benchmark suite",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "c4fbf1fe93a1e072fff3bc759c101738e43b61320a30fbefbe8bc0cdf69c807b"
+    },
+    {
+      "n": 9,
+      "file": "slides/009.webp",
+      "intervals": [
+        [
+          444.0,
+          524.0
+        ]
+      ],
+      "title": "Results - Performance",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "0fbe0025cccf45c9cde61bd1f65dbf56716010e5f04d86c36d56aa30246d9145"
+    },
+    {
+      "n": 10,
+      "file": "slides/010.webp",
+      "intervals": [
+        [
+          524.0,
+          526.0
+        ],
+        [
+          619.0,
+          660.0
+        ]
+      ],
+      "title": "Analysis of Findings",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "29eab09cb55b5f27b2c104a28db0e765ddf834911acfc40ed3d2af2f84599ff3"
+    },
+    {
+      "n": 11,
+      "file": "slides/011.webp",
+      "intervals": [
+        [
+          526.0,
+          619.0
+        ]
+      ],
+      "title": "Results - Resource Usage",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "505239c4ab3eb61f7ee0d56397c61fde833a8c990dc4aaafa3a0f79e8c689642"
+    },
+    {
+      "n": 12,
+      "file": "slides/012.webp",
+      "intervals": [
+        [
+          660.0,
+          724.0
+        ]
+      ],
+      "title": "Developer Perceptions of GraalVM",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "1a7eefcb6017a9f44a0492c135c5a95f0c402e3e0b0bede0da26a32cef2013d4"
+    },
+    {
+      "n": 13,
+      "file": "slides/013.webp",
+      "intervals": [
+        [
+          724.0,
+          786.0
+        ]
+      ],
+      "title": "Value of the Work",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "228b548da0e99d10ea86fbafb4f944583c3ed729fe2693acb44910c339eedd3d"
+    },
+    {
+      "n": 14,
+      "file": "slides/014.webp",
+      "intervals": [
+        [
+          786.0,
+          867.0
+        ]
+      ],
+      "title": ">X>X>",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "bdee615e0147a10dcff4456d7c9dc2a9a4425163424f1276f290fd539a3752bc"
+    },
+    {
+      "n": 15,
+      "file": "slides/015.webp",
+      "intervals": [
+        [
+          867.0,
+          960.0
+        ]
+      ],
+      "title": "Thank you for listening",
+      "is_slide": true,
+      "source_slide": null,
+      "sha256_webp": "adadba153d327ec08c599f2030d29d62e886eed80130878547bbc071818aac98"
+    }
+  ],
+  "presented_deck_file_id": null,
+  "summary": "JVM, but it's also included features like Justin Time compilation. or I have more optimized just in time compilation and the ability to ahead of time compile and. The first use case we used was zero prefix haching which is a very CPU heavy use case and then we used the second use case was text prediction algorithm which uses a large data set to predict text which. Compilation and build time, or compilation time and build size. So the builds we compared were the normal hotspot just in time, the GraVM optimized just in time and then for native images, one that had no. Performance and we can also see that the native images are pretty good in memory usage but we can see that the more PGO you use the more memory it uses and we can see that the growl just in time has a lot of peak memory usage which was. Of time completion and also explore more use cases for out of time compilation.",
+  "files": {
+    "transcript_txt": "transcript.txt",
+    "transcript_vtt": "transcript.vtt",
+    "notes": "notes.md",
+    "chunks": "chunks.jsonl",
+    "slide_prompts": "slide_prompts.md",
+    "audio": "audio.opus"
+  },
+  "storage_tiers": {
+    "original": 220480662,
+    "tiers": [
+      {
+        "name": "T0 Original",
+        "bytes": 220480662,
+        "saving": 0.0,
+        "desc": "Original recording",
+        "measured": true
+      },
+      {
+        "name": "T1 Smart re-encode",
+        "bytes": 5980941,
+        "saving": 0.97287,
+        "desc": "Same video, re-encoded for screen content",
+        "measured": true
+      },
+      {
+        "name": "T2 Audio + slides + text",
+        "bytes": 2321952,
+        "saving": 0.98947,
+        "desc": "Opus speech audio, WebP keyframes, transcript, notes",
+        "measured": true
+      },
+      {
+        "name": "T3 Slides + text",
+        "bytes": 648567,
+        "saving": 0.99706,
+        "desc": "Keyframes + speaker transcript + voice samples",
+        "measured": true
+      },
+      {
+        "name": "T4 Text + slide links",
+        "bytes": 648567,
+        "saving": 0.99706,
+        "desc": "Transcript; slides replaced by links to source-of-truth decks",
+        "measured": true
+      }
+    ],
+    "breakdown": {
+      "audio": 1673385,
+      "slides": 531148,
+      "slides_linked": 0,
+      "text_raw": 81510,
+      "text_gzip": 26449,
+      "voices": 90970,
+      "packet_total": 2377013
+    }
+  },
+  "information_retention": {
+    "screen_text_retained": 0.952,
+    "frames_checked": 8,
+    "timeline_covered_by_keyframes": 1.0,
+    "keyframes": 15,
+    "linked_to_source_deck": 0,
+    "transcript_words": 1682,
+    "speech_confidence": 0.857,
+    "speakers": 6,
+    "live_video_area": 0.016
+  }
+}

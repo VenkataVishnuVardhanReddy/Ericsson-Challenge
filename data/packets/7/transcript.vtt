@@ -1,0 +1,241 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.840
+<v Speaker 1>Hello and welcome to our thesis presentation.</v>
+
+00:00:04.900 --> 00:00:11.780
+<v Speaker 1>We're going to talk about the growl VMs ahead of time compilation, benefits and challenges in production.</v>
+
+00:00:12.440 --> 00:00:16.840
+<v Speaker 1>It will be presented by me, Muhammad Yasmr Takhani and me, Tomy Wilson.</v>
+
+00:00:19.950 --> 00:00:25.250
+<v Speaker 2>Here is the table of content that we cannot talk about.</v>
+
+00:00:25.250 --> 00:00:34.170
+<v Speaker 1>And as you know, Java-based application faced challenges in a continuous environment.</v>
+
+00:00:35.210 --> 00:00:46.370
+<v Speaker 1>And these challenges include inefficient resource usage and slow start-up time, which affects operational sustainability and efficiency.</v>
+
+00:00:47.530 --> 00:00:57.130
+<v Speaker 1>And the goal we address Java, JVM's limitation and offering low resource consumption and faster startup times.</v>
+
+00:00:58.170 --> 00:01:10.110
+<v Speaker 1>And it's good in cloud computing and microservices environment where rapid scaling and cost effective resource consumption are critical.</v>
+
+00:01:11.310 --> 00:01:27.050
+<v Speaker 1>And the primary objective of this thesis is to critically examine the capabilities of VMs mainly focusing on it's ahead of time completion and native image support.</v>
+
+00:01:29.740 --> 00:01:40.260
+<v Speaker 1>Here are some key terms that we need to explain. So, GraVM is a project by Oracle, which is basically a copy of the hotspot</v>
+
+00:01:41.100 --> 00:01:54.640
+<v Speaker 3>JVM, but it's also included features like Justin Time compilation. or I have more optimized just in time compilation and the ability to ahead of time compile and</v>
+
+00:01:54.640 --> 00:01:57.780
+<v Speaker 1>also running multiple languages on the same app.</v>
+
+00:01:59.180 --> 00:02:14.500
+<v Speaker 1>So ahead of time compilation is compiling code into a native executable that can run only on the target platform and the ground VMs tool for this is native image.</v>
+
+00:02:14.500 --> 00:02:22.880
+<v Speaker 1>and just in time compilation is compiling code at runtime, which is what the standard JVM uses.</v>
+
+00:02:23.860 --> 00:02:30.420
+<v Speaker 1>And then PGO or profile-guided optimization is a technique used in the head of time compilation</v>
+
+00:02:32.340 --> 00:02:44.720
+<v Speaker 1>because to optimize in a good way, you need more information. So PGO is a way to create profiles of the application and optimize from those profiles.</v>
+
+00:02:47.270 --> 00:02:50.050
+<v Speaker 4>Yes, and here is our resource question where</v>
+
+00:02:50.050 --> 00:02:59.270
+<v Speaker 1>the first one, how does the performance of a GLAW VM's native image compare to the standard JVM regarding execution speed?</v>
+
+00:02:59.930 --> 00:03:10.210
+<v Speaker 1>And this is compared the just in time and the head-of-time completion. And the second one, how does native image impact resource usage compare to the standard JVM?</v>
+
+00:03:10.210 --> 00:03:24.910
+<v Speaker 1>And the last one, how do developers and the system administrator receive the integration of the GROL VM ahead of time compilation into existing workflow and its impact on operational efficiency.</v>
+
+00:03:25.830 --> 00:03:40.810
+<v Speaker 1>And our research questions are based on the Oracle that claim many things about GROL VM ahead of time mainly improve the performance and improved resource usage and it's a production ready.</v>
+
+00:03:44.250 --> 00:04:01.550
+<v Speaker 1>And for the broader interest so Grower VMs helps in reducing the environmental impact by making application run more efficiently and with efficiently mean that it uses just the necessary resources and services like classes and methods.</v>
+
+00:04:02.490 --> 00:04:17.990
+<v Speaker 1>And it will be consuming less energy and optimize the resource utilization, lead to lower operational cost and saving money on infrastructure and energy pills.</v>
+
+00:04:18.970 --> 00:04:37.690
+<v Speaker 1>And the GradVM is a practically benefit, with beneficial for micro services architecture and improved startup times and resource efficiency, which are critical crucial for scalable and responsive applications.</v>
+
+00:04:41.600 --> 00:04:50.160
+<v Speaker 1>And our resource methodology is the first one, quantitative data collection and qualitative data collection.</v>
+
+00:04:50.160 --> 00:05:08.220
+<v Speaker 1>So we use the performance benchmarks and resource users metrics to provide the price and the objective data on how different JVM configuration versus the standard versus the growl VMS and it will</v>
+
+00:05:08.220 --> 00:05:20.840
+<v Speaker 1>highlight the performance improvement or regressions and for the quality of data collection we used the semi-structured interviews</v>
+
+00:05:22.580 --> 00:05:40.940
+<v Speaker 1>where it's a offer in depth on understanding of the practical challenges and benefits of integration, a GroldVM into existing workflow and this type of open and discussions will allow informants to the</v>
+
+00:05:40.940 --> 00:05:44.880
+<v Speaker 1>flexibility to share their views in their own world.</v>
+
+00:05:48.080 --> 00:05:55.300
+<v Speaker 1>So the benchmarks we decided on was to use two use cases to test an application.</v>
+
+00:05:55.980 --> 00:06:14.460
+<v Speaker 1>The first use case we used was zero prefix haching which is a very CPU heavy use case and then we used the second use case was text prediction algorithm which uses a large data set to predict text which</v>
+
+00:06:14.460 --> 00:06:16.580
+<v Speaker 1>is both CPU and memory intensive.</v>
+
+00:06:18.000 --> 00:06:33.920
+<v Speaker 1>Each test was run a hundred times to get an accurate picture of both the stability of the performance and to be able to see the startup and warm up times for the JVMs.</v>
+
+00:06:35.580 --> 00:06:45.440
+<v Speaker 1>Performance was monitored internally, but we tested them through API endpoints to make it easier to test.</v>
+
+00:06:46.380 --> 00:06:47.980
+<v Speaker 1>And then we also measured</v>
+
+00:06:47.980 --> 00:06:53.900
+<v Speaker 3>memory usage, both average and peak. and we also recorded the</v>
+
+00:06:53.900 --> 00:07:12.280
+<v Speaker 1>compilation and build time, or compilation time and build size. So the builds we compared were the normal hotspot just in time, the GraVM optimized just in time and then for native images, one that had no</v>
+
+00:07:12.280 --> 00:07:13.780
+<v Speaker 1>profilgetted optimization,</v>
+
+00:07:15.440 --> 00:07:21.500
+<v Speaker 3>one that had on use case one, one that had PGO on use case 2 and one that had full</v>
+
+00:07:21.500 --> 00:07:22.020
+<v Speaker 1>PGO.</v>
+
+00:07:25.150 --> 00:07:43.310
+<v Speaker 1>So here we can see from the graphs that we can see on the yellow and red lines that those are the just in times and they start up very high, very slow and then</v>
+
+00:07:43.310 --> 00:08:02.490
+<v Speaker 1>once they warm up they settle into a very good performance position. and we can see on the left that the growl just in time out performs the full pgeo, which is the fastest of the native images by about 16%.</v>
+
+00:08:02.490 --> 00:08:12.370
+<v Speaker 1>And we can see on the right that the native image actually outperforms the growl just in time, which was the faster of the just in times.</v>
+
+00:08:13.550 --> 00:08:19.950
+<v Speaker 1>So you can see here that it really depends on the use case if native image can improve performance or not.</v>
+
+00:08:21.050 --> 00:08:32.590
+<v Speaker 1>But when it comes to the first few executions, it can be a lot faster. We can also see that PGO increases the performance by a lot.</v>
+
+00:08:33.170 --> 00:08:42.390
+<v Speaker 1>In both use cases, when not using PGO, execution took about 1.8 to 2 times slower.</v>
+
+00:08:46.700 --> 00:09:04.880
+<v Speaker 1>Then we can see here we can talk with memory usage the just in times were used a lot of memory we can also see that the groull just in time used more memory which is probably because of its more aggressive optimization and the sacrificing memory to get better</v>
+
+00:09:04.880 --> 00:09:22.960
+<v Speaker 1>performance and we can also see that the native images are pretty good in memory usage but we can see that the more PGO you use the more memory it uses and we can see that the growl just in time has a lot of peak memory usage which was</v>
+
+00:09:22.960 --> 00:09:31.700
+<v Speaker 1>during the warm up but then it settled in and stuck around the 100 mark during the execution.</v>
+
+00:09:32.600 --> 00:09:50.680
+<v Speaker 1>And we can also see in the build size that just in times are much better on build size. It's much smaller than the native images, which were a lot bigger because they contain a lot more information and they contain the native code to execute.</v>
+
+00:09:52.080 --> 00:10:10.540
+<v Speaker 1>And we can see in compilation time that the native images are a lot slower to compile. even though this is a very small image and the native images will never be faster because you first have to compile to a jar and</v>
+
+00:10:10.540 --> 00:10:16.340
+<v Speaker 1>then do the native image step so it will always be slower than just compiling for adjusting time.</v>
+
+00:10:19.540 --> 00:10:29.500
+<v Speaker 1>Yes, analysis of findings so for the performance native image can out from just the time specific specific cases with the PGO and all other</v>
+
+00:11:10.280 --> 00:11:19.690
+<v Speaker 1>developer display spectrum of family industry with the Gral VM from basic to advanced and perceived benefits.</v>
+
+00:11:20.170 --> 00:11:38.690
+<v Speaker 1>So faster startup time, this is especially for application that need quick responsive like serverless functions and reduced memory usage, where it's important for micro services that run in resource constraint environment</v>
+
+00:11:38.690 --> 00:11:57.650
+<v Speaker 1>and for the changes they thought so complex configuration it requires significant efforts to configure for dynamic future like reflections and for the learning curve so developers need to train to</v>
+
+00:11:57.650 --> 00:12:01.250
+<v Speaker 1>effectively use a head of time completion and the visual.</v>
+
+00:12:04.820 --> 00:12:17.500
+<v Speaker 1>So the value of our work is that Gravium's ahead of time enhances JVM based applications, especially by reducing memory usage, which is important in microservices.</v>
+
+00:12:18.660 --> 00:12:36.820
+<v Speaker 1>PGO also ensures that performance isn't much worse in key use cases and sometimes better, but it has drawbacks such as increasing memory, increasing compilation time and increasing image size and</v>
+
+00:12:36.820 --> 00:12:55.040
+<v Speaker 1>developers are concerned about the added configuration complexity. We can also note that performance is instant there is no warm up needed so they can be good for serverless functions and there is also</v>
+
+00:12:55.040 --> 00:13:02.580
+<v Speaker 1>a significant potential for cost and resource efficiency improvements in production environments.</v>
+
+00:13:06.080 --> 00:13:22.040
+<v Speaker 1>Yes, for the volatility threats and future work. So, volatility threats with all that, that Grohl VMs was released in 2019, making it a relatively new industry.</v>
+
+00:13:22.040 --> 00:13:30.860
+<v Speaker 1>Because it's a new technologies, not many companies and developers have used it extensively.</v>
+
+00:13:31.800 --> 00:13:42.100
+<v Speaker 1>So due to its limited adoption, we had a small sample size of developers with hands-on experience using Graal VM.</v>
+
+00:13:43.100 --> 00:13:50.740
+<v Speaker 1>And these results are specific to our software configuration used in our study.</v>
+
+00:13:50.740 --> 00:13:57.820
+<v Speaker 1>So, broader testing is needed to validate findings in varied environments.</v>
+
+00:13:59.440 --> 00:14:00.080
+<v Speaker 3>And then</v>
+
+00:14:00.080 --> 00:14:18.220
+<v Speaker 1>for future work, we think that a good next step would be case studies on real-world applications to see how the performance and resource usage can be is affected by using ahead</v>
+
+00:14:18.220 --> 00:14:24.620
+<v Speaker 1>of time completion and also explore more use cases for out of time compilation.</v>
+
+00:14:28.270 --> 00:14:33.930
+<v Speaker 2>Yes, thank you for listening and a special thanks for Luckmall and Park.</v>
+
+00:14:35.310 --> 00:14:40.410
+<v Speaker 1>Nice. Thank you. And a big applause for that.</v>
+
+00:14:43.900 --> 00:14:48.100
+<v Speaker 1>And do we have any questions in the audience or online?</v>
+
+00:15:00.170 --> 00:15:07.770
+<v Speaker 5>I think you started off with one of the ADS services, I wonder what happened to that track and what problems you encountered there.</v>
+
+00:15:08.550 --> 00:15:25.870
+<v Speaker 1>Yeah, so during that track we got a build, we compiled to a build and we set up a test environment but we have not gotten any test to actually work.</v>
+
+00:15:25.870 --> 00:15:28.930
+<v Speaker 1>It seems like the image is not really working.</v>
+
+00:15:30.690 --> 00:15:34.390
+<v Speaker 1>So we have spent a lot of time trying to debug that.</v>
+
+00:15:35.710 --> 00:15:39.870
+<v Speaker 1>But one of the things we have tried is working.</v>
+
+00:15:41.230 --> 00:15:49.870
+<v Speaker 1>So we don't really know what to do. So it was very hard to incorporate in production environments.</v>
+
+00:15:51.230 --> 00:15:52.430
+<v Speaker 1>questions.</v>
+
+00:15:58.570 --> 00:15:59.630
+<v Speaker 6>Thanks again.</v>

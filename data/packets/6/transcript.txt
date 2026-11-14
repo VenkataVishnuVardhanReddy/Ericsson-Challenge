@@ -1,0 +1,1006 @@
+00:38 Speaker 1: Yeah yeah like
+00:40 Speaker 1: this
+00:43 Speaker 1: I just, I had a lot
+00:47 Speaker 1: of you to take his place But
+00:51 Speaker 1: I still spend some nights Will wait, I'll spend more,
+00:59 Speaker 1: expand up
+02:01 Speaker 1: Yeah, we're ending me
+02:15 Speaker 1: I still spend some nights
+03:28 Speaker 1: I ever die When the world is calling you And
+03:36 Speaker 1: I'm screaming out
+03:41 Speaker 1: Agents never die Every
+03:49 Speaker 1: time you play for It's
+03:54 Speaker 1: great, it's great.
+04:50 Speaker 4: Top of the top.
+07:03 Speaker 6: Can you hear me?
+07:05 Speaker 6: OK, great. So in the spirit of innovation sort of, I'm trying to innovate this little intro here.
+07:13 Speaker 6: I haven't written anything. It's coming creatively, like a flow right now from me to you. But I'm so glad to see so many of you here and so many different people from different organizations here.
+07:26 Speaker 6: What I do, I work at the Blue Science Park is called, but it's a science park where there are many of them throughout the country, exist tied to the different universities.
+07:37 Speaker 6: What we do is we work with innovation in ecosystem. So we work between organizations like Ericsson, for example, with schools like Hyper Island and BTH, and individuals like you are right now.
+07:53 Speaker 6: And yeah, hopefully this is the start of a nice tradition that we can bring to this town, that this is something that we can do each year and improve upon.
+08:03 Speaker 6: This is the first goal we have at it. I think there's 50 people here right now.
+08:09 Speaker 6: And yeah, I'm really looking forward to seeing what you guys can create in 24 hours, quite short time, but I believe in you.
+08:16 Speaker 6: So I'm going to turn the mic over to Ericsson. They're going to tell you a little bit about their company first. And then we're going to invite the experts in from, yeah, you're going to see later, but they're going to present the brief to you.
+08:30 Speaker 6: So thank
+08:33 Speaker 7: you, yes, Per.
+08:35 Speaker 8: All right, my name is Anders. And with me here I have Stefan. And with us on Teams link, we have Gonzalo and Torbjörn, who will present a little bit later or rather soon actually.
+08:51 Speaker 8: But before we go into their presentation, I thought I would just give a very short introduction of Ericsson, a little bit very briefly who we are and what we do in basically.
+09:05 Speaker 8: So let's start and maybe Stefan, who can keep an eye on the teams there, make sure that
+09:11 Speaker 10: Gonzalo and the tourbillon are following us and everything is fine, technically. Good.
+10:42 Speaker 8: Oh, thank you. Thank you so much.
+10:45 Speaker 8: Well, the video is just so. It's a little bit of who we are at the Ericsson, and what we do, also shares our vision and our goals.
+10:57 Speaker 8: As you saw on the video, imagine possible was said there. And imagine possible is our brand tagline, because we believe in making the unimaginable possible.
+11:10 Speaker 8: And that is about innovation. And you will hear a little bit more about that in the coming slide here. But to start with, I said on my name is Anders.
+11:19 Speaker 8: I work here at Ericsson in Kaskrona with the communication and employee branding that my responsibility.
+11:29 Speaker 8: But did you know that if you have coverage which on your telephone, which means that you are connected to one of those antennas that you see here.
+11:41 Speaker 8: That means that there's a 40% possibility that you're actually connected to an Ericsson network because that is the market share that we have today.
+11:54 Speaker 8: So we are the one of the leading providers of telecommunication networks
+12:01 Speaker 8: and selling to telecom operators all around the world.
+12:06 Speaker 8: Cause we believe that anything that benefit from a connection will be connected. And it's no longer only phones that is benefiting from a connection.
+12:16 Speaker 8: Of course, a lot of other things like glasses, like cars, like industries, everything that benefits from being connected will be connected.
+12:24 Speaker 8: And our system does not only just provide connectivity as such to your different devices, but also a multitude of other functionality.
+12:37 Speaker 8: It's our products that makes it possible for you to browse internet with your phones, to snapchat with your friends, to watch YouTube, Instagram, having possibility to pay with your phones, and also give the possibility for the operators, of course, to charge for the traffic that you're using.
+12:56 Speaker 8: All of these things set, I mean it's obvious for all of us today.
+13:02 Speaker 8: And we have been leading force in the industry, I would say, and drive evolution of these networks, of these mobile networks, since actually since the dawn of telecommunication.
+13:17 Speaker 8: And every generation of mobile networks really sets a foundation and starts lots of new innovations.
+13:28 Speaker 8: I mean all these standard as you see all the different Gs, one, two, G3, G4, G and so on. They are really an engine for economic growth in all different sectors.
+13:41 Speaker 8: And that is why we talk about making the unimaginable possible. Because if you take for example 4G, you could never, or at least I could never imagine that when we started developing 4G or researching 4G, the smartphones was not
+13:59 Speaker 8: even, well, maybe it was invented, but it was not in everyone's hand.
+14:04 Speaker 8: And that was quite many years back. And we could not at that time or I could not at that time believe that we would live in this at economy as we are in today.
+14:14 Speaker 8: I mean, just imagine how many thousands different companies that actually have started up due to this technology or even I mean, hundreds of thousands or maybe millions of jobs due to this technology.
+14:30 Speaker 8: And I mean this will continue of course. The next generation will come with new innovations and set a new baseline for lots of new things that we cannot really imagine today.
+14:44 Speaker 8: And
+14:46 Speaker 8: being in leader in communication of course comes with the responsibility to use that knowledge that we have in helping the world to become better.
+15:01 Speaker 8: And that is something that also describe the vision that we have. We're improving lives, as you can see here.
+15:10 Speaker 8: Because that is our vision. The world will limit this, limitless connectivity improves lives, redefine businesses and pioneers a sustainable future.
+15:19 Speaker 8: And it's this improved lives that we will focus on today. So, therefore, our sustainability and corporate responsibility, that is a very integrated part of Eric Sons business strategy.
+15:35 Speaker 8: And one of these areas within our corporate responsibility is digital inclusion, which consists of some different parts.
+15:47 Speaker 8: And we will focus on two of them here today. And this is where we'll hear Gonzalo and Turbion talk about digital education and connect to learn.
+15:59 Speaker 8: And what we do when it comes to humanitarian response with an organization that's called Ericsson response.
+16:08 Speaker 8: So by that I will hand over now to starting with Torbjörn.
+16:17 Speaker 8: We'll talk about Ericsson response and now I will see if I can do like this.
+16:26 Speaker 8: Because you cannot see top right now. Can you hear me?
+16:31 Speaker 7: Yes we can hear you but
+16:33 Speaker 8: I will just shuffle in these teams window here so everyone can see you so this is tovian so now I will switch back to the large screen again so
+16:51 Speaker 8: they will only hear your voice
+16:53 Speaker 12: good Good, I'm going to see myself.
+16:58 Speaker 8: I guess you can see the fantastic audience that we have here in the room.
+17:03 Speaker 7: Yeah, that makes me really
+17:05 Speaker 13: nervous.
+17:08 Speaker 13: Hello, Carl Sam.
+17:11 Speaker 13: Sorry.
+17:13 Speaker 8: You want to take control over the presentation or should I click the slides?
+17:18 Speaker 7: Can I take control, maybe? Let's see if that works.
+17:23 Speaker 14: So I'm in control now. Yep, work with me. I can go step down.
+17:31 Speaker 15: Out there.
+17:34 Speaker 15: I've never done this before guys. So bear with me.
+17:39 Speaker 10: Well, my name is Tobbe, Alteini. I work also like Anders and Stefan in Karlskruhnah.
+17:47 Speaker 10: I'm an ICT architect. my normal job but then I'm also an Ericsson response volunteer.
+17:56 Speaker 10: And the reason why I'm on teams because I live on Gotland, I've been working remote for a long before
+18:04 Speaker 15: the pandemic.
+18:06 Speaker 15: Nothing about me and more about Ericsson response then.
+18:12 Speaker 16: So as I mean I started there we kind of part of the CSR within Ericsson,
+18:20 Speaker 10: which means we try to do good things and align with the global
+18:26 Speaker 14: goals, the UN millennial goals. So I think that's already covered by understanding.
+18:35 Speaker 14: But then Ericsson response
+18:36 Speaker 9: it was founded year 2000 by a group of employees in Ericsson that kind
+18:47 Speaker 15: of understood the power of bringing communication into a disaster relief operation.
+18:58 Speaker 10: And we consist of about 140 volunteers. We are all working with other things within Ericsson, so that's kind of a, you need to be an exon employee to be able to be part of response.
+19:16 Speaker 10: And we're a non-profit, non-commercial, non-political, like all other, like say you and our Red Cross or this type of
+19:26 Speaker 15: organizations because otherwise you won't get out in the field. And we've been to 50-plus missions in
+19:38 Speaker 14: over 40 countries.
+19:44 Speaker 10: Not all 140 volunteers go into the field, a lot work with shipping of equipment and back office functions but some of us then from time to time deploy out on mission.
+20:02 Speaker 10: And the technology we bring today, it's mostly Wi-Fi solution where we bring connectivity with Wi-Fi hotspots.
+20:17 Speaker 10: We create a link of a network with Wi-Fi links from a backhole that is usually a satellite backhole.
+20:29 Speaker 10: But previously since we come from the telecom industry, we used to
+20:34 Speaker 15: bring in two, three, three, and four systems.
+20:39 Speaker 15: And we can still do that, but it's not that common. I would say the past ten years, maybe it's been mostly the Wi-Fi solution we bring.
+20:48 Speaker 10: And we always operate together with the partners and that is the
+20:55 Speaker 7: WFP, the Welfare Program, and their emergency telecom
+21:01 Speaker 15: sector.
+21:03 Speaker 15: And a couple of years ago we also signed a similar deal with the RETS, which is UNHCR.
+21:13 Speaker 7: So we don't go alone. We go embedded in the UN mission then.
+21:25 Speaker 16: And there's some
+21:26 Speaker 10: pictures of the telco solutions.
+21:30 Speaker 10: And you see there kind of big and bulky. It's basically a small data center there in a
+21:37 Speaker 7: container that you bring out. So it requires a lot of
+21:43 Speaker 10: paper, power.
+21:48 Speaker 10: It's hard to deploy. And it's also a license-wise difficult to deploy because there's usually a mobile operator owning the spectra for the audio 3G.
+22:02 Speaker 10: And the little balloon here, that's the satellite dish. that is very common, that we always bring.
+22:13 Speaker 7: And then we come to to wider,
+22:17 Speaker 9: which is then the common solution for us, which is Wi-Fi in the SOSTER emergency response. And this is maybe generation six, I think, of the wider system.
+22:28 Speaker 9: And then
+22:29 Speaker 10: it's a cradle point edge route there. This is a 7,900 on the picture level. but there are even smaller ones.
+22:38 Speaker 10: It's the size of a Raspberry Pi. Maybe it's very small. You can power it with a car battery or solar panel.
+22:49 Speaker 10: And it's very rugged and good for mission deployments. And then we have the
+22:56 Speaker 15: AAA accounting authorization in the cloud that was previously on board with a more Linux server that was a bit bulkier, but now it's again then cloud based and then we have the
+23:12 Speaker 10: panel antennas and outdoor access points and the panel antennas are for creating links you can shoot links up to 20 30k maybe if you have a good setup
+23:25 Speaker 15: and then access point is for accessing use for giving bring
+23:31 Speaker 3: access to the use. and we had also some simple indoor access points.
+23:41 Speaker 10: And I mean, this is the problem I've been coming up with that we face when we deploy your, when we plan the deployment because if we go for an, let's say, an hurricane or earthquake mission, it's kind
+23:59 Speaker 10: of short notice. It can be 102 days notice before you deploy. So you have to prepare yourself for all the equipment we bring you you have to carry basically or be able to carry all the equipment you bring so we pack stuff in in this back
+24:17 Speaker 10: packs flight cases 23 kilos so you can check them in and regular flight.
+24:25 Speaker 10: and then you try to get an overview of where you're going and don't know if you heard about it didn't hit the news matching in Europe and Sweden but there was a typhoon in Manuatu
+24:43 Speaker 10: early March then there was an earthquake the day after then yet another typhoon.
+24:50 Speaker 10: So in three days they were hit really bad.
+24:53 Speaker 10: So we got a call from WFP to prepare to deploy to Banuatu. One island they talked about there was Tana Island.
+25:03 Speaker 10: So I have a screenshot in the middle from an app called Radio Mobile.
+25:12 Speaker 10: It's for a ham radio operator, is really so it's not really for this type of deployments but it's a fairly good tool and we still use it even if it's really really old because what we need in the field is
+25:30 Speaker 10: that we need line of sight
+25:34 Speaker 10: between the antennas and it doesn't matter if it's 4G antennas or I mean micro links or if it's a wife I think it's the
+25:44 Speaker 15: same. The antennas need to see each other and there's nothing breaking the
+25:51 Speaker 10: signal. It's not really just the line of sight. It's also called a freshen-el radius that has to be free for the radio signal to move between the antennas.
+26:05 Speaker 10: And that we don't really have any tool for so we can look good on the paper in the tool, but in reality it don't always work.
+26:16 Speaker 10: So for example on the 10th island here I can on Google Earth see that people were living kind of along the shoreline and there were houses and what we suspect maybe school buildings and airfield, a harbor, but
+26:34 Speaker 10: there were on different sides of this mountain. That's a red sector, it's the top of a mountain. It's like 1k, 1,000 meter high.
+26:45 Speaker 10: This island would make it very difficult to shoot a link from one side to the other of the island.
+26:53 Speaker 10: So I really need to go up on top on the mountain. I would like to get there and put the antenna there.
+27:01 Speaker 10: But I don't know if there is a road available.
+27:05 Speaker 10: Can I even get there? What is the power situation up there?
+27:12 Speaker 10: So there is a lot of unknowns when when we deploy that you kind of had to find out on the ground, that then it can be late.
+27:22 Speaker 10: If you realize you
+27:23 Speaker 7: don't have all the equipment you need, etc.
+27:27 Speaker 7: So that's a big
+27:29 Speaker 10: question for us when we deploy.
+27:34 Speaker 10: And also the tools kind of don't see, take three buildings into account. They only have the altitude of the ground sort of speak.
+27:44 Speaker 10: So if there it can miss a house. So if you, it looks good when you do the assessment in on Google Earth or Radio mobile.
+27:53 Speaker 10: but on the ground it might not really fit.
+28:01 Speaker 10: So if you take a snapshot of this picture maybe I think this is the picture that I had at this scribes the problem we see from response when we when we deploy.
+28:15 Speaker 10: And then I had some food for thoughts because I was involved in some other hackathon a couple of years ago together with a drone
+28:25 Speaker 15: company and was trying to figure out how to use drones in this type of deployment.
+28:36 Speaker 15: And it ended
+28:38 Speaker 10: up in this
+28:38 Speaker 15: sort
+28:39 Speaker 10: of very expensive big drone with a blimp hanging under it. It's not really drone GPT or
+28:49 Speaker 10: not a super smart solution that was kind of hoping for but it's moving forward.
+28:58 Speaker 10: And then we had deployed, as I said, to many, many missions and there are more coming.
+29:07 Speaker 10: and then we go to the latest was in Turkey.
+29:14 Speaker 10: Probably heard of it a couple of, like a month ago.
+29:21 Speaker 10: It didn't turn out as bad as maybe this picture show with the tell-it-tower falling down. Conveativity was up fairly quick so the people we had on the ground more helped out with delivering power solutions for people living in refugee shelters
+29:39 Speaker 10: so they can charge their phones and communicate with other families.
+29:52 Speaker 10: And we have also deployed to Moldova and this is still ongoing mission. Then it's together with RETS and connecting and unites your refugee blue dots, transit point, accommodation centers.
+30:07 Speaker 10: So refugees usually come to shits and out, capital and Moldova, and then they can get help to maybe transit some other country, or if they want to stay in Moldova, they can get help at this UNHSA centers.
+30:29 Speaker 10: And then we have Colombia, I also refugee mission here, it's refugees from Venezuela in the Netherlands, flying into the neighboring Colombia.
+30:40 Speaker 10: It's a big group of people, several million people have fled from Venezuela and it's also an ongoing mission still.
+30:52 Speaker 10: And then we have Bangladesh. It's also a refugee mission. It was a bit different.
+30:58 Speaker 10: Here's more connecting equipment than the refugees because Bangladesh government don't allow internet to the refugees.
+31:08 Speaker 10: So then we only could serve what's called the WFP scope, which is a system for beneficiary management.
+31:18 Speaker 10: It's basically a fingerprint scanner. So if you registered in the camp, you can get a special amount of food, depending on how big your family is, for example.
+31:29 Speaker 10: So then you can go to these food shelters and get your weekly ration of food.
+31:37 Speaker 10: And this is a big camp still growing on some million people living there today. This is probably gonna stay for very long.
+31:53 Speaker 10: And then we have the Caribbean 2017. It was on the island of Dominica.
+32:01 Speaker 10: And this was maybe the first time where we could connect
+32:05 Speaker 15: also the civilians living on Dominic and here I'm going to show a movie if this works.
+32:34 Speaker 17: Sorry to interrupt.
+32:36 Speaker 7: Yeah.
+32:37 Speaker 17: I need to shift window here.
+32:39 Speaker 7: How many do you need to start it there?
+32:45 Speaker 17: That?
+33:02 Speaker 1: Deficitation in Dominica is beyond
+33:06 Speaker 2: anything I have ever seen.
+33:09 Speaker 2: Roads are gone. Some homes are completely destroyed.
+33:17 Speaker 1: We've had four major hurricanes, two of which were category five, which is unprecedented in one year.
+33:25 Speaker 2: Because of the devastation there was no connectivity. The government really needed to get information out that the Winnecah really needed help.
+33:33 Speaker 2: The
+33:40 Speaker 1: whole of Ericsson Response is to put up a communications infrastructure for first responders. So we often go in within the first 48 hours of a disaster and try to create that.
+33:50 Speaker 1: Part
+33:55 Speaker 2: of the response requires understanding and getting data information from some rural areas.
+34:02 Speaker 2: And they're not reachable. It makes it very hard for us to have the most updated data information to be able to design a program that is most appropriate for the needs of vulnerable children and families.
+34:17 Speaker 2: Having that fun activity has allowed us to discuss multiple times a day to make sure that we will receive the exact materials that we need.
+34:25 Speaker 2: And to receive them as soon as possible.
+34:29 Speaker 2: There are many ideas in the island where they used to know, to start to know, or to succeed, or work or
+34:35 Speaker 1: not.
+34:37 Speaker 1: Our task is to spread the signals and the SPO from the satellite to wherever it is needed.
+34:46 Speaker 1: We started at a government office in downtown Rosso and I'm setting up connectivity for all
+34:52 Speaker 18: the humanitarian workers in Dominica. We've hooked up the airport close by and the port where most of the goods are coming in.
+35:01 Speaker 1: So thanks to the partnerships that we have such as the one from Ericsson Response, we're able to provide equipment, staffing and the resources needed to get the connectivity back up and running in the most needed areas.
+35:12 Speaker 18: At the moment We've registered more than 2,500 users on our network, which has been
+35:16 Speaker 1: at the start mostly humanitarian workers But now we're actually connecting the effective population in the area They can come up to our Wi-Fi hotspots and actually connect themselves so that their families know that they're actually okay
+35:30 Speaker 1: Hey, I'm Vincent Smaggedoff, so I've been working with the Eric Sinner Response team to help set up the emergency telecommunications and network that we've been using because it was all only means of communication.
+35:45 Speaker 1: The first thing is everybody got to communicate with their family. And family members out of the country were trying to see their loved ones were okay.
+35:55 Speaker 2: I'm thankful for you guys. Those that really came out to give a healthy hand support in time of need.
+36:03 Speaker 2: It's nice to
+36:04 Speaker 1: come in when people say what they're doing. We know that they have a lot of hard work in front of them, but we hope that we can lay some foundation for that process to start.
+36:14 Speaker 1: And if we can do that each time, if there is an unfortunate situation, then I think we as
+36:19 Speaker 2: volunteers and as a company can fill in the power.
+36:55 Speaker 7: It was stunning, it was mind blowing.
+36:58 Speaker 7: The biology questions, I have them.
+37:03 Speaker 15: I will see. Do you hear me again guys?
+37:06 Speaker 7: Yes, very.
+37:07 Speaker 15: Yeah, thank you.
+37:10 Speaker 15: So we can maybe move on. See if I can.
+37:14 Speaker 8: We just click somewhere on the.
+37:17 Speaker 3: Okay.
+37:19 Speaker 3: Yeah. Okay. Hi. This was kind of the same setup. We can.
+37:24 Speaker 15: I thought I had removed that one. And then we have Nepal yet another big earthquake.
+37:35 Speaker 15: where
+37:38 Speaker 15: we came in early in the mission and supported a lot of humanitarian organizations, but then also focusing on the humanitarian and not effective population so much.
+37:53 Speaker 15: But here's another good case movie Anders. Shall you start it or shall I start it?
+38:14 Speaker 12: I think that...
+39:10 Speaker 1: Probably this whole town where it now needs to be taken down and rebuilt.
+39:14 Speaker 1: People are just sort of coming around to try to determine where to go next, where to get their food, or to prepare for the monsoon season that's coming soon.
+39:24 Speaker 1: If I had to sort of put my finger on the two most critical elements of an operation, it would clearly be logistics and communications.
+39:36 Speaker 1: Because if you can't talk, it doesn't work. If you can't move, nothing goes anywhere.
+39:43 Speaker 2: After an emergency, time is of the essence. So the faster that you can
+39:47 Speaker 1: respond, the more opportunity you have to save lives. So the internet, we can react in real time. We can receive information in real time.
+39:56 Speaker 1: Teams who are in the field who are assessing the situation, who are understanding the needs of the population, they can transmit that information to Kathmandu and this example, and then they can make decisions and they can send out aid straight away.
+40:09 Speaker 1: I've been doing emergency work for nearly 20 years, both in the government and in the UN. And I've rarely seen a communications capacity restored as quickly and as effectively as we've done at home.
+40:36 Speaker 1: Ericsson responses are a very, very strong partner of the emergency telecoms cluster. They've been responding as part of our team for over 10 years now.
+40:45 Speaker 1: We are all part of one team. I think in this area we have developed a cadre of professionals which are really unparalleled on the face of the planet.
+40:56 Speaker 1: There isn't anyone except maybe national militaries who can go in and reestablish the ability to communicate with faster than we have in this region.
+41:11 Speaker 1: Thank
+41:36 Speaker 19: you, Anne. Yeah,
+41:53 Speaker 10: Philippines. I took this one because it's really big. Probably the largest disaster
+41:59 Speaker 15: that at least Ericsson has been involved in. Tens of thousands people killed and going on for very long.
+42:11 Speaker 15: But the Philippines recovered really quickly in like six months.
+42:17 Speaker 15: They could handle this without support from the UN,
+42:25 Speaker 15: delivering food to the affected population.
+42:30 Speaker 15: But really, really tough for everyone there.
+42:37 Speaker 16: And then I have my last slide here, and it's
+42:41 Speaker 10: also a little film, but this is where I think things are changing a bit where we also have to change.
+42:48 Speaker 10: We have historically connected the NGOs and the relief workers so that they could do their job to help the affected population.
+42:58 Speaker 10: But and that has been driven by the back hole that has been the geostationary satellite on a theoretical level, have eight megabit backhole.
+43:11 Speaker 10: So you can't have that many people on a network
+43:13 Speaker 15: with that
+43:14 Speaker 14: weak backhole, but that is all changing now with this layout, low orbit, low Earth orbit satellite, like the starlink for
+43:24 Speaker 9: example. They're not available everywhere yet, but I mean it's building quite rapidly.
+43:32 Speaker 9: And then you have like maybe 400, 600 megabit backhole. You can do so much more with that
+43:37 Speaker 15: strong backhold competitor is like six, four, six megabit backhold that we have had previously or
+43:46 Speaker 10: still have in some extent and then also ISP are more common everywhere you can find a fiber cable maybe or even the network mobile operators then it can also function as a If you have 5G network available somewhere, you
+44:05 Speaker 15: can catch the 5G network and then you can link it out to where connectivity is needed.
+44:12 Speaker 15: I think this is an interesting change coming for us and everyone in the fields.
+44:21 Speaker 15: Unless you can start the last case film there.
+44:25 Speaker 3: I think you need to click it actually. I'm sorry, because I don't know. But
+44:34 Speaker 1: up and down on the first of symptoms was all symptoms.
+44:39 Speaker 1: The dead bacteria and viruses, antiseptic substances and hyndrolinondals, the strepsis, on every moment.
+44:47 Speaker 1: It was said on the radio, but I never took it very seriously until it opened.
+44:55 Speaker 1: I think that's why I lost everything in the house, everything.
+45:02 Speaker 1: It was about midnight as Hurricane Maria lashed the Caribbean nation of Devenica with winds of nearly one sixteen miles per hour.
+45:10 Speaker 1: The islands are the first hurricane of its strength in the eighty-five years. In the night when I watched outside I was feeling I can see everything good.
+45:20 Speaker 1: I just still don't get a call from her and I just stopped to pray. You know, not a stun. I see how I got in here.
+45:27 Speaker 1: It's the day I was there. I have been very naked. By next morning, there were no phone and internet signals, leaving the island virtually in complete blackout.
+45:39 Speaker 1: One of the communities no one had any information about was Marigold, the rural town in Northern Dominica.
+45:46 Speaker 1: Marigold had no means of communication for days without a world.
+45:50 Speaker 7: I've seen plenty of hurricanes, I've seen nothing to this degree, I've seen nothing this severe ever.
+45:55 Speaker 1: Today is a big day for Marigod. Alp is one of the engineers who's setting up internet connectivity hubs in various parts of Dominica.
+46:03 Speaker 2: We're starting to keep with towers and sides because they're always in the right spot where you want to have, you know, reach a lot of places.
+46:10 Speaker 2: So everything is about line of sight. You have to see a lot of places from it. And the more time you stand on doing a first setting, I'll be here.
+46:19 Speaker 2: The rest of the locations is just going to be so easy. Otherwise you have to link from the airport around Regis and everything. Here we
+46:25 Speaker 18: put one on the top, we can reach everywhere. So we can just go sprinkle access points down there and it's going to work.
+46:34 Speaker 1: Marigad Connectivity Center is one of the 13 locations where emergency cardiac communication cluster through its partner Ericsson Response in emergency lieu is providing free of charge internet connectivity.
+46:48 Speaker 1: For many of them, it is the first time they had been able to get connected to Internet after the storm.
+46:57 Speaker 1: My daughter is studying in which it falls in Texas and then my son is in at York University in Toronto.
+47:06 Speaker 1: So it's just happy to be able to get through to them. And all of these friends are having Europe and the US and having to know that they were worried at number one.
+47:15 Speaker 1: And having to hear from you now, they're so happy. And all of you, it's like really something nice of me today.
+47:25 Speaker 1: There's no more connectivity blackout in Marigold. Hundreds of people every day are using free of charge Internet to connect back with their loved ones, send and receive relevant information and make informed decisions about their lives as they move forward to build their lives back.
+47:42 Speaker 1: Yeah,
+48:15 Speaker 14: that was my last slide. Thank you for listening guys.
+48:18 Speaker 9: Thank you. Thank you to a lot. I just spoke to Jesper right now. I guess there's a lot of
+48:24 Speaker 8: input here and probably a lot of inspiration and a lot of questions.
+48:31 Speaker 8: But we said, before we take the question, let's take five to ten minutes. Then you have the possibility to speak to each other, maybe come up with ideas and questions.
+48:44 Speaker 8: and then we take the questions. So five, 10 minutes to sort of
+48:51 Speaker 8: pass with your colleagues and friends.
+49:00 Speaker 8: Yeah, you can go upstairs, but five, 10 minutes and then we take the questions.
+49:06 Speaker 8: So sit tight, Tobana will also bring you up on the big screen here.
+49:12 Speaker 8: So you can eventually turn on the
+49:18 Speaker 11: camera.
+50:19 Speaker 20: I think you have to work, but you have to do it.
+50:24 Speaker 21: I think you can get more. But if you do it, you get a little test, test and so on.
+50:34 Speaker 9: You have to start with the first thing you have to do. The first thing
+50:36 Speaker 22: you have to do is to get the first thing. No, I don't know. I don't know.
+50:43 Speaker 10: Do you know if you hear questions? I don't know if you need to ask her to volunteer and if you need to get a student program.
+50:54 Speaker 9: No, we actually have some students who have helped us with a
+51:00 Speaker 15: specific project. We do.
+51:04 Speaker 15: But not as we have seen on the mission, but we have a little student project.
+51:10 Speaker 23: So
+51:11 Speaker 15: it's not out of the way.
+51:14 Speaker 23: It's something that you can have in your mind, because you develop some sort of program,
+51:18 Speaker 6: or you have to be able to first be settled in the field.
+51:23 Speaker 10: So you work with more schools, do you think it's possible?
+51:29 Speaker 6: No, because I think when I do it under the summer, I think it's very important for me to be able to do it as a program for students who can go out and be able to do it.
+51:40 Speaker 10: We have nothing, we have nothing clear, but it's not the end of the decision. It's a good idea.
+51:47 Speaker 10: It's important.
+51:49 Speaker 15: It's a
+51:51 Speaker 24: big problem.
+51:58 Speaker 10: We have the other question.
+52:02 Speaker 7: Which one is the first one?
+52:03 Speaker 9: Okay. Yes.
+52:25 Speaker 25: I know.
+52:26 Speaker 22: It's the second
+52:27 Speaker 25: one.
+52:29 Speaker 27: It's a good idea.
+52:31 Speaker 22: You can think of it as
+52:31 Speaker 23: a
+52:34 Speaker 23: separate decision.
+52:42 Speaker 22: Absolutely.
+52:44 Speaker 26: It's so cool to have a good time.
+52:51 Speaker 29: It's good to have something good. It's good. It's good. Good to
+52:58 Speaker 29: hear. Good to hear.
+53:03 Speaker 29: All right.
+53:06 Speaker 29: Okay. Good to hear.
+53:14 Speaker 16: Yes. I think so. Yeah,
+53:17 Speaker 10: yeah, yeah, yeah, we are I mean we are we have I mean we have customers all over the world and where we have customers We also have an irritant office
+53:29 Speaker 10: No, that is no that is more telecom like mobile 3G4G 5G song and I'm Positive that we have operators probably empty and this and run the I guess yeah, and we have empty and it's customers Yes, so So Empty and then...
+53:47 Speaker 16: Ertel, yeah. Those are both... Both there are some customers. So yeah. Yeah.
+53:54 Speaker 7: Hmm.
+53:56 Speaker 7: You're from there? Yeah.
+53:58 Speaker 31: But I believe in one. Okay. All right. Ah,
+54:03 Speaker 7: okay.
+54:05 Speaker 14: It's really, really good what
+54:06 Speaker 8: you do. Yeah. Thank you. We're proud of it. Yeah.
+54:13 Speaker 7: Yeah. Good to hear. I think
+55:40 Speaker 4: that is, we
+56:07 Speaker 28: have
+56:25 Speaker 32: networks and then of the radius, but we have also other products in the network that cages for all different functionality.
+56:40 Speaker 18: We have the glier, the rig, the tool and the reclinator. I'm not sure. No,
+57:36 Speaker 31: I'm not sure.
+58:33 Speaker 31: It's
+58:46 Speaker 28: almost done. Yes, it's done. If
+59:09 Speaker 26: they had pictures, they would have always been... ...to find a solution
+59:15 Speaker 10: to critical issues, to help us and so on.
+59:21 Speaker 31: And...
+59:27 Speaker 9: I don't know. I think it works, but maybe it was a very
+59:32 Speaker 10: expensive area to handle the... battery time and so on, which is always out of the morning.
+59:39 Speaker 10: But... So
+59:40 Speaker 9: sorry,
+59:40 Speaker 16: I lost your last name.
+59:42 Speaker 9: Bornstead. B-O-R-N-S-T. There you have it.
+59:50 Speaker 9: Yeah, go
+59:54 Speaker 7: ahead and get the car.
+59:56 Speaker 31: Yes, I'll get it.
+59:58 Speaker 31: I'll see if I can fix it.
+59:59 Speaker 9: Okay, Avro.
+1:00:03 Speaker 9: All right, everyone, should we gather
+1:00:06 Speaker 8: again for some hope that you have come up with a lot of good questions now.
+1:00:15 Speaker 8: And if you want to ask a question, then you need to wave your hand so I can come up with a microphone, otherwise a tool will not hear you.
+1:00:26 Speaker 8: And we have a couple of microphones. So yeah,
+1:00:54 Speaker 8: we have a question ready. We have some people, still some people coming down. So just give them 15 seconds to I'm going to have to say,
+1:01:05 Speaker 8: how the wifi password.
+1:01:08 Speaker 8: Is it urgent or can it wait just?
+1:01:12 Speaker 8: Yeah, I can bring it up on the
+1:01:14 Speaker 34: screen soon.
+1:02:01 Speaker 9: All right.
+1:02:17 Speaker 8: So Tobian, are you ready for some questions?
+1:02:21 Speaker 10: Do you really want the camera on or? Yeah. Yeah. Yeah.
+1:02:26 Speaker 8: I
+1:02:28 Speaker 10: hope you have some really good ones for me.
+1:02:30 Speaker 8: Yeah, I'm pretty sure that we have some good ones.
+1:02:41 Speaker 8: So, yeah, there we have one up there. I will run.
+1:02:59 Speaker 36: My
+1:03:01 Speaker 36: hello.
+1:03:04 Speaker 19: Hello.
+1:03:05 Speaker 36: I'm Daniel from Business Developer Hyper
+1:03:10 Speaker 37: -Allen. My question is that you made digital,
+1:03:14 Speaker 37: like accessibility, made it possible, the digital
+1:03:18 Speaker 36: accessibility. Do you have any future plan for the digital education like for children of these areas?
+1:03:25 Speaker 14: Not
+1:03:26 Speaker 15: within this program, but Gonzalo is going to present after me here,
+1:03:33 Speaker 15: from connector learned.
+1:03:36 Speaker 15: He will explain what's going on there.
+1:03:40 Speaker 9: So as a company, yes, but from a certain response, no.
+1:03:51 Speaker 10: Stopposed, Gonzalo will talk a lot about that in the coming presentation so that's the next part.
+1:03:58 Speaker 10: Anything more? More questions?
+1:04:03 Speaker 9: Down there?
+1:04:04 Speaker 7: There's microphone coming.
+1:04:08 Speaker 7: Hi,
+1:04:09 Speaker 10: so I'm wondering about the drones. What was the complications with that?
+1:04:17 Speaker 15: First of all, this was a very expensive drone that they have used here because it's And I think I called it theatered when it's connected to the ground for power because the blimp which was the like orange thing with the antennas that
+1:04:36 Speaker 15: we build it kind of weight a bit and so it can't stay in the air for long without power from the ground.
+1:04:46 Speaker 15: So you mean you need like five really really big bags just to carry this one one drone like a million Swedish sick
+1:04:59 Speaker 7: thing and also it's a problem to have it up in the air maybe you know every hour where it has to stay there for weeks at
+1:05:11 Speaker 15: the 100 meters. It makes a lot of noise.
+1:05:16 Speaker 15: And it just consumes too much energy. I think it's the biggest issue
+1:05:21 Speaker 10: with it. And also in the disaster zone, you don't really want to have drones flying around because there are helicopters, airplanes coming in and
+1:05:30 Speaker 15: out the whole time.
+1:05:32 Speaker 15: So it's easily in the way.
+1:05:36 Speaker 15: Thank you.
+1:05:43 Speaker 10: Hi, quick question. It was mentioned in the video that perhaps only the military
+1:05:48 Speaker 16: can deploy solutions faster than Ericsson. What, why, and what exactly can they deploy faster than you guys technically speaking?
+1:05:59 Speaker 15: I think that was Richard Reagan from WFP.
+1:06:04 Speaker 15: So I think he talks more about the whole WFP mission there, whereas Ericsson is the partner.
+1:06:10 Speaker 15: I think it's the K-Pen build. So it's not just us. It's the partners, for example, the satellite that is Luxembourg LU.
+1:06:22 Speaker 15: So it's like the MSB from Luxembourg, you can say.
+1:06:26 Speaker 15: So it's the partner ship within the emerging telecom cluster that has that
+1:06:32 Speaker 3: strength. And Ericsson is just a part of that team, I would say. Thank you.
+1:06:43 Speaker 7: Good, anything more?
+1:06:48 Speaker 7: Yeah,
+1:06:53 Speaker 6: I can take a sneak question here. I was just curious, maybe you mentioned it, but could you mention a little bit more about how you do like recognition, so research beforehand, like how do you learn about the place that you're going to go to since I guess it's not so easy to know where you're going to
+1:07:11 Speaker 6: go next.
+1:07:13 Speaker 15: Now, that's the only thing you're sure of, that you probably never heard of it or at least never been there.
+1:07:21 Speaker 15: And you have kind of limited time to deploy if you go into an emergency. We talk about maybe you have a day or two to prepare yourself.
+1:07:32 Speaker 15: So you mean the sources, usually Google your Google, try to find as much information as possible, what the situation is.
+1:07:42 Speaker 15: And the thing is when a disaster happened, it turns quiet because no one can communicate.
+1:07:50 Speaker 15: They can't get information out of there. So you won't get a picture of what's going on until you're on the ground basically.
+1:07:59 Speaker 15: So then you have to go to this Google Earth, for example, to see what satellite images can tell you and so on.
+1:08:08 Speaker 15: So there is some information gap that is hard to feel before you deploy.
+1:08:22 Speaker 15: Was that an answer to your question or?
+1:08:26 Speaker 15: Yeah. Thank you, Björn.
+1:08:30 Speaker 16: Hello. So I would like to ask about, is there any employment for AI in any operation right now for Ericsson?
+1:08:43 Speaker 16: Not that I'm aware
+1:08:45 Speaker 15: about, but I think there is definitely room for ideas here.
+1:08:52 Speaker 7: I think AI could be probably helped out a lot here in the just feeling the information gap here to speed up how you collect information, for example.
+1:09:09 Speaker 7: Because now I'm usually, you know, you just go out there and shoot your questions to Google, basically.
+1:09:21 Speaker 9: Yeah, I have a question also. How much does that weigh?
+1:09:27 Speaker 7: Oh, you mean the access point?
+1:09:31 Speaker 10: Can be three, three for kilos maybe. It's kind of bulky. But then you have
+1:09:39 Speaker 15: external antennas to it that are even bulkier. Like if you shoot a long link, you have a big panel antenna.
+1:09:50 Speaker 15: Or if you have
+1:09:51 Speaker 10: an omni antenna, that's a long stick. Now, consale correct me. It's a two kilo, six point.
+1:09:59 Speaker 10: But it's a lot of,
+1:10:01 Speaker 13: it's kind of bulky. But
+1:10:08 Speaker 15: then it's where the proof can sustain a lot.
+1:10:15 Speaker 7: Yes, hello.
+1:10:17 Speaker 7: Can you elaborate a little bit on the process of assembling these access points? Like how do you assemble it essentially?
+1:10:30 Speaker 10: We call it the Swiss Army knife because it can do several things. it has a built-in omni antennas, it has built-in directional
+1:10:41 Speaker 7: antennas and then you can, it has n connectors so you can connect the external antennas
+1:10:50 Speaker 15: to it. And you can also open it up and shift things around connection-wise if you want to switch what frequency it use for the different antennas etc.
+1:11:05 Speaker 15: So it's versatile in that sense.
+1:11:11 Speaker 15: So we can use one type of antenna for everything. We don't need to bring different types of antennas or access points.
+1:11:20 Speaker 9: Okay, so it's largely as before you get to
+1:11:24 Speaker 7: the destination where it's supposed to sit. Yeah,
+1:11:27 Speaker 10: things are like pre we have basically plug-in play kits and then you can
+1:11:34 Speaker 15: modify them on the ground. But everything is pre-prepared to just deploy so you don't have to spend time doing that on the ground.
+1:11:46 Speaker 8: Okay, thank you.
+1:11:50 Speaker 8: Good, thanks a lot.
+1:11:53 Speaker 15: I would like to ask what the reach of the antenna that it's connected to access points.
+1:12:00 Speaker 10: It depends on what type of antenna. If you want to shoot this long links, I think the theoretical is 40k
+1:12:08 Speaker 15: even. But I have never seen a link, maybe 20k. And then you can go without external antenna and have really short links.
+1:12:20 Speaker 15: How long? How wide is that? Are you in the spectrum of
+1:12:26 Speaker 10: the antenna?
+1:12:27 Speaker 15: It can be 360 round.
+1:12:31 Speaker 15: Also another question. How easy is it for people to actually connect to the Internet once it deployed?
+1:12:38 Speaker 15: So what's the process?
+1:12:40 Speaker 10: It's kind of easy. It's like, you know, if you come to a
+1:12:45 Speaker 15: hotel room, you have this Wi-Fi hotspot. So you get to splash page that says ETC, which is emergency telecom cluster then.
+1:12:53 Speaker 15: And then you, if it's the first time you
+1:12:56 Speaker 9: register on that splash page. And if you're from a known,
+1:13:00 Speaker 10: if you're
+1:13:03 Speaker 15: from like wfp.org, you register with that email, then you're automatically approved so there is no approval process you get immediate access then but if you come if you use for example your Google mail then then there needs an administrator intervention
+1:13:20 Speaker 3: to approve that user so so the right people get access to the network.
+1:13:27 Speaker 3: And why can't everyone get access to the network in case of a rush?
+1:13:33 Speaker 15: It's because of the back hole that is the weak, the battle neck in the emergency.
+1:13:40 Speaker 15: It's the satellite link, which is then maybe 46 megabits.
+1:13:47 Speaker 15: So you can have a couple of hundred users with very limited data access.
+1:13:54 Speaker 15: But if you have an ISP, then you can then be connected to everyone. But then
+1:13:59 Speaker 3: it's like a home network when you have like a guest network so you let everyone to this sort of guest network.
+1:14:09 Speaker 6: So it's very limited.
+1:14:11 Speaker 15: It's very limited.
+1:14:13 Speaker 6: You
+1:14:13 Speaker 15: can configure all these are configurable so you can change it in the mission if you see there is the link is not being used that heavily.
+1:14:23 Speaker 15: then you can increase the data amount for everyone, so to speak.
+1:14:29 Speaker 6: Okay, so I guess not everyone who has an iPhone in the crisis area can connect
+1:14:35 Speaker 15: with the internet, right? It usually goes to the most important things.
+1:14:40 Speaker 15: Yes, so that is also some traffic shaping. And also it's a lot about blocking unnecessary traffic.
+1:14:49 Speaker 15: So when you have this kind of weak back hole, for example, you allow WhatsApp text messaging, but you block video call
+1:14:58 Speaker 3: stand, for example.
+1:15:09 Speaker 37: Thank you. I assume that you experience a lot of challenges and overcome, hopefully most of them.
+1:15:17 Speaker 37: Do you face similar challenges in every place where you respond to a disaster and if not, how does a place stand out from the other?
+1:15:27 Speaker 7: I haven't been in that many missions, you know, but of course there is a lot of, I think there's a lot of pressure
+1:15:36 Speaker 15: before you go mentally, you know, to what you're going to meet.
+1:15:43 Speaker 15: And then when you're in the mission, you kind of tend to focus on work.
+1:15:51 Speaker 15: And when you come back
+1:15:52 Speaker 3: home then you have the period when you kind of think about your life. So it's hard to speak.
+1:16:01 Speaker 15: But you end up want to do this again and again somehow.
+1:16:09 Speaker 29: Hi, I have another question.
+1:16:11 Speaker 9: You mentioned a little bit earlier about low orbit
+1:16:15 Speaker 7: satellites, right, like Starlink. Yeah, is this something Ericsson is working with now or are there plans for it or?
+1:16:25 Speaker 9: I mean, satellites don't really exist in business and not even in the response context.
+1:16:32 Speaker 9: It's something that Luxembourg,
+1:16:34 Speaker 15: L.U. are responsible for in a mission. again. We have some antennas as well, but usually it's Luxembourg who is responsible in the ITC context and the day for sure work with this Laura
+1:16:53 Speaker 15: or orbit
+1:16:55 Speaker 14: satellites.
+1:16:58 Speaker 14: Thank you.
+1:17:05 Speaker 7: Go to the console you have, I see that you are chatting here. Maybe you want to. Yeah,
+1:17:09 Speaker 10: I can jump in here and I'll do a comment. Through what. What follow analysis that I conducted last year, I got to know that we have an ongoing collaboration actually with the Qualcomm and Talis.
+1:17:23 Speaker 10: So we're actually working on based on equipment to be deployed on low with orbit satellites and with the actual idea to use 5G.
+1:17:34 Speaker 10: over satellites. So it would be 5G frequencies and those 5G reds would be sitting on the
+1:17:42 Speaker 10: satellites and the areas that you could use your regular terminal, regular smart for which is 5G compatible to talk to the satellite.
+1:17:49 Speaker 10: Obviously it's sort of an add-on use case which you could use let's say when you're sailing in the archipelago, when you're wandering around in the nature, hiking, etc.
+1:18:00 Speaker 10: So anywhere where you have line of sight to a satellite, basically, it would be only outdoor coverage, but it could extend the existing coverage today with the terrestrial networks.
+1:18:11 Speaker 10: So I shared the link with you and there's something that you can read more, but basically, yeah, the trend is sometimes called 5GOS, 5G oversatellite.
+1:18:22 Speaker 10: Sometimes people refer to it as non-terrestrial networks.
+1:18:26 Speaker 10: Yeah, so good.
+1:18:30 Speaker 12: Thanks, Consala. Yes,
+1:18:35 Speaker 8: we have one more.
+1:18:38 Speaker 15: Yeah, another question. So if I understand correctly, I mentioned that the license and loss at a big issue when it comes to the risk and response Wi-Fi.
+1:18:48 Speaker 15: Right.
+1:18:51 Speaker 10: If I understood correctly, I think Wi-Fi is the reason we use Wi-Fi is because it's free.
+1:18:58 Speaker 15: Basically everywhere, which GSM licenses are not free.
+1:19:05 Speaker 6: Okay, so under why would be like
+1:19:08 Speaker 15: getting a license would be a problem doing a national crisis. So sorry, coming in.
+1:19:18 Speaker 15: Why would be getting a license? Or why getting a license is a like a challenge when it comes to a national crisis?
+1:19:24 Speaker 10: When we talk about GSM, now right. I
+1:19:28 Speaker 15: assume it's because that someone has paid for
+1:19:33 Speaker 3: that license.
+1:19:34 Speaker 3: A network mobile operator owned that frequency, and that is there, core business to sell.
+1:19:48 Speaker 15: I think there are something called GSMA for example, there is no way is a cooperation between UN and the NMOs how to solve this in emergency and I think that might have been applied in Philippines last time
+1:20:07 Speaker 15: but I'm not that knowledgeable there. Do you know that consalo maybe?
+1:20:15 Speaker 10: Not that one in particular but what I could add regarding Wi-Fi stories that it is a license that is also key point right you don't have time in an emergency to get license for new parts of the spectrum.
+1:20:28 Speaker 10: I mean that takes a lot of time with the regulators with governments, et cetera. And the other good thing is that it's a ubiquitous. Everyone has a Wi-Fi compatible device, right?
+1:20:37 Speaker 10: So laptops, phones, tablets, everyone has something which is Wi-Fi compatible. We don't have it with Wi-Max with all the technology.
+1:20:44 Speaker 10: So those are the two main reasons. Easy to deploy, easy to use, and then basically unlicensed. That's the key point.
+1:20:53 Speaker 15: We're going to be better to establish, like not an open source, but open to emergency telecom solution, like, and satellite network that you would be like the only license you wouldn't need to contact anyone or ask anyone for
+1:21:09 Speaker 3: permission to launch your network.
+1:21:17 Speaker 10: I mean, what we have today, three-manian CLUs, sort of permanently allocated bandwidth on geostationary satellites that we have and those that is always allocated for emergencies, but that is super expensive to maintain over time because whenever there's not any more you're still paying for that bang
+1:21:35 Speaker 10: with and making sure it's there on the satellites and you know that's payload that goes into space etc so yeah it's not that simple but
+1:21:43 Speaker 15: yeah I'm sure some people are also thought about that I guess
+1:21:50 Speaker 15: yeah I mean there's also this LTE free which is like a small 4G free spectra but I don't know why that is not used either.
+1:22:03 Speaker 10: Maybe it's come back to that Wi-Fi is available on basically every platform. You have it in your smartphone, you have it on your
+1:22:10 Speaker 7: laptop, on your tablet.
+1:22:13 Speaker 15: It's commonly used. Everyone has a Wi-Fi, a connectable device basically.
+1:22:22 Speaker 7: You mentioned LT free or is it free as FRE or number 3?
+1:22:31 Speaker 7: No FRE.
+1:22:33 Speaker 15: So it's supposed to be I think it's used in some appliances like kind of similar to how Wi-Fi is used.
+1:22:51 Speaker 16: When setting up a hotspot location, no one where to put it to ensure line of sight, and there that it reaches as many people as possible and more.
+1:23:00 Speaker 16: But you say the hard part is accessing the actual data like searching for it, or knowing how to act upon that data.
+1:23:08 Speaker 9: Where's the bottleneck, could say? The hard part is to kind of what then
+1:23:17 Speaker 15: maybe Google off shows you is that the truth.
+1:23:21 Speaker 15: Because I think the apps or the applications tend to miss, for example, buildings or trees.
+1:23:29 Speaker 15: That, I mean, a couple of trees will block the signal, a building will definitely block the signal.
+1:23:37 Speaker 15: And then you have to do, like a site survey, on the ground to see if your exemptions are true.
+1:23:46 Speaker 15: And that might, you might need to climb a tower or to see if you have a line of sight.
+1:23:54 Speaker 3: And that takes a lot of time, of course. That's the problem.
+1:24:06 Speaker 17: Okay.
+1:24:08 Speaker 17: Are we running
+1:24:09 Speaker 10: out of questions?
+1:24:12 Speaker 10: Should we then hand over to Gonzalo that you now have already met and take you to the next presentation, which is related to learning and connect to learn.
+1:24:32 Speaker 10: So then I will move you out from the big screen here, Gonzalo, so we'll only hear your voice.
+1:24:43 Speaker 10: Yes, please. Like that. And then I think if Torbjorn, if you let go of the control and see if Gonzalo can take over the control.
+1:24:57 Speaker 15: That works.
+1:25:03 Speaker 15: Yeah,
+1:25:09 Speaker 9: it should be on the next. There we go.
+1:25:13 Speaker 10: Awesome.
+1:25:15 Speaker 10: Alrighty. The bar is quite high. Great presentation, Tobbe.
+1:25:20 Speaker 10: Now let's see if I can get to the same level and inspire you as much as Tobbe did.
+1:25:27 Speaker 10: First of all, nice to meet you. It's great to be here. It'll be even better to be in casclarna was there for seven weeks a few years ago doing some testing for charian and I keep very good memories of that place.
+1:25:42 Speaker 10: And it's a few degrees warmer than Stockholm right now where I'm based.
+1:25:48 Speaker 10: Alright let me start my presentation with this quote. It's one of my favorite ones and it's also the reason I guess why I have the job that I have today, one why I sort of tried to change my career towards this path.
+1:26:08 Speaker 10: And if there's something that you are going to remember from the next 30 minutes, I hope it's at least this quote.
+1:26:18 Speaker 10: For me, it means a lot. And I strongly believe that, you know, of all the bad things happening in the world right now,
+1:26:28 Speaker 10: climate change, inequality, gender imbalance, or armed conflicts, racism, xenophobia.
+1:26:37 Speaker 10: I mean, all those issues could be improved with better education.
+1:26:43 Speaker 10: That is really education is the key to make the world a better place. And unfortunately, it's not a topic that many politicians are willing to discuss because they normally look into the short term.
+1:26:55 Speaker 10: the next couple of years or maybe longer side the next four years until the next relations but investing in education is investing in better societies and normally you see the results in a longer time frame but I strongly believe that this is true and this is the reason
+1:27:13 Speaker 10: where I'm doing what I do hope that inspires it. All right quick presentation about myself my name is Gonzalo as you already know I'm born and raised in Spain living in Sweden for the last last 10 years.
+1:27:26 Speaker 10: I'm a so-called the Scherlech's immigrant.
+1:27:29 Speaker 10: Probably, yeah. Not the wisest decision. When it's late March and it's snowing and minus five in Stockholm and plus 25 degrees back home, but that's how it is.
+1:27:39 Speaker 10: I kind of regret now. I'm a telecom engineer. As I said, I've been working at Ericsson for the last 15 years.
+1:27:46 Speaker 10: I started working in BSS and I switched to IPTV and I always says, and I've been in many technical, different and technical yokes, but in 2016 I became an Ericson response volunteer like Tobit and that was sort of an inflection point in my career where I decided that I wanted to
+1:28:05 Speaker 10: work full-time helping other people at least trying to make the world a better place. So I'm very lucky that I'm doing that today working full-time on a program like a Connect to Learn and actually my official title is School Connectivity Paramountier.
+1:28:22 Speaker 10: So one of my main duties is providing internet to schools, which is something that, again, makes me really proud and makes me go to work every day with the, with a smile on my face and on full of energy.
+1:28:36 Speaker 10: I've worked in many different places. I got deployed to a number of countries with their installing telecom networks, upgrading, solving issues, basically putting down fires, as I like to say.
+1:28:50 Speaker 10: So it's pretty cool that I've been to places that I could never imagine I would go on my own like Nigeria or Congo, Swasi land, Lebanon, Jordan, Sri Lanka.
+1:29:00 Speaker 10: You name it. There have been so many countries and stories and adventures behind those.
+1:29:07 Speaker 10: The picture that you see there on the left, that's actually my only mission with Eric's response. I was 2019 in Colombia where I was So, Clienting Up Tower to set up an access point to connect the Venezuelan refugees in the context of the Venezuelan refugee crisis that
+1:29:26 Speaker 10: you've heard about.
+1:29:28 Speaker 10: But again, since we are a little bit behind the schedule, I think that's enough about me. I have all their interest, but probably they are not that important at this point.
+1:29:37 Speaker 10: It would be great if I was there in person, and we could have a coffee later on. She's shot a bit more by anyway.
+1:29:45 Speaker 10: And the short stuff I can also share my email address in case you want to establish contact or wherever, or you can find me on LinkedIn, et cetera.
+1:29:55 Speaker 10: So let me just start by placing where connect to learn and the edicts on response are within Ericsson.
+1:30:03 Speaker 10: So you know, we have a huge area which is sustainability and corporate responsibility and then we have three main strategic areas there, right?
+1:30:10 Speaker 10: One is the responsible business, making sure that you know we do everything in a safe way, you know we follow all the ethics, compliance, the businesses in country that respect human rights and do not work with embargo countries, do responsible starts and etc.
+1:30:26 Speaker 10: And other big areas, the environmental sustainability that's embedded now in the core of the company, all the products, the new radius, so the 5G radius, we're doing a huge effort on reducing the carbon footprint, making sure we create products that consume less.
+1:30:42 Speaker 10: This is ultra important, not only for the environment, but also for our customers, for the operators that they all want to see the electricity bill going down, right?
+1:30:51 Speaker 10: So energy efficiency is a key topic, product payback, recycling all radius, reusing them, etc. And then the third large area, which is where Ericsson responds and Connector Lymphidian is the digital inclusion one, right?
+1:31:04 Speaker 10: So you can see that we have a little area to connect the unconnected and that we do through our business. We still, there's let's say, six percent of the world population that leave
+1:31:17 Speaker 10: outside the broadband coverage and then there's roughly 40 percent which, you know, leave within coverage, mobile broadband, but it still do not use the internet for a number of right.
+1:31:31 Speaker 10: One of the is actually the lack of digital skills and that's what we're trying to tackle within connect to learn right that's that's Eric's answer to digital education and it's a completely known profit program that we have there the other one you just heard about it is risks and response, which is focused on humanitarian response after a humanitarian crisis.
+1:31:50 Speaker 10: And then the other solution, and we have to tackle digital inclusion, it's the only one which is commercial, which is mobile financial services.
+1:31:56 Speaker 10: We have in the Ericsson wallet platform, which is a solution where people who are unbanked can still do payments on transfer money.
+1:32:05 Speaker 10: And let's say something like kind of similar to Swish, but not really the case. I mean, you have your account on your phone, but yeah, that's pretty helpful when you don't have a bank account.
+1:32:17 Speaker 10: So, Ericsson Connect to Learn.
+1:32:21 Speaker 10: We are a little bit younger than Ericsson Response, Ericsson Response founded in 2000. This one came 10 years later, 2010.
+1:32:30 Speaker 10: But still the impact has been pretty big so far. So it's been 36 countries officially up to date and over 400,000 students that have been reached through our program.
+1:32:42 Speaker 10: So we have, the name of the program is critical here, right? We're called Connect to Learner. And you see the little breach in between the two words.
+1:32:50 Speaker 10: That's key, right? So connectivity is an important part. So one of the focus areas is school connectivity. As I said, that's the area where I work, right?
+1:32:57 Speaker 10: And then the other one is the learning part. We have some learning solutions that I'm going to briefly talk about in the next couple of slides.
+1:33:04 Speaker 10: And the idea is that we provide connectivity for that specific purpose, right? There are some of the people which are trying to contribute and they're connecting schools or connecting on the locations and then they leave and they go to the next place.
+1:33:18 Speaker 10: And sometimes, I mean, we believe to create an impact, you don't only need the connectivity, but you also need to have a plan beyond that.
+1:33:26 Speaker 10: How is that connectivity going to be used? How do we make sure that those students get benefited from that connectivity that we put in place?
+1:33:36 Speaker 10: So we try to combine the full picture. So we work, we have a huge partnership with UNICEF.
+1:33:43 Speaker 10: I'm going to talk about it in a few minutes as well. We collaborate with governments with a lot of ministries of education, ministries of ICT.
+1:33:51 Speaker 10: We collaborate with UNESCO, with the Broadband Commission. We also collaborate with our customers. So even though this is a free program, we never chart for any of our solutions, for our operating system, for our labs, for we never get paid for any of this but sometimes we provide connectivity in conjunction with
+1:34:09 Speaker 10: our customers. So we use their networks to provide connectivity to the schools. For example, using fixed wireless access, I might also cover in a few minutes.
+1:34:21 Speaker 14: So let
+1:34:22 Speaker 10: me then mention these five key pillars of digital inclusion.
+1:34:30 Speaker 10: We mentioned that
+1:34:32 Speaker 10: Both are excellent response and connect to learn with in digital inclusion. And what do we mean when we're talking about digital inclusion? We want to make sure that all individuals, all the communities, including the most disadvantaged, they have access to ICT, right?
+1:34:45 Speaker 10: And they use it in a responsible, safe and empowering way. So access to Internet is the number one thing. You use that, that's a must, right?
+1:34:52 Speaker 10: If you don't have access to Internet, then we need to fix it somehow. Then you need devices and software, right? When we're talking about education, if you are the Internet, but you have no laptops, no phones, no tablets, well, it's going to be kind of hard to consume that then.
+1:35:06 Speaker 10: That would be sort of the access part, right? The black one there. Then we have the yellow one, which is about skills development, digital literacy.
+1:35:13 Speaker 10: So we have digital platforms which are specifically thought for education. We have some digital content, which is thought for this, we're building sort of a curricula and we're growing a lot in that part actually.
+1:35:26 Speaker 10: And then it's also about training and mentorship, right? You can just put those tools in place and expect that the teachers and the students are going to be able to use them from from day one, but you need to trade them, you need to mentor them, you need to make sure that they get the basic understanding of how to use these tools and how to leverage them in the best possible way.
+1:35:46 Speaker 10: So
+1:35:50 Speaker 2: change has swept across the world.
+1:35:54 Speaker 2: In this current reality, we've found new ways of staying connected, new
+1:36:04 Speaker 2: ways of educating, evolving the learning experience.
+1:36:12 Speaker 1: Not everyone has access.
+1:36:17 Speaker 1: Millions of students are disconnected from the power of their potential. Through powerful partnerships and technology, the world will bridge the digital divide.
+1:36:27 Speaker 1: So, the push of a button can spark a change.
+1:36:34 Speaker 1: Dreams and ambitions deserve the chance to be realized.
+1:36:40 Speaker 1: Now, more than ever, the world needs change makers.
+1:37:12 Speaker 10: Okay, that worked smoothly with the video I'm battered in the presentation. Let's see if I can then move on to the next slide.
+1:37:21 Speaker 10: And while the next slide is showing up, let me, if you remember one of the videos that Toby showed you, you heard this guy from the UN saying how people kind of laughed at the beginning in the emergency responses when we were talking ICT, right?
+1:37:35 Speaker 10: On being an internet to emergency, they were like, ah, this is not that important. You need food, you need medicines, you need lifestyle and equipment, you need shelter, water sanitation, you know, these kind things but I mean without internet you cannot talk and if you cannot talk your your kind of screw
+1:37:53 Speaker 10: right so that has shifted and I think in when it comes to education the the COVID-19 pandemic has also helped to put a little bit of a spotlight into digital education right because I think many people thought that well education is something that happens in this course and you
+1:38:11 Speaker 10: know that's a that's everything whatever they do in this course stays in the schools and the kids go to schools and they learn of the schools, right?
+1:38:20 Speaker 10: Sorry, Gonzalo. I think you need to flip slide because we only see...
+1:38:25 Speaker 10: Yeah, I'm trying to
+1:38:26 Speaker 7: do that. It's a video again.
+1:38:30 Speaker 7: Thanks.
+1:38:33 Speaker 10: There we go. Yeah, this is the one. Perfect. Thanks. So yeah, what I was trying to say is that this So now governments, big actors, funders, donors, everyone is realizing that, okay, maybe
+1:38:51 Speaker 10: you don't have a complete education if you are not going digital, right? And I think the pandemic made that pretty obvious, right?
+1:38:59 Speaker 10: It was such a difference between those who could continue their education when they were, maybe it was in the case for you guys, right?
+1:39:06 Speaker 10: maybe you could continue studying whatever you're doing completely in a remote basis and everything worked even though it was a little bit of a surprise for everyone but it worked more or less as smoothly but those who couldn't do that they were completely disconnected and that's something really
+1:39:24 Speaker 10: really terrible right so okay let me introduce them real quick the portfolio highlight I'm I'm gonna go very deep into this, I mean just to name it so that it rings a bell and then maybe you get some basic understanding of what we're doing.
+1:39:42 Speaker 10: And again, this is not the part either where I work in that closely. So we have basically four kind of solutions.
+1:39:49 Speaker 10: We have some, which I thought to learn with technology, which is the Arizona to get platform, right? And then we have learning about technology and then we have split that one into different age groups.
+1:40:00 Speaker 10: We have a digital app which you can do with robotics, with game development, electronics, artificial intelligence, and then we have all kinds of hands-on exercises from building labels which are very advanced, with motors, engines, things that move, learning to code,
+1:40:19 Speaker 10: and you have some microsurkets and basic startup kits can put hands on. Then we have also the Ericsson Educate Content and Curriculum which I saw today is a lot about
+1:40:30 Speaker 10: 5G, artificial intelligence, machine learning, automation, cloud computing, data science on all these kinds of things.
+1:40:37 Speaker 10: And then we have grown a lot into the 5G one. Actually, we're running a huge project now in Malaysia with a few universities.
+1:40:46 Speaker 10: And we have that one more advanced for university students called my 5G University. And then we have also specific programs for girls, power in girls to make sure that girls get interested also in STEM, specifically in some countries where we see huge bridge between boys
+1:41:04 Speaker 10: and girls.
+1:41:06 Speaker 10: So yeah, this is an example of some of the deployments that we have right now ongoing. By basic deployments, we mean basic connect to learn principle, the school connectivity projects.
+1:41:20 Speaker 10: Then we have the 21st century technologies, five-year university and digital labs in different countries.
+1:41:27 Speaker 10: And then we have some many other projects that are already closed that have been started sometime between 2010 and today.
+1:41:37 Speaker 10: Okay, I mentioned before, and you can find more on that, you see to remember url-xon.com slash unicell.
+1:41:44 Speaker 10: You can read all about our partnership, but basically we have created a four-year partnership with UNICEF, in which we are helping them with this initiative called JIGA.
+1:41:56 Speaker 10: So JIGA is a joint UNICEF and ITU, ITU is the International Telecommunications Union, and they want to connect all the schools in the world to the Internet by 23rd.
+1:42:06 Speaker 10: Right? That's a pretty ambitious goal. That's, especially when we don't even know how many schools there are in the world today.
+1:42:14 Speaker 10: So it's pretty challenging when you reach out to governments and in countries like Mauley, Mauritania, Malawi, Sierra Leone, and it's like, how many schools are you having in the country?
+1:42:24 Speaker 10: Well, we don't know. We're trying to figure out. So in order to make this happen, you need to sort of very structure where the first one is map in the schools and by mapping, we mean understanding.
+1:42:36 Speaker 10: Where they are. So what is the actual physical location, geolocation of the school?
+1:42:42 Speaker 10: What is the coverage level of the school? Do they have coverage, if any? do they have GSM coverage, 3G coverage, maybe LTE coverage, even eventually 5G coverage.
+1:42:53 Speaker 10: Do they have all the type of coverage which is not mobile but fixed, let's say fiber, cable, DSL, satellites, all kind of information about the coverage that they have and then what is the connectivity level, right?
+1:43:08 Speaker 10: Ultimately what we want to build is a map of all the schools in the world, let me get back to this slide in a second. This is, this is, if you recognize this slide, this is the background that I have on my, on my teams.
+1:43:21 Speaker 10: As of today, we have mapped already 2.1 million schools and we believe and I want to certainly sure about this, there are around 6 million in the world.
+1:43:32 Speaker 10: So it's, we came about a third of the road already.
+1:43:38 Speaker 10: So, ideally, when you then go into a country, you will see the connectivity levels of the school, right?
+1:43:44 Speaker 10: So those dots represent based on the color where the school is connected and has good connectivity.
+1:43:52 Speaker 10: I good there, there, they're saying beyond five megabits per second, we want to change that to 20 megabits per second, which we believe is more of a meaningful connectivity.
+1:44:00 Speaker 10: But anyway, that's a matter of taste. then we have the orange ones which is you know schools are connected but yeah connectivity is pretty poor and to be honest with you guys there's only one thing worse than not having connectivity which is having really poor connectivity that's that's terrible when you know your internet
+1:44:18 Speaker 10: connection is super slow unreliable goes up and down that really sucks so we want to avoid that and we want to make sure that it's because not only get connectivity but they get meaningful connectivity, right?
+1:44:32 Speaker 10: Then you see the red dots which are unconnected to schools. Those are the ones that we need to work on and to make sure we connect.
+1:44:39 Speaker 10: And there are some blue ones for which we don't have information, but we're working on all this, trying to fetch all this information and getting real time data.
+1:44:49 Speaker 10: So you can see here, we're mapping the location of the school. So this is where my school, what is the latitude, which is the and I can put it all on the map.
+1:44:58 Speaker 10: What is the coverage level? If there's any coverage, maybe there's no coverage at all. Is it connected or not? And then the schools can report a static one time measurement said, yeah, I'm connected.
+1:45:09 Speaker 10: I have coaxial cable, average speed is 15 megabits per second. Then we write that in the database and they're remiss there.
+1:45:17 Speaker 10: But you know, things are not static in life, you write. I mean, you could have 15 megabits per second today, but in one year time, your connectivity could be better because you have upgraded to fiber or it could be worse or maybe you maybe you run out of funds in the school and you are not able to afford paying for the connectivity anymore.
+1:45:34 Speaker 10: And that means that you you were a green dot in the map but then all of a sudden you became red. And that is something that we want to avoid as well, right?
+1:45:43 Speaker 10: We want to make sure that when these guys turn green on the map, they remain green.
+1:45:51 Speaker 10: So that's a goal that we work and then you know the ISPs the M&O's are connecting those schools they need to be accountable for connecting and making sure that there's also a sustainability plan right.
+1:46:01 Speaker 10: There are also some actors and companies I'm seeing out there they're doing CSR projects they say hey we have connected these schools in Honduras via satellite it's amazing and then you know they provide connectivity for three months and then they very much want to avoid.
+1:46:18 Speaker 10: We want to make sure that there's a sustainability plan behind all the connectivity. Anyway, this is a very large project, as you can imagine.
+1:46:26 Speaker 10: It takes a great deal of my all my time and patience and energy but it's still a very nice one and you can read more as well on giga.gov global.
+1:46:37 Speaker 10: I'm going to write the link here on the chat. If you're curious about that project, it's a pretty large one. And there are other partners as well.
+1:46:44 Speaker 10: Ericsson is not the only private company, although we're the first ones that partner with the UNICEF.
+1:46:50 Speaker 10: The other type of projects that I'm highly involved in is, as I said before, access to Internet connectivity for schools.
+1:46:58 Speaker 10: I'm currently working with the larger one in Indonesia, another one in Senegal. We might have more projects coming down the road in Nigeria and other countries.
+1:47:08 Speaker 10: But basically what we're trying to do, as Eric Schoen is promoting fixed to wireless access as a technology to connect this course.
+1:47:19 Speaker 10: What is fixed wireless access? You might, maybe some of you have never heard of this term before. Well, actually, fixed wireless access is anything, right?
+1:47:28 Speaker 10: I mean, we'll talk with this crack through our answer response. That is fixed wireless access because by fixed wireless access, we mean serving a fixed location using wireless technology.
+1:47:39 Speaker 10: So if you have let's say your satellite link and then you create your Wi-Fi point to point, point to multiple links, you're using Wi-Fi links which are wireless to serve a fixed location.
+1:47:51 Speaker 10: So that and ultimately to access the internet, right? That's what the word access comes from. So actually or technically speaking, fixed wireless access is just a generic term.
+1:48:02 Speaker 10: You're serving a fixed location based on wireless technology to get access to the internet. But specifically what we're working with is using wireless technology which is 3GPP based.
+1:48:13 Speaker 10: So mobile technologies, let's say roughly 4G and 5G because in 3G this gets a little bit more cumbersome.
+1:48:21 Speaker 10: Plus you are not really able to get the throughput that you really want.
+1:48:27 Speaker 10: I don't know if you're too young, maybe to have used 3G on your phones. I don't know. But anyway, characteristics from this type of connectivity, you don't have a mobile phone at the schools or a run to do you have something we call a CPE customer premise equipment, which is kind of like a 4G
+1:48:46 Speaker 10: router, you could say or 5G router depending on the technology that you're using, but you could have it outdoors or you could have it with a little bit better antenna and better gain to maximize the throughput of the school.
+1:48:58 Speaker 10: And then that subscription would be like any fixed description. So in a mobile subscription, you typically don't get a guaranteed quality of service, right?
+1:49:07 Speaker 10: Now, one tells you your operator, if you have Telia or three years or whatever you have, they won't tell you you have 150 megavits per second warranty.
+1:49:18 Speaker 10: They will tell you you have 25 gigabytes of data per month. You have a maximum of 50 or 10, I don't know, depending on the plan that they offer you, depending on how much you pay basically.
+1:49:29 Speaker 10: However, when you have fiber at home or any other fixed subscription, you normally have unlimited data rate, right?
+1:49:36 Speaker 10: You don't have a maximum data you can consume. And then what you pay for is for the quality of service. So basically you pay more if you pay for 20 megabits per second, 50, 100, or maybe you get one gigabit per second if you pay more.
+1:49:49 Speaker 10: So in fixed wireless access, we're doing the same. We provide unlimited amount of data. That means of we need a lot of capacity on the networks of course and then we warrant the quality of service.
+1:49:59 Speaker 10: That's the key difference. Mobile problem when you have your phone around. If I'm wondering around depending on the usage, depending on the utilization of the cell, depending on the number of factors, I will get better or lower throughput on my phone.
+1:50:11 Speaker 10: But if if I'm using fixed wireless access then I know that I'm getting what I'm paying for, which could be 2050 depending on the operator.
+1:50:19 Speaker 10: The operator will be able to offer more or less depending on on, of course, the radio technology that they have, depending on their transport network, et cetera, right?
+1:50:29 Speaker 10: But that's sort of the solution that we are trying to implement for the schools. This is an example I just took a picture from the handbook.
+1:50:38 Speaker 10: You see those two happy people there in their house. That is the CPE, in this case, is outer mountain, and this would be typically, it would be pointing towards the radio base station that is serving the house.
+1:50:51 Speaker 10: So, you know, you someone a technician will go there and understand where the the BTS is and they will be pointing that it with many it could be mounted on the rooftop, it could be mounted on a pole, it could be mounted on a window, it could be also sitting indoors actually, but then you have a little bit less gain obviously.
+1:51:11 Speaker 10: But anyway, maybe now you know a little bit about what fixed wireless access is and I hope it sounds interesting.
+1:51:18 Speaker 10: It is a technology that is growing a lot. Operators are getting more and more interested. And it is a way for mobile network operators to compete against
+1:51:30 Speaker 10: fiber providers. Now another thought, okay, let's say if you live in a city where there's fiber cables everywhere, well, this technology maybe is not as good as fiber because the fiber is already deployed.
+1:51:43 Speaker 10: But when you need to deploy connectivity in places like the ones where I'm working in remote islands in Indonesia or in the middle of the desert in Mauritania.
+1:51:52 Speaker 10: Very remote villages in the middle of nowhere in in sub-Saharan Africa. Well, then this has to be a very interesting technology because you can reach more farther.
+1:52:02 Speaker 10: You don't need to. I mean, fiber is kind of affordable once you have installed it, but deploying fiber is not that cheap.
+1:52:11 Speaker 10: And then of course we could also to consider the environmental impact of trend in the fiber cables, trenching, et cetera, while building a tower and then using wireless technology is probably a better solution for the environment.
+1:52:25 Speaker 10: That's, by the way, another area that interests me a lot, you know, the lifecycle assessment and the environmental impact of the different type of networks. Anyway, I don't have good numbers and we're running a study with some other guys from research, but hopefully one day I can show the numbers on the facts.
+1:52:39 Speaker 10: I don't wanna talk numbers if I don't have them, But we believe that mobile technology is better than fiber from an environmental point of view for remote areas.
+1:52:55 Speaker 10: Okay, some of the things that we're doing that take some part of my time as well. Not that much as the other two. This is sort of extra effort that we will cooperate in with some other agents and partners to create influential reports to try to basically we're trying to.
+1:53:11 Speaker 10: make people understand what I just told you at the beginning.
+1:53:15 Speaker 10: Things are better when, or education is better when you digitalize it basically. So you know, you have, you have this influential report that we created with, and that was published on the Economist together with UNICEF.
+1:53:31 Speaker 10: Basically what this report shows is that the GDP of a country grows when you are investing on digital education.
+1:53:38 Speaker 10: So you can read all those numbers.
+1:53:42 Speaker 10: We have also is work with the Broadband Commission for sustainable development and we're going to go through the details.
+1:53:49 Speaker 10: We're also part of the Digital Education Coalition which is arranged by UNESCO.
+1:53:56 Speaker 10: And there are a lot of members, but we are running workshops and basically trying to create a set of tools for governments to implement and solutions to get access to connectivity to digital solutions, not only necessarily using our solutions, but in any
+1:54:14 Speaker 10: generic ones.
+1:54:16 Speaker 10: But yeah, there are a lot of things going on. And at Vocacy, it's an important part of the work we do.
+1:54:24 Speaker 10: And just to finalize the presentation, officially, let me share with you this internal pledge that we did last year.
+1:54:33 Speaker 10: I mentioned before that we have reached already to 400,000 students and the goal is to reach up to 1 million by 2025.
+1:54:42 Speaker 10: So we have only two years left and we want to scale pretty much. So we reached 400,000 in the last 13 years but now we're like all in and really want to reach at a larger scale.
+1:54:56 Speaker 10: So let's see if we can manage our goal. But that was announced announced by Burye Ekham, the CEO of Ericsson in December 2021, and that's sort of the goal towards which we're going.
+1:55:10 Speaker 10: I think it's nice to finish with the goal. Now, this is something that I added. This is not part of the Connect to Learn presentation, but I'm going to share some thoughts with you guys since this is just an example because I don't know if you could read the text on my presentation.
+1:55:26 Speaker 10: I like to play chess. It's one of my hobbies. I have a lot of hobbies. and chess is one of them.
+1:55:33 Speaker 10: And then I wanted you to sort of reflect about how it was, let's say, to learn chess for someone like, let's say our parents generation.
+1:55:45 Speaker 10: The generation that grew up without the internet.
+1:55:49 Speaker 10: Let's say they were interested in chess the same way as I am. Then, if you wanted to learn, you basically have to buy a chess book or maybe go to the public library in your city or your village and then you could read some books, some get some bibliography, there were some classic books, or additionally
+1:56:08 Speaker 10: you could try to play in a club, if there's any club in your place or try to play with other people and play over the board basically.
+1:56:17 Speaker 10: That's it, maybe if you're very lucky you can join a club and someone who's good at chess can can teach you a few tricks about the openings and about the middle game and the end game and what not.
+1:56:31 Speaker 10: However, I wanted to compare with what's going on today.
+1:56:36 Speaker 10: Let's say you get interested in chess. Now, you've never played before, where you got interested today after my presentation for whatever reason.
+1:56:45 Speaker 10: It's incredible what you can do with digital tools, so really, and chess. So you could access very much any game which is recorded on online databases.
+1:56:57 Speaker 10: You can play online anytime, any single with any person in the world. You can play with a computer on any single granular level and you can improve.
+1:57:06 Speaker 10: You can get tutorials, you can get courses, you can get analysis real time of your games that tell you immediately, you know, the game, the move that you it, and move 17 was a good move or not, and why was it good?
+1:57:19 Speaker 10: Why was it good? I mean,
+1:57:22 Speaker 10: the possibilities that you have to learn today compared to what you have, let's say, 34 or 15 years ago, I mean, chess is a game that has six, with the current rules, 500 years, maybe historically, a few thousand years, is just unbelievable.
+1:57:40 Speaker 10: I mean, it's sort of an inflection point, and you can see that in the level of the players, in the way they learn in the way they play, etc.
+1:57:47 Speaker 10: Not to mention artificial intelligence or computers, etc. Anyway, that was just a simple example that I wanted to share with you guys thinking about the hackathon.
+1:57:59 Speaker 10: I mentioned just because I like chess again, but you could extrapolate this to anything, basically, right?
+1:58:06 Speaker 10: You could extrapolate it to geography, to calculus, to trigonometry, to physics, one to electrodynamics, languages.
+1:58:17 Speaker 10: Many of you are, I'm sure, I've used the whole linga to learn other languages, to code into computer science, to any topic in the world, basically.
+1:58:24 Speaker 10: It is so much easier to learn, to get access to information, to opportunity and to choice today, thanks to the internet.
+1:58:35 Speaker 10: So, I will stop here, because I could continue talking for hours or ages about this is a topic that fascinates me, but I just wanted to share this thought with you.
+1:58:44 Speaker 10: Maybe it triggers some ideas, some inspiration.
+1:58:49 Speaker 10: And with that, I will conclude the presentation here. I think we are kind of on track considering that we started my presentation half an hour behind the schedule, but I'm happy to hand it over to you guys in the audience if you have any.
+1:59:04 Speaker 10: Any question for me, any comments? I'll be happy to answer them to the best of my ability. Thank you for listening.
+1:59:11 Speaker 8: Thank you, Gonzalo.
+1:59:14 Speaker 8: Got some applause there as well.
+1:59:18 Speaker 8: So that's perfect. So I guess we skip the break this time and jump directly to the questions.
+1:59:28 Speaker 10: Can you elaborate on the learning content and development programs that Ericsson provides the connected schools?
+1:59:39 Speaker 7: Yeah, I don't let me be if I can I had some hidden slides which
+1:59:46 Speaker 10: are not shown here, but never mind.
+1:59:49 Speaker 10: Let me bring this one at least.
+1:59:53 Speaker 10: I want to win just a second.
+2:00:03 Speaker 10: So it is so basically yeah and this is actually not all we have we have something else we have also learning management system.
+2:00:10 Speaker 10: We have created as well our own operating system, we call it Connect to Learn OS.
+2:00:18 Speaker 10: It is a Ubuntu based operating system which could be installed in laptops at this course and then you could use a system to basically manage the content, right?
+2:00:29 Speaker 10: So you could be, let's say a school administrator and you could use that solution to administer the content. So what is getting pushed to the students and then what the students can see on the laptops, right?
+2:00:40 Speaker 10: could be maths, could be language, could be nature science, etc.
+2:00:48 Speaker 10: And then they can consume that content. And that means that you can do a lot of things with that. You can do reports, you can see who access the content, you can see how many questions they answered, if they were right or wrong, you could create some sort of virtual curriculum online as well.
+2:01:03 Speaker 10: And you can give badges. If you complete this module, you get this little certification. As same as it happens today many other online platforms, right?
+2:01:12 Speaker 10: If you have you go to Harvard University online, they offer free courses and then you get a sort of accreditation every time you complete something.
+2:01:20 Speaker 10: So that's one of the solutions.
+2:01:23 Speaker 10: And then the other ones are sort of mentioned here and again, it depends really on the on the on the age and then yeah, what we're trying to solve.
+2:01:34 Speaker 10: So for For example, when we are going to connect the schools, the first thing we do, we identify the schools that we want to connect, and then we do a needs assessment.
+2:01:43 Speaker 10: Means that we go to the schools, we talk to the principal there, we interview them, we ask them a number of questions to understand what are the gaps, what is really that they, what do they have the needs?
+2:01:55 Speaker 10: Does it need teacher training? We even have, it's not mentioned here. I mean, I tried to keep the presentation as simple as possible.
+2:02:02 Speaker 10: of course you can go as well to edicsome.com slash connect dash to dash learn and then you can read a bit more.
+2:02:10 Speaker 10: We even have VR for teacher training right where you can put some VR glasses on you as a teacher and then you have a class of virtual classroom there and then the students will be asking questions and you are asking those questions and you're choosing between different options
+2:02:25 Speaker 10: So our portfolio is quite, it's not that deep. It's quite wide, I would say.
+2:02:33 Speaker 10: And then we, yeah, depending on the needs we offer one or all the solution. But again, we are not trying to solve the learning pattern ourselves, right?
+2:02:41 Speaker 10: We also rely on third party providers, content. We, depending on the project, we might be having a collaboration with UNESCO, with UNICEV, or with some other partners.
+2:02:51 Speaker 10: And we have collaborated with NGOs in the past. them. And if they come with a really good learning solution, we're very happy to implement it as well, right?
+2:02:59 Speaker 10: So it's not that we are trying, when we can discuss to use only these solutions, this is not the only thing that we work, we're completely open to work with any kind of learning platform, if I can say so.
+2:03:12 Speaker 10: Well, hopefully that answers your question.
+2:03:16 Speaker 7: Hi, so I also have a question. I see some answers already on the slide, but what are the results of these and is it only courses or are they like one year educations
+2:03:28 Speaker 15: or yeah how does it look?
+2:03:31 Speaker 10: Yeah we don't have any offering which is as long as a full year the one the longest one is probably the MIFI G University and now we're growing that one and I think but in total it's not more than a few weeks I can't remember it was like eight weeks or so
+2:03:50 Speaker 10: Normally, all these modules and courses, they are time-friendly.
+2:03:55 Speaker 10: Of course, the digital lab you could run for quite long, but then it depends really on the local context.
+2:04:03 Speaker 10: Let's say we have that one running in Italy, in Japan.
+2:04:06 Speaker 10: Some groups might want to run it again with the same group of students and increasing the level of difficulty, and some others might want to run with a lot of different groups to make sure they reach more students.
+2:04:17 Speaker 10: So it's really customizable but we're talking generally that's hours of training for each of the models.
+2:04:32 Speaker 16: Yes, hello. So what are some of the hinders that you faced while reaching out to schools before while setting up the curriculum with them?
+2:04:46 Speaker 10: While setting up the curriculum. Well, I mean, yeah, there are a lot of hinders, right? I mean, first one I can think of is language, language is a tough one, right?
+2:04:57 Speaker 10: We've been working in countries where, you know, English is not that trivial, so in many, in many places, you need a translator, you need someone who's acting as a translator all the time, and that makes things a little bit more cumbersome, of course.
+2:05:12 Speaker 10: So I say huge difference when people are fluent in English, that makes our lives so much easier. And then of course, much of this context could be adapted to different countries and languages as well, right?
+2:05:24 Speaker 10: So let's say my 5G University were translating it to Malaysian, Bahasa.
+2:05:32 Speaker 10: We try, when we generate content, we try to make sure that it's adaptable and easy to, so basically, let's say, rather than the content, of course, it's always translatable, but let's say the tool, the offering itself that you can easily then swap the content from language which A to language B and make it reusable because
+2:05:50 Speaker 10: that's something great. If you have developed something that you can translate and then offer in some of the country.
+2:06:00 Speaker 10: But that's one area and then the other one is where I would say that sometimes people get a lot of interest to work with us because they see us, oh, connect to learning is coming in here and that means free laptops, free devices, free iPads and free internet.
+2:06:18 Speaker 10: Well, that's true anyway, but we don't want them to look at us that way, right?
+2:06:25 Speaker 10: We want them to look at us as someone who can help them to create a better impact on their students. So, they're willing to assess that they really, they are not there just because they want the free devices and the free internet, which looks very appealing, especially when we're talking about developing countries, but that they really
+2:06:43 Speaker 10: have an interest in using ICT to improve their learning and to create a better impact on their students.
+2:06:51 Speaker 10: So I would highlight those two as the major challenges.
+2:06:57 Speaker 7: Hello, I have a question. So essentially your goal is to reach 600,000 kids in two years.
+2:07:07 Speaker 10: more. That's right, yeah. That's correct. Yeah.
+2:07:13 Speaker 9: What are your key problems
+2:07:17 Speaker 14: that hinders you from doing that when it comes to scale and what are your key problems other than that in general?
+2:07:26 Speaker 10: You're asking me a question that I was expecting you to solve through the hackathon.
+2:07:32 Speaker 10: I'm just kidding.
+2:07:35 Speaker 10: That's a really good question. That's a
+2:07:38 Speaker 15: system laughter. Let me go back to this slide. Maybe this one.
+2:07:48 Speaker 10: Yeah, it's not easy to scale up these things, right? If you want to make things the right way and you want to make, as I said before, things sustainable, right, to make sure that this access is not vanishing after a few months.
+2:08:03 Speaker 10: Well, let's say when we close on the, because, you know, we work with projects. Sooner or later, we need to disengage and move on to the next project, right.
+2:08:10 Speaker 10: I told you that I'm working with Indonesia and Senegal at the moment. I mean, I'm not going to be working with them forever. Those projects will close in one and a half year time, in two years time from now.
+2:08:19 Speaker 10: But hopefully, the whole idea is that when when I leave the project, the project is close down, we create all the reports of the input reporting, we have a monitoring and evaluation, we have a transplant, we have all kind of documentation, you know, needed to close the project and then we can show some results, but the idea is that that continues over time, right?
+2:08:37 Speaker 10: So how do you make that scalable? To be honest, we're trying to figure it out.
+2:08:44 Speaker 10: And also that's part of the challenge that we're facing with Jiga, right? I mean, the scale in the Jiga project is even It's much larger than what we're trying to do.
+2:08:56 Speaker 10: We want to reach 600,000, but remember that
+2:09:01 Speaker 10: Giga still needs to amount 4 million schools and connect many of those. We're talking about hundreds of thousands of schools.
+2:09:07 Speaker 10: So we're talking about millions, hundreds of millions of students. So it's two different levels of magnitude.
+2:09:15 Speaker 10: In our case, little connect to learn what we can do. I mean, I think that reaching out to university, university students and working on content that is movable from different countries, from different languages that's a really good asset for us.
+2:09:31 Speaker 10: So again, we are much bigger actually on the learning parts, that on the connectivity part and the connectivity, I mean, we're doing this as I said before, these projects are for free.
+2:09:44 Speaker 10: So my hours, they are given for free to these basically that. I mean the company is paying my hours and we're getting no revenue whatsoever.
+2:09:53 Speaker 10: So it's not that we can connect the schools on a larger scale. We are not dimensioned. We don't have the capacity to do that on a corporate and social responsibility level.
+2:10:02 Speaker 10: That's that's infeasible. We could only get a scale if we got a lot of funding from a Ministry of Education, organization from organizations like SIDA.
+2:10:15 Speaker 10: You know, then we could try to scale up, but I mean, with the current setup that we have, I mean, in my team, we are four people in the court team and we have some developers in India.
+2:10:25 Speaker 10: We're just a few people working in Connect to learning the company, so it is challenging to get a scale.
+2:10:32 Speaker 10: But I mean, we're very happy to hear your thoughts, the as on that matter.
+2:10:39 Speaker 10: And but again, keeping the full this picture in mind, right? Sometimes when things scale up, they start losing quality.
+2:10:47 Speaker 10: That's kind of obvious, right? And we still want we prefer to do things at a smaller scale and with the right quality and level of impact and down spanning a scale.
+2:10:56 Speaker 10: So if we can reach our number, but we are creating a better impact, I will still sign that I always prefer focusing on the quality than in the quantity.
+2:11:05 Speaker 10: So,
+2:11:07 Speaker 14: but yeah, some of us out of these five key
+2:11:11 Speaker 7: activities, where would you say you spend the most time, or which one is more time consuming?
+2:11:22 Speaker 10: Good question. I work mostly on the first two ones, right, on the black ones. So, it takes a lot of time.
+2:11:32 Speaker 10: because when we're partnering with the contract, means we're writing a legal contract with the customers.
+2:11:39 Speaker 10: So it's like, okay, what are you going to do? What am I going to do? Okay, you're gonna pay for the six first months.
+2:11:46 Speaker 10: Okay, I will pay for the next 12, who's gonna pay afterwards? Where is the funding coming from? There are so many aspects to that something that is kind of new for me.
+2:11:56 Speaker 10: I forgot to say that I haven't worked in Connect to them for two years only. So it's not since in 2016 I became a volunteer of action response.
+2:12:04 Speaker 10: In 2021 I became a connect to learn project money. So what I'm trying to say,
+2:12:12 Speaker 10: I mean I wasn't used in my previous roles to all these complications about how complicated it is really to get a contract signed, to make sure you go through compliance, you go through boxes to make sure you do all the things right to make sure that everything is approved.
+2:12:30 Speaker 10: Okay, you're getting funding from let's say welcome another partner that funding is approved. Everything is approved. You need to talk to legal.
+2:12:37 Speaker 10: You need to talk to the lawyers. You need to talk to the head of the country. You need to talk to the head of our area. You need to make sure that this budget is approved.
+2:12:44 Speaker 10: It is so complicated to get that.
+2:12:47 Speaker 10: And then just, you know, when you go through all those steps and then I'm just looking forward for the the basic connectivity part to happen for the actual installation of the CPEs to go there to the problem is going to be myself who is doing that.
+2:13:02 Speaker 10: But I mean, when we install the CPEs in the schools, we'll restore this access point. When we create the Wi-Fi network at the school, we give access.
+2:13:09 Speaker 10: I mean, that probably is going to take less time than all the preparations in this month. So, yeah, sometimes maybe people don't see, they think that it's access to internet is not for us as fast as it's for Eric's own response.
+2:13:24 Speaker 10: Let's say in a reactive way like, oh, we go there, satellite link, pom pom pom in 24 48 hours.
+2:13:31 Speaker 10: We have created internet access out of nowhere, which is pretty cool. But unfortunately, we move at a different pace.
+2:13:39 Speaker 10: So we need to have contracts in place and a number of approvals and that's tedious. And then the devices and the software, that's another one because There are requirements from the ministries, I'd say they want to use only Chrome or Chromune always for example, and then they have these requirements in the laptops and then you need to still, yeah,
+2:13:58 Speaker 10: there are some processes in turn not to get it approved, to buy them, to ship them to the particular country, to ship them to the schools, etc.
+2:14:08 Speaker 10: So yeah, things take a little bit longer than we're taking. And then of course on the learning part, well, the deployment is fairly straightforward, but what we don't see here is all the time on the development, right?
+2:14:18 Speaker 10: That's also very time consuming. So yeah, it's a
+2:14:24 Speaker 7: full burn. Yeah.
+2:14:27 Speaker 14: Hi, so on back to the education and courses, I
+2:14:33 Speaker 7: saw robotics and games. And what results have you gotten from that and what benefits has the people got?
+2:14:41 Speaker 7: Do you have like measured it in some ways,
+2:14:44 Speaker 15: like which ones are more beneficial for the students. Yeah.
+2:14:50 Speaker 10: Yeah, I wish that my manager was here because I'm pretty sure she could give you a very good answer on that one. She's the one that is more into the history of connect to learn, you know, what deployments have been happening in the past has been, you know, working on all these monitoring and evaluation reports and I could tell you a little
+2:15:08 Speaker 10: bit more about the impact and the differences with the different models. I don't have the background so I don't want to get your wrong.
+2:15:15 Speaker 10: I could definitely follow up on that question. It's a very relevant question. I'm a very good one.
+2:15:21 Speaker 10: I mean, the idea that's about what we are always doing is creating an interest for children, small children, especially girls on technology, right?
+2:15:30 Speaker 10: You've probably heard of the 10, 10, a wrong writer in the chart, which stands for science technology engineering and maths.
+2:15:39 Speaker 10: sometimes you even see that steam some people refer to it with the A8 standing for arts.
+2:15:46 Speaker 10: So yeah science, technology, engineering, math, that's sort of the areas where we want to create an interest.
+2:15:53 Speaker 10: Because it's sort of our area right we are at the engineering company, a telecoms company. So I think it also makes sense that that's that's area in which we create our content right will be very weird that if we as arixam create I don't know Content to learn geography or languages
+2:16:12 Speaker 10: or some of the topics which are not really at our core expertise
+2:16:17 Speaker 10: But I think it's also it's topics are very interesting that are hot that you know students are Of course, you know learning to program learning to code learning on artificial intelligence and machine learning.
+2:16:32 Speaker 10: Those are topics that could be extremely valuable for the years to come. So that's also, I guess, the reason where we are working on those.
+2:16:40 Speaker 10: But I mean, if you want the specifics on what is the difference, you know, when comparing robotics using LEGOs to electronics, using some of the solution, I cannot give you a straightforward answer.
+2:16:52 Speaker 10: Now I'm...
+2:16:59 Speaker 38: Hi.
+2:17:01 Speaker 38: My question is how many different courses their have and two
+2:17:07 Speaker 38: students are free to choose courses.
+2:17:14 Speaker 10: Sorry, I didn't get the second question. Could you repeat it?
+2:17:19 Speaker 38: Are they actually free to choose courses students?
+2:17:27 Speaker 38: I mean, are they choosing courses by themselves? Are they available to choose on the this is something that is set up already in schools?
+2:17:36 Speaker 10: Yeah, now all this is optional for students. We are not part of, as far as I know, none of our courses are part of the mandatory curriculum, you know, K-12 schools in any country whatsoever.
+2:17:49 Speaker 10: And the one that I'm more familiar with, the MindFidee University of Malaysia, I know that's the one to make that as an, you know, at least when I studied in university, was like that that you could, you had these optional courses that you could take to complete the amount of credits that you needed to get your certification.
+2:18:03 Speaker 10: So this is kind of similar. And the MI5G University, for example, and the research, we kind of scale this one because we're trying to use that one, not only for engineering or technical students, but for all kind of students.
+2:18:16 Speaker 10: So let's say, emulation student who was studying low could still apply for that course and get it.
+2:18:23 Speaker 10: But it's always on an optional basis.
+2:18:28 Speaker 10: And
+2:18:29 Speaker 7: do you get any kind of certificate diploma?
+2:18:33 Speaker 10: Yeah, we were working on that as well and we're growing. I'm also sharing another link, educate the direction of the net. I think that one should be a public that link open to everyone.
+2:18:44 Speaker 10: You can try it on maybe talk where you can help me in the background or Stefan. I believe that anyone can log in there and then see the causes that are available today about telecoms, IoT 5G automation.
+2:18:55 Speaker 10: machine learning, AI, etc.
+2:19:00 Speaker 38: How much is valuable and acceptable between schools
+2:19:06 Speaker 38: when they have this diploma after that? Yeah,
+2:19:11 Speaker 10: that's a good question as well. I mean, we're trying to work on this, creating these batches on the systems of that, they're integrated and the moment you complete, you get this recognition, but I mean this is still kind of very high level.
+2:19:27 Speaker 10: I mean I don't think as of today that you know you could complete one of these courses and it will be embedded into your academic curriculum or something like that.
+2:19:37 Speaker 10: I mean it's something extra as of today but definitely that's the path where we all would like to go right that you know ideally you can complete this and then this becomes part of it sort of an internationally recognized curriculum but that requires a future for don't you know as tanda rising the
+2:19:55 Speaker 10: curriculum what is approved what is not but I know that that that is an area that my manager is working on and yeah we're
+2:20:01 Speaker 14: trying to improve in that
+2:20:02 Speaker 10: sense.
+2:20:05 Speaker 14: Last question.
+2:20:08 Speaker 15: Yeah. Yeah.
+2:20:11 Speaker 15: So I have a couple of questions. So what level of education your organization aims to in the third world countries like Morocco and Indonesia.
+2:20:23 Speaker 15: Do
+2:20:24 Speaker 10: you you know Hans Rosling, it wouldn't be happy to hear the Fed World conference.
+2:20:31 Speaker 10: Okay, the age groups, they're basically mentioned here. So you see they're basically between 11 and 25 roughly.
+2:20:42 Speaker 10: But then, you know, four, so the total lap, I mean, it could be used in any country, actually, and the same with the other ones, really.
+2:20:54 Speaker 10: So, yeah, to keep the answer simple, I would say any age group between 11 and 25 roughly.
+2:21:04 Speaker 15: Also mentioned that he already have a close base, does it have a solution for this, but is it just cost money to access that?
+2:21:13 Speaker 10: No, no, no, again, nothing that we offer has a cost for the student or for the school or for the university, for the learning in certain, and we never charge for anything that we offer.
+2:21:25 Speaker 10: So the everything is completely free of charge, including the connectivity and everything.
+2:21:34 Speaker 10: So we would never connect to them. We would never be charging a single cent for any of the offerings, for including the devices or everything.
+2:21:42 Speaker 10: So if we offer devices, that means that we are either paying for them ourselves or maybe we're getting funds from some other partner, which is collaborating in that period, but you will never be charged for the, as a school, as a learning center, for the access, for the devices, or for the content, for the platforms, for nothing.
+2:21:59 Speaker 10: Everything is completely free of charge. We can access that platform right now. Yeah, again, and I need to check if Tobel wrote here that is for students that are enrolled in Ericsson-Parnett entities.
+2:22:12 Speaker 10: So I think everyone within Ericsson can access these courses.
+2:22:16 Speaker 10: I think you need to register the email. I need to explore that. I can't ship because I thought that at least two of the courses were open for the general public.
+2:22:26 Speaker 10: I can double check that one and get back to you. Okay, just last question.
+2:22:30 Speaker 9: So I think once the certification has standardized, don't you think that this will
+2:22:36 Speaker 15: compete with the regular use universities? like some kids might choose, do not go to the high school and use this system directly to complete courses, get certification and go off to get some job quicker.
+2:22:56 Speaker 10: I see this more as a compliment rather than competition. So I mean, it's not that we want to take over the, you know, the education again.
+2:23:07 Speaker 10: I mean, our core expertise is on the technology, right? So we, maybe there we have something to provide, but I mean, there's so many things that you learn at school at university that it's completely impossible for us to cover it all.
+2:23:22 Speaker 10: So I don't see ourselves as competing with anyone out there and then trying to push for more content or create more content of them.
+2:23:29 Speaker 10: We see a lot of demand on the on the on the learning content part. That's where you know a lot of people come to us like they already have internet, but they want.
+2:23:36 Speaker 10: They want content that we see that that is a trend that we're seeing today. However, I mean we were a talent company and we are again a small team.
+2:23:44 Speaker 10: So it's not that we can't fulfill all the. the needs of the requirements. We chose not to be in the mobile world congress now in February and of February, which is the most important congress in the telecom world as Connect to Learn because we don't want to attract more customers or more, let's say, more requests
+2:24:02 Speaker 10: at the moment. We are kind of overwhelmed with the work that we have. So we were afraid that if we go there, we're gonna get more interest from customers, foundations, whoever's there, we want to collaborate with you.
+2:24:15 Speaker 10: We don't have the capacity. So again, we're small team. We have our ambition reaching one million students.
+2:24:22 Speaker 10: And again, it's sort of the full picture. Remember, connect to learn. So it's a connectivity. It's a learning part. It's sort of the full picture.
+2:24:29 Speaker 10: But we cannot compete with professional learning institutions. And in fact, we know one of the things that we do, we borrow people from learning services in Ericsson.
+2:24:39 Speaker 10: So in Ericsson, we have a department which is, you know, all these guys are creating courses and content internally for Ericsson employees, right?
+2:24:47 Speaker 10: So of course we do have a lot of learning, we have access to courses, all Ericsson employees have access to a lot of different learning opportunities.
+2:24:54 Speaker 10: So we work with some of these guys to help design our courses and our modules and to help put them in a nice educational, instructive way, et cetera, because we really were not experts on learning.
+2:25:09 Speaker 10: We're experts on engineering, But we're trying our best.
+2:25:15 Speaker 10: Yeah,
+2:25:16 Speaker 14: if I can say so. Thank you. No worries.
+2:25:21 Speaker 8: Okay, thanks. Thanks a lot, Gonzalo. And thanks a lot, all of you for having so many and good questions.
+2:25:31 Speaker 10: So.
+2:25:33 Speaker 8: Yeah,
+2:25:34 Speaker 10: I'm sorry does thank you everyone again and I'm going to mute my mic here, but I just also wanted to thank you for for your attention.
+2:25:41 Speaker 10: I could see from here that everyone was listening carefully and I think the questions that you asked were great, really good questions, a lot of questions.
+2:25:50 Speaker 10: So I'm, I'm very happy that
+2:25:54 Speaker 10: that you appreciate it and I hope that you learned something new that you got some inspiration on some ideas for the hackathon as well.
+2:26:03 Speaker 10: Great to meet you guys and thanks for listening once again.
+2:26:07 Speaker 8: Thanks, Gonzalo. So if I take back the control, maybe
+2:26:14 Speaker 9: we can do that anyway.
+2:26:21 Speaker 9: Right.
+2:26:24 Speaker 8: So then we are jumping to what everyone's been waiting for.
+2:26:36 Speaker 9: Take it away, yes, Per.
+2:26:38 Speaker 7: Okay.
+2:26:38 Speaker 9: So good sound in this one.
+2:26:43 Speaker 10: Yeah, I hope it has been
+2:26:45 Speaker 6: an interesting time listening to Ericsson, both with the response team and the Connected Learn team.
+2:26:53 Speaker 6: And I also hope that you see what I see a sort of common thread going from connectivity to communication to education.
+2:27:03 Speaker 6: So now to the brief, which is brief, because it's only 24 hours, right?
+2:27:12 Speaker 6: So in 24 hours, you're tasked with delivering a tech concept. And by that, we mean an idea that is based on digital technology.
+2:27:22 Speaker 6: And it solves one or several of the challenges outlined by Eric's response, connect, learn.
+2:27:30 Speaker 6: So teams will be judged since it's a competition on the technology, the design, and the business part.
+2:27:38 Speaker 6: And what do we mean by that? So we do not expect you in this very limited amount of time to build anything.
+2:27:47 Speaker 6: We don't expect it to build working software. We don't expect it to build even an interactive prototype unless you want to and have time.
+2:27:54 Speaker 6: and I don't encourage you to put too much effort into the presentation. What is important here is, as we said, that it's a concept, an idea that you can convey, an idea that you can explain your way of thinking, your way
+2:28:12 Speaker 6: of reasoning, that could then itself be further developed into a solution.
+2:28:21 Speaker 6: And so we want your thoughts on what technologies are there and how can we utilize them.
+2:28:28 Speaker 6: We want some sort of design, like how do we make it accessible to these technologies to the users or recipients that it's supposed to help.
+2:28:41 Speaker 6: And we need some sort of business idea like how do we get this out into the world.
+2:28:47 Speaker 6: And I also want to mention that, okay, now we have listened to Ericsson. It's a giant company.
+2:28:53 Speaker 6: They have so many technologies and patents and competencies also in this company.
+2:29:00 Speaker 6: But the reason that you're sitting here right now is because you have different perspectives and you have fresh perspectives. So don't take anything for granted that you've heard.
+2:29:10 Speaker 6: Those are stories, and they are true in some sense. in some reality.
+2:29:17 Speaker 6: But we also want you to bring innovation, right? So we have to question everything. We have to look at things from different angles, perspectives.
+2:29:27 Speaker 6: There will be two prices. One for best technology design. We decided to lump those two together.
+2:29:36 Speaker 6: And one for best business. With one winning team in each category.
+2:29:42 Speaker 6: And the winners will be chosen by a jury consisting of BTH, Hype Island together with Ericsson.
+2:29:50 Speaker 6: The people representing Ericsson in this case are the people you have just listened to, where I've presented.
+2:30:00 Speaker 6: When tomorrow, day two, at 1530, we are back here in the Black Box for presentations.
+2:30:09 Speaker 6: Before that, we need, And we need what you have created in a team folder on a Google Drive.
+2:30:19 Speaker 6: And how you choose to present this up to you, but you have five minutes. So that's quite a constraint.
+2:30:27 Speaker 6: It could be slides and you can do it live right here right now. Like I do it right now, or it could be a video that you recorded for that.
+2:30:36 Speaker 6: It's completely up to you as long as we can understand your way of reasoning and how this concept is supposed to work.
+2:30:47 Speaker 6: And we have, I know that many of you have already found your teams on your Slack, the Hyper Island Slack.
+2:30:54 Speaker 6: But we do also have a Slack platform for this event. If you choose to use it, you can.
+2:31:02 Speaker 6: On there you will find a support channel, if you find a channel for your team, you will find the presentations, material.
+2:31:12 Speaker 6: You will find a link to this Google Drive where you will send in what you created.
+2:31:19 Speaker 6: But yes, I will answer your questions also. But we can also get that to you, right?
+2:31:27 Speaker 6: they mean through other channels. We can talk about that tomorrow. But basically, things to remember about the time and so on.
+2:31:37 Speaker 6: I recommend that you stay here for just a little while, like before you disappear, that you talk to your teams, like how what are we going to do next?
+2:31:46 Speaker 6: When do we meet next? From tomorrow at 7 o'clock in the morning, Hype Ryland will be open available for working in teams.
+2:31:54 Speaker 6: And you do that until we meet here again at 1530. We had a question in
+2:32:07 Speaker 11: the chat on,
+2:32:14 Speaker 9: I'm not fully understanding which chat.
+2:32:20 Speaker 9: Okay. Yeah.
+2:32:23 Speaker 9: Thank
+2:32:26 Speaker 6: you for clarifying that. Yes.
+2:32:30 Speaker 39: So anything
+2:32:31 Speaker 6: we need, hopefully, we will include in that Slack channel.
+2:32:36 Speaker 9: Yeah, any question?
+2:32:44 Speaker 10: I'm not sure about that one actually. Have to ask the jury about that. I
+2:32:49 Speaker 17: would say no. Probably, you know.
+2:32:53 Speaker 17: If you can win both categories, but I would say no. I mean, if, yeah, sorry.
+2:33:00 Speaker 10: They are different, yes.
+2:33:04 Speaker 10: But you, yeah, I mean, this is quite
+2:33:07 Speaker 6: an open brief, we know that. And so we expect you to go different directions. And we also want you to remember that even though this is a gathering by Ericsson, and we have gotten a lot of new knowledge and new inspiration by Ericsson,
+2:33:27 Speaker 6: that we have chosen a setup where we don't have any non-disclosure agreements where we don't have any contracts beforehand, the idea is belong to anyone, so it doesn't have to be you know fitting inside the Ericsson
+2:33:45 Speaker 6: company, the solution that you come with. It could be partnering with Ericsson, for example.
+2:33:53 Speaker 7: Anything else before we disperse?
+2:33:58 Speaker 10: Okay, thank you so much for your attention and good luck.
+2:34:03 Speaker 37: Thank you.
+2:34:06 Speaker 8: I just want to mention some practicalities when we are leaving or you are leaving.
+2:34:12 Speaker 8: Right now it's after six o'clock. We will not enter in the same pathway or hallway as we did.
+2:34:23 Speaker 8: So you enter
+2:34:23 Speaker 10: just directly in the stair outside this black box.
+2:34:31 Speaker 10: And there is a door at the bottom floor with a
+2:34:35 Speaker 8: button that you press. But that door cannot be open for too long because then the alarm will go off and security guys will come.
+2:34:44 Speaker 8: and that will cost the fortune probably. So if you all living at the same time, I will go down with you.
+2:34:51 Speaker 8: So I will
+2:34:51 Speaker 10: secure that we are pressing the button and not keeping the door open too long.
+2:34:59 Speaker 10: That's what I wanted to say. And thanks a lot.
+2:35:13 Speaker 9: And one more thing I promise it's the last thing. But tomorrow when you enter Hyper Island, you...

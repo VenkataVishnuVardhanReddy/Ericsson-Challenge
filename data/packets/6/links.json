@@ -1,0 +1,650 @@
+{
+  "file_id": 6,
+  "linked_slides_count": 36,
+  "links": [
+    {
+      "keyframe": 28,
+      "file": "slides/028.webp",
+      "intervals": [
+        [
+          1055.0,
+          1059.0
+        ],
+        [
+          1092.0,
+          1114.0
+        ]
+      ],
+      "title": "Ericsson Sustainability",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 2,
+      "slide_id": "SLD-A29DB1308B"
+    },
+    {
+      "keyframe": 29,
+      "file": "slides/029.webp",
+      "intervals": [
+        [
+          1114.0,
+          1181.0
+        ]
+      ],
+      "title": "Ericsson Response in brief",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 3,
+      "slide_id": "SLD-3BCAFD2504"
+    },
+    {
+      "keyframe": 30,
+      "file": "slides/030.webp",
+      "intervals": [
+        [
+          1181.0,
+          1284.0
+        ]
+      ],
+      "title": "Three key elements",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 4,
+      "slide_id": "SLD-E2F83F306E"
+    },
+    {
+      "keyframe": 31,
+      "file": "slides/031.webp",
+      "intervals": [
+        [
+          1284.0,
+          1333.0
+        ]
+      ],
+      "title": "Ericsson Response Telco Solutions",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 5,
+      "slide_id": "SLD-477DBD5291"
+    },
+    {
+      "keyframe": 32,
+      "file": "slides/032.webp",
+      "intervals": [
+        [
+          1333.0,
+          1419.0
+        ]
+      ],
+      "title": "WIDER: WiFi in Disaster and Emergency Response",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 6,
+      "slide_id": "SLD-BEE9DB1854"
+    },
+    {
+      "keyframe": 35,
+      "file": "slides/035.webp",
+      "intervals": [
+        [
+          1738.0,
+          1751.0
+        ]
+      ],
+      "title": "Highlight of missions 2000 - 2021",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 9,
+      "slide_id": "SLD-0451E7EB17"
+    },
+    {
+      "keyframe": 36,
+      "file": "slides/036.webp",
+      "intervals": [
+        [
+          1751.0,
+          1790.0
+        ]
+      ],
+      "title": "Turkiye 2023",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 10,
+      "slide_id": "SLD-5FFA531989"
+    },
+    {
+      "keyframe": 37,
+      "file": "slides/037.webp",
+      "intervals": [
+        [
+          1790.0,
+          1828.0
+        ]
+      ],
+      "title": "Moldova 2022",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 11,
+      "slide_id": "SLD-E03204CC11"
+    },
+    {
+      "keyframe": 38,
+      "file": "slides/038.webp",
+      "intervals": [
+        [
+          1828.0,
+          1851.0
+        ]
+      ],
+      "title": "Colombia 2021/2022",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 12,
+      "slide_id": "SLD-E170586931"
+    },
+    {
+      "keyframe": 39,
+      "file": "slides/039.webp",
+      "intervals": [
+        [
+          1851.0,
+          1910.0
+        ]
+      ],
+      "title": "Bangladesh 2019",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 13,
+      "slide_id": "SLD-B37FF064DC"
+    },
+    {
+      "keyframe": 40,
+      "file": "slides/040.webp",
+      "intervals": [
+        [
+          1910.0,
+          1969.0
+        ],
+        [
+          1971.0,
+          1973.0
+        ]
+      ],
+      "title": "TG-",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 14,
+      "slide_id": "SLD-39878BD761"
+    },
+    {
+      "keyframe": 61,
+      "file": "slides/061.webp",
+      "intervals": [
+        [
+          2208.0,
+          2217.0
+        ],
+        [
+          2224.0,
+          2238.0
+        ]
+      ],
+      "title": "TG-",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 14,
+      "slide_id": "SLD-39878BD761"
+    },
+    {
+      "keyframe": 63,
+      "file": "slides/063.webp",
+      "intervals": [
+        [
+          2238.0,
+          2245.0
+        ]
+      ],
+      "title": "Haiti 2016",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 15,
+      "slide_id": "SLD-3D845D7951"
+    },
+    {
+      "keyframe": 64,
+      "file": "slides/064.webp",
+      "intervals": [
+        [
+          2245.0,
+          2279.0
+        ],
+        [
+          2506.0,
+          2510.0
+        ]
+      ],
+      "title": "Nepal 2015",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 16,
+      "slide_id": "SLD-32F7242305"
+    },
+    {
+      "keyframe": 86,
+      "file": "slides/086.webp",
+      "intervals": [
+        [
+          2510.0,
+          2556.0
+        ]
+      ],
+      "title": "Philippines 2013",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 17,
+      "slide_id": "SLD-D19AA97146"
+    },
+    {
+      "keyframe": 87,
+      "file": "slides/087.webp",
+      "intervals": [
+        [
+          2556.0,
+          2671.0
+        ],
+        [
+          2888.0,
+          2893.0
+        ]
+      ],
+      "title": "communities",
+      "deck": "Ericsson Response Introduction[64]  -  Read-Only.pdf",
+      "doc_number": null,
+      "revision": null,
+      "page": 18,
+      "slide_id": "SLD-AC476EE005"
+    },
+    {
+      "keyframe": 113,
+      "file": "slides/113.webp",
+      "intervals": [
+        [
+          5111.0,
+          5146.0
+        ]
+      ],
+      "title": "Connect to Learn",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 1,
+      "slide_id": "SLD-D6F3541FEB"
+    },
+    {
+      "keyframe": 114,
+      "file": "slides/114.webp",
+      "intervals": [
+        [
+          5146.0,
+          5234.0
+        ]
+      ],
+      "title": "weapon which you.can use to",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 2,
+      "slide_id": "SLD-BC3857422A"
+    },
+    {
+      "keyframe": 116,
+      "file": "slides/116.webp",
+      "intervals": [
+        [
+          5377.0,
+          5537.0
+        ]
+      ],
+      "title": "Ericsson - Sustainability and Corporate Responsibility",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 3,
+      "slide_id": "SLD-1E94426F89"
+    },
+    {
+      "keyframe": 117,
+      "file": "slides/117.webp",
+      "intervals": [
+        [
+          5537.0,
+          5662.0
+        ]
+      ],
+      "title": "Ericsson's action for digital education",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 4,
+      "slide_id": "SLD-0250118831"
+    },
+    {
+      "keyframe": 128,
+      "file": "slides/128.webp",
+      "intervals": [
+        [
+          5911.0,
+          6067.0
+        ],
+        [
+          7201.0,
+          7627.0
+        ],
+        [
+          8084.0,
+          8499.0
+        ]
+      ],
+      "title": "Ericsson Educate Portfolio",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 8,
+      "slide_id": "SLD-ECFAF32158"
+    },
+    {
+      "keyframe": 129,
+      "file": "slides/129.webp",
+      "intervals": [
+        [
+          6067.0,
+          6095.0
+        ],
+        [
+          8499.0,
+          8501.0
+        ]
+      ],
+      "title": "Connect to Learn - Current Deployments",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 9,
+      "slide_id": "SLD-E07387B894"
+    },
+    {
+      "keyframe": 130,
+      "file": "slides/130.webp",
+      "intervals": [
+        [
+          6096.0,
+          6113.0
+        ]
+      ],
+      "title": "GIGA Partnership with",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 10,
+      "slide_id": "SLD-EEB6B23F8F"
+    },
+    {
+      "keyframe": 131,
+      "file": "slides/131.webp",
+      "intervals": [
+        [
+          6113.0,
+          6191.0
+        ]
+      ],
+      "title": "Ericsson - UNICEF Partnership for GIGA",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 11,
+      "slide_id": "SLD-F7984586DD"
+    },
+    {
+      "keyframe": 133,
+      "file": "slides/133.webp",
+      "intervals": [
+        [
+          6220.0,
+          6289.0
+        ],
+        [
+          6346.0,
+          6386.0
+        ],
+        [
+          6389.0,
+          6409.0
+        ]
+      ],
+      "title": "\u4e09",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 14,
+      "slide_id": "SLD-169D12D706"
+    },
+    {
+      "keyframe": 134,
+      "file": "slides/134.webp",
+      "intervals": [
+        [
+          6289.0,
+          6345.0
+        ]
+      ],
+      "title": "Three types of mapping",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 12,
+      "slide_id": "SLD-55AC835B4B"
+    },
+    {
+      "keyframe": 135,
+      "file": "slides/135.webp",
+      "intervals": [
+        [
+          6386.0,
+          6389.0
+        ],
+        [
+          6409.0,
+          6416.0
+        ],
+        [
+          7627.0,
+          7634.0
+        ]
+      ],
+      "title": "connectivity for",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 15,
+      "slide_id": "SLD-0565B5A0A4"
+    },
+    {
+      "keyframe": 136,
+      "file": "slides/136.webp",
+      "intervals": [
+        [
+          6416.0,
+          6508.0
+        ]
+      ],
+      "title": "FWA - What is it?",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 16,
+      "slide_id": "SLD-65645D0E5D"
+    },
+    {
+      "keyframe": 137,
+      "file": "slides/137.webp",
+      "intervals": [
+        [
+          6508.0,
+          6632.0
+        ],
+        [
+          7634.0,
+          7636.0
+        ]
+      ],
+      "title": "FWA - Key characteristics",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 17,
+      "slide_id": "SLD-E6BDF83A87"
+    },
+    {
+      "keyframe": 138,
+      "file": "slides/138.webp",
+      "intervals": [
+        [
+          6632.0,
+          6676.0
+        ],
+        [
+          6679.0,
+          6774.0
+        ]
+      ],
+      "title": "An image is worth",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 18,
+      "slide_id": "SLD-50F8F63172"
+    },
+    {
+      "keyframe": 139,
+      "file": "slides/139.webp",
+      "intervals": [
+        [
+          6676.0,
+          6679.0
+        ],
+        [
+          6774.0,
+          6782.0
+        ],
+        [
+          7192.0,
+          7194.0
+        ]
+      ],
+      "title": "Advocacy",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 19,
+      "slide_id": "SLD-7CD42CD8DA"
+    },
+    {
+      "keyframe": 140,
+      "file": "slides/140.webp",
+      "intervals": [
+        [
+          6782.0,
+          6819.0
+        ]
+      ],
+      "title": "Global influencial reports",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 20,
+      "slide_id": "SLD-03D7C4EAB3"
+    },
+    {
+      "keyframe": 144,
+      "file": "slides/144.webp",
+      "intervals": [
+        [
+          6862.0,
+          6912.0
+        ],
+        [
+          7642.0,
+          7656.0
+        ]
+      ],
+      "title": "young people by 2025 with access to digital tools,",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 24,
+      "slide_id": "SLD-3EB3B87473"
+    },
+    {
+      "keyframe": 149,
+      "file": "slides/149.webp",
+      "intervals": [
+        [
+          7194.0,
+          7201.0
+        ]
+      ],
+      "title": "Ericsson - UNICEF Partnership for GIGA",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 11,
+      "slide_id": "SLD-F7984586DD"
+    },
+    {
+      "keyframe": 151,
+      "file": "slides/151.webp",
+      "intervals": [
+        [
+          7656.0,
+          7662.0
+        ]
+      ],
+      "title": "Three types of mapping",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 12,
+      "slide_id": "SLD-55AC835B4B"
+    },
+    {
+      "keyframe": 154,
+      "file": "slides/154.webp",
+      "intervals": [
+        [
+          8779.0,
+          8787.0
+        ]
+      ],
+      "title": "FWA - What is it?",
+      "deck": "C2L_Presentation_Hackathon_RevB.pdf",
+      "doc_number": null,
+      "revision": "B",
+      "page": 16,
+      "slide_id": "SLD-65645D0E5D"
+    }
+  ]
+}
