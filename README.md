@@ -138,17 +138,17 @@ To give compliance and legal teams mathematical certainty, Distill implements a 
 | | Level 2 | `estimated` | — | — | Estimated (recording > 2.5h; not pre-rendered to save disk) |
 | | Level 3 | `measured` | 95.8% | 90.0% | Opus audio ($\Delta t = 0.01\text{s}$, 75.3% speech covered) + slides |
 | | Level 4 | `measured` | 95.8% | 90.0% | Keyframe slides + timestamped transcript + speaker attribution |
-| | Level 5 | `measured` | 90.1% | 70.0% | 36 slide moments linked to official SharePoint deck |
+| | Level 5 | `measured` | 95.8% | 70.0% | Links to official deck: linked text 95.3%, unlinked 96.3% (6 linked moments) |
 | **GraalVMs_Ahead-of-Time_Compilation.mp4** | Level 1 | `measured` | 100.0% | 100.0% | Untouched original, SHA-256 bit-level match |
 | | Level 2 | `measured` | 100.0% | 100.0% | **PSNR: 28.67 dB**, pHash match 100.0% (5 fps H.264) |
 | | Level 3 | `measured` | 99.7% | 100.0% | Opus audio ($\Delta t = 0.00\text{s}$, 84.8% speech covered) + slides |
 | | Level 4 | `measured` | 99.7% | 100.0% | Keyframe slides + timestamped transcript + speaker attribution |
-| | Level 5 | `measured` | 99.7% | 100.0% | Slide links to official presentation deck |
+| | Level 5 | `measured` | 99.7% | 100.0% | Exactly Level 4 numbers (0 linked moments to separate deck) |
 | **Jury and prizes.mp4** | Level 1 | `measured` | — *(no text)* | 100.0% | Untouched original, SHA-256 bit-level match |
 | | Level 2 | `measured` | — *(no text)* | 75.0% | **PSNR: 30.11 dB** (Broadcast quality), pHash match 100.0% |
 | | Level 3 | `measured` | — *(no text)* | 75.0% | Opus audio ($\Delta t = 0.01\text{s}$, 60.8% speech covered) + slides |
 | | Level 4 | `measured` | — *(no text)* | 75.0% | Keyframe slides + timestamped transcript + speaker attribution |
-| | Level 5 | `measured` | 15.0% | 75.0% | Text transcript + slide links |
+| | Level 5 | `measured` | — *(no text)* | 75.0% | Exactly Level 4 numbers: pictures 82.4%, visual 75.0% (0 linked moments) |
 | **Ericsson Response Introduction.pdf** | Document | `proven` | — | — | **Proven (SHA-256)**: Bit-for-bit identical to governed original |
 | **SD-WAN Orchestration (Rev B).pptx** | Document | `proven` | — | — | **Proven (SHA-256)**: Governed primary deck in SharePoint |
 | **C2L_Presentation_Hackathon_RevB.pdf** | Document | `proven` | — | — | **Proven (SHA-256)**: Governed primary deck in SharePoint |

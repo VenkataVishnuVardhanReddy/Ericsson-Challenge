@@ -302,13 +302,22 @@ def verify_level5_recording(
     level5_moments = []
 
     linked_visual_matches = []
-    linked_text_scores = []
     unlinked_visual_matches = []
-    unlinked_text_scores = []
+
+    linked_found_chars = 0.0
+    linked_orig_chars = 0
+    unlinked_found_chars = 0.0
+    unlinked_orig_chars = 0
+
+    text_moments_count = 0
+    picture_scores = []
 
     for idx, (t, im1, _) in enumerate(moments_raw):
         g1 = np.asarray(im1.resize((320, h320), Image.BILINEAR).convert("L"), dtype=np.uint8)
         g1_m = (g1 * mask).astype(np.uint8)
+
+        stored_m = ret_orig_moments[idx] if idx < len(ret_orig_moments) else {}
+        stored_kind = stored_m.get("kind")
 
         # Matched keyframe
         matched_kf = None
@@ -352,14 +361,14 @@ def verify_level5_recording(
 
         visual_match = dist_phash <= threshold
 
-        # Text match without re-running OCR: use stored words from existing moment
-        stored_m = ret_orig_moments[idx] if idx < len(ret_orig_moments) else {}
+        # Text score computation
         orig_words = (stored_m.get("found_words") or []) + (stored_m.get("missing_words") or [])
         clean_orig = "".join(orig_words)
-        target_compact = re.sub(r"[^a-z0-9]", "", target_text.lower())
+        orig_cnt = stored_m.get("original_count", len(clean_orig))
 
-        found_chars = 0
-        if is_linked:
+        if is_linked and s_row:
+            target_compact = re.sub(r"[^a-z0-9]", "", target_text.lower())
+            found_chars = 0
             for w in orig_words:
                 w_len = len(w)
                 if w in target_compact:
@@ -371,13 +380,14 @@ def verify_level5_recording(
                             found_chars += w_len
                             break
             text_score = (found_chars / len(clean_orig)) if clean_orig else 1.0
+            found_cnt = text_score * orig_cnt
         else:
-            orig_cnt = stored_m.get("original_count", 0)
-            fnd_cnt = stored_m.get("found_count", 0)
-            text_score = (fnd_cnt / orig_cnt) if orig_cnt > 0 else 1.0
+            found_cnt = float(stored_m.get("found_count", 0))
+            text_score = (found_cnt / orig_cnt) if orig_cnt > 0 else 1.0
 
         moment_entry = {
             "t": round(t, 1),
+            "kind": stored_kind,
             "is_linked": is_linked,
             "linked_slide_id": matched_kf.get("slide_id") if matched_kf else None,
             "official_page_no": s_row["page_no"] if s_row else None,
@@ -390,28 +400,89 @@ def verify_level5_recording(
         if is_linked:
             linked_moments.append(moment_entry)
             linked_visual_matches.append(visual_match)
-            linked_text_scores.append(text_score)
         else:
             unlinked_moments.append(moment_entry)
             unlinked_visual_matches.append(visual_match)
-            unlinked_text_scores.append(text_score)
 
-    linked_vis_pct = round(sum(1 for v in linked_visual_matches if v) / len(linked_visual_matches), 3) if linked_visual_matches else None
-    linked_txt_pct = round(sum(linked_text_scores) / len(linked_text_scores), 3) if linked_text_scores else None
+        # 1. Count only moments whose stored kind is "text"
+        if stored_kind == "text":
+            text_moments_count += 1
+            if is_linked:
+                linked_found_chars += found_cnt
+                linked_orig_chars += orig_cnt
+            else:
+                unlinked_found_chars += found_cnt
+                unlinked_orig_chars += orig_cnt
+        elif stored_kind == "picture":
+            # 3. For picture moments, use same pHash rule as Level 4 (<= 12)
+            picture_scores.append(1.0 if dist_phash <= 12 else 0.0)
 
-    unlinked_vis_pct = round(sum(1 for v in unlinked_visual_matches if v) / len(unlinked_visual_matches), 3) if unlinked_visual_matches else None
-    unlinked_txt_pct = round(sum(unlinked_text_scores) / len(unlinked_text_scores), 3) if unlinked_text_scores else None
+    # 4. If a recording has 0 linked moments, Level 5 must return exactly the Level 4 numbers
+    if len(linked_moments) == 0:
+        return {
+            "status": "measured",
+            "text_kept_pct": ret_orig.get("text_kept_pct"),
+            "text_moments": ret_orig.get("text_moments"),
+            "text_note": ret_orig.get("text_note"),
+            "pictures_kept_pct": ret_orig.get("pictures_kept_pct"),
+            "picture_moments": ret_orig.get("picture_moments"),
+            "picture_note": ret_orig.get("picture_note"),
+            "visual_match_pct": ret_orig.get("visual_match_pct"),
+            "ocr_accuracy_pct": ret_orig.get("ocr_accuracy_pct"),
+            "moving_video_pct": ret_orig.get("moving_video_pct"),
+            "linked_moments_count": 0,
+            "linked_visual_pct": None,
+            "linked_text_pct": None,
+            "unlinked_moments_count": len(unlinked_moments),
+            "unlinked_visual_pct": ret_orig.get("visual_match_pct"),
+            "unlinked_text_pct": ret_orig.get("text_kept_pct"),
+            "audio_check": {
+                "status": "measured",
+                "audio_kept": False,
+                "detail": "No audio at Level 5 (by design)",
+            },
+            "notes": "Links to official deck: 0 linked moments, 20 unlinked moments",
+            "moments": level5_moments,
+        }
+
+    # 2. Character-weighted formula over text moments
+    total_found_chars = linked_found_chars + unlinked_found_chars
+    total_orig_chars = linked_orig_chars + unlinked_orig_chars
+
+    # 3. If fewer than 3 text moments, set text_kept_pct = null with note
+    if text_moments_count < 3:
+        total_txt_pct = None
+        text_note = f"Not enough text moments ({text_moments_count})"
+    else:
+        total_txt_pct = round(total_found_chars / total_orig_chars, 3) if total_orig_chars > 0 else 1.0
+        text_note = None
+
+    if len(picture_scores) < 3:
+        pictures_kept_pct = None
+        picture_note = f"Not enough picture moments ({len(picture_scores)})"
+    else:
+        pictures_kept_pct = round(sum(picture_scores) / len(picture_scores), 3)
+        picture_note = None
+
+    linked_txt_pct = round(linked_found_chars / linked_orig_chars, 3) if linked_orig_chars > 0 else None
+    unlinked_txt_pct = round(unlinked_found_chars / unlinked_orig_chars, 3) if unlinked_orig_chars > 0 else None
 
     all_vis = [m["visual_match"] for m in level5_moments]
-    all_txt = [m["text_score"] for m in level5_moments]
-
     total_vis_pct = round(sum(1 for v in all_vis if v) / len(all_vis), 3) if all_vis else None
-    total_txt_pct = round(sum(all_txt) / len(all_txt), 3) if all_txt else None
+    linked_vis_pct = round(sum(1 for v in linked_visual_matches if v) / len(linked_visual_matches), 3) if linked_visual_matches else None
+    unlinked_vis_pct = round(sum(1 for v in unlinked_visual_matches if v) / len(unlinked_visual_matches), 3) if unlinked_visual_matches else None
 
     return {
         "status": "measured",
         "text_kept_pct": total_txt_pct,
+        "text_moments": text_moments_count,
+        "text_note": text_note,
+        "pictures_kept_pct": pictures_kept_pct,
+        "picture_moments": len(picture_scores),
+        "picture_note": picture_note,
         "visual_match_pct": total_vis_pct,
+        "ocr_accuracy_pct": ret_orig.get("ocr_accuracy_pct"),
+        "moving_video_pct": ret_orig.get("moving_video_pct"),
         "linked_moments_count": len(linked_moments),
         "linked_visual_pct": linked_vis_pct,
         "linked_text_pct": linked_txt_pct,
@@ -423,7 +494,7 @@ def verify_level5_recording(
             "audio_kept": False,
             "detail": "No audio at Level 5 (by design)",
         },
-        "notes": f"Links to official deck: {len(linked_moments)} linked moments (visual {linked_vis_pct or 0:.0%}), {len(unlinked_moments)} unlinked moments",
+        "notes": f"Links to official deck: {len(linked_moments)} linked moments (text {linked_txt_pct or 0:.1%}, visual {linked_vis_pct or 0:.0%}), {len(unlinked_moments)} unlinked moments",
         "moments": level5_moments,
     }
 
