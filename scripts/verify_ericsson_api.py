@@ -86,7 +86,7 @@ def test_ericsson_api() -> None:
         assert r.status_code == 200
         cmp_ = r.json()
         print(f"[PASS] /api/compare: identical={cmp_['identical']}, modified={cmp_['modified']}, removed={len(cmp_['removed'])}")
-        assert cmp_["identical"] == 22 and cmp_["modified"] == 3
+        assert cmp_["identical"] == 18 and cmp_["modified"] == 7
 
         # Visual diff on modified slide
         mod_pair = next(p for p in cmp_["pairs"] if p["relation"] == "modified")

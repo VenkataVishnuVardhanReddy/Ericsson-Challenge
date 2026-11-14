@@ -48,12 +48,53 @@ def sanitize_file(f: dict | None) -> dict | None:
         return f
     if "path" in f and f["path"]:
         try:
-            rel = str(Path(f["path"]).resolve().relative_to(C.ROOT.resolve())).replace("\\", "/")
+            p = Path(f["path"])
+            if not p.is_absolute():
+                p = (C.ROOT / p).resolve()
+            else:
+                p = p.resolve()
+            rel = str(p.relative_to(C.ROOT.resolve())).replace("\\", "/")
             f["rel_path"] = rel
         except Exception:
             f["rel_path"] = Path(f["path"]).name
         f.pop("path", None)
     return f
+
+
+def resolve_packet_dir(packet_dir_val: str | Path | None, file_id: int | None = None) -> Path:
+    """Safely resolve packet directory whether stored as relative, absolute, or across platforms."""
+    if packet_dir_val:
+        p = Path(packet_dir_val)
+        if p.exists():
+            return p
+        cand = C.ROOT / packet_dir_val
+        if cand.exists():
+            return cand
+        cand2 = C.PACKETS_DIR / p.name
+        if cand2.exists():
+            return cand2
+    if file_id is not None:
+        cand = C.PACKETS_DIR / str(file_id)
+        if cand.exists():
+            return cand
+    return C.PACKETS_DIR / str(file_id or "")
+
+
+def resolve_file_path(path_val: str | Path | None, file_name: str | None = None) -> Path:
+    """Safely resolve source file path whether relative or absolute."""
+    if path_val:
+        p = Path(path_val)
+        if p.exists():
+            return p
+        cand = C.ROOT / path_val
+        if cand.exists():
+            return cand
+    if file_name:
+        for root in [(C.ROOT / "sample_data"), (C.DATA_DIR / "uploads")]:
+            found = list(root.rglob(file_name))
+            if found and found[0].exists():
+                return found[0]
+    return Path(path_val) if path_val else Path()
 
 
 def fmt_ts(s: float | int | None) -> str:
@@ -666,7 +707,7 @@ def api_recording(file_id: int):
         m = DEICTIC_RE.search(s["text"] or "")
         s["deictic"] = m.group(0) if m else None
 
-    pdir = Path(rec["packet_dir"])
+    pdir = resolve_packet_dir(rec.get("packet_dir"), file_id)
     manifest = {}
     if (pdir / "manifest.json").exists():
         manifest = json.loads((pdir / "manifest.json").read_text(encoding="utf-8"))
@@ -698,7 +739,7 @@ def api_recording_audio(file_id: int):
     rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
     if not rec:
         raise HTTPException(404)
-    pdir = Path(rec["packet_dir"])
+    pdir = resolve_packet_dir(rec.get("packet_dir"), file_id)
     for name, media in (("audio.opus", "audio/ogg"), ("audio.m4a", "audio/mp4")):
         p = pdir / name
         if p.exists():
@@ -711,7 +752,7 @@ def api_voice_sample(file_id: int, filename: str):
     rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
     if not rec:
         raise HTTPException(404)
-    p = Path(rec["packet_dir"]) / "voices" / Path(filename).name
+    p = resolve_packet_dir(rec.get("packet_dir"), file_id) / "voices" / Path(filename).name
     if not p.exists():
         raise HTTPException(404)
     return FileResponse(p, media_type="audio/ogg")
@@ -719,12 +760,15 @@ def api_voice_sample(file_id: int, filename: str):
 
 @app.get("/api/recordings/{file_id}/video")
 def api_original_video(file_id: int):
-    f = db.q1("SELECT path FROM files WHERE id=?", (file_id,))
-    if not f or not Path(f["path"]).exists():
+    f = db.q1("SELECT path, name FROM files WHERE id=?", (file_id,))
+    if not f:
         raise HTTPException(404)
-    if not C.is_allowed_path(f["path"]):
+    p = resolve_file_path(f.get("path"), f.get("name"))
+    if not p.exists():
+        raise HTTPException(404)
+    if not C.is_allowed_path(p):
         raise HTTPException(403, "File path is outside allowed roots")
-    return FileResponse(f["path"], media_type="video/mp4")
+    return FileResponse(p, media_type="video/mp4")
 
 
 @app.get("/api/recordings/{file_id}/frame")
@@ -734,7 +778,7 @@ def api_recording_frame(file_id: int, t: float = Query(0.0, ge=0.0)):
     if not f:
         raise HTTPException(404, "File not found")
 
-    p = Path(f["path"])
+    p = resolve_file_path(f.get("path"), f.get("name"))
     # 1. Try cv2.VideoCapture on original file if it exists and is accessible
     if p.exists() and C.is_allowed_path(p):
         try:
@@ -837,7 +881,7 @@ def api_packet_asset(file_id: int, asset: str):
     }
     if asset not in allowed:
         raise HTTPException(400, "Invalid asset")
-    pdir = Path(rec["packet_dir"])
+    pdir = resolve_packet_dir(rec.get("packet_dir"), file_id)
     if asset == "links.json":
         _ensure_links_json(file_id, pdir)
     p = pdir / asset
@@ -851,7 +895,7 @@ def api_recording_slide_pic(file_id: int, n: str):
     rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
     if not rec or not rec.get("packet_dir"):
         raise HTTPException(404, "Recording not found")
-    pdir = Path(rec["packet_dir"]) / "slides"
+    pdir = resolve_packet_dir(rec.get("packet_dir"), file_id) / "slides"
     if not pdir.exists():
         raise HTTPException(404, "Slides folder not found")
     clean = n.replace(".webp", "")
@@ -872,11 +916,11 @@ def api_recording_slides_list(file_id: int):
     rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
     if not rec or not rec.get("packet_dir"):
         raise HTTPException(404)
-    pdir = Path(rec["packet_dir"]) / "slides"
+    pdir = resolve_packet_dir(rec.get("packet_dir"), file_id) / "slides"
     if not pdir.exists():
         return {"slides": []}
     files = sorted(pdir.glob("*.webp"))
-    mf_path = Path(rec["packet_dir"]) / "manifest.json"
+    mf_path = resolve_packet_dir(rec.get("packet_dir"), file_id) / "manifest.json"
     kf_map = {}
     if mf_path.exists():
         try:
@@ -909,7 +953,7 @@ def api_recording_voices_list(file_id: int):
     rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
     if not rec or not rec.get("packet_dir"):
         raise HTTPException(404)
-    vdir = Path(rec["packet_dir"]) / "voices"
+    vdir = resolve_packet_dir(rec.get("packet_dir"), file_id) / "voices"
     if not vdir.exists():
         return {"voices": []}
     voices = []
@@ -937,11 +981,14 @@ def api_document(file_id: int):
 @app.get("/api/files/{file_id}/raw")
 def api_file_raw(file_id: int):
     f = db.q1("SELECT path, name FROM files WHERE id=?", (file_id,))
-    if not f or not Path(f["path"]).exists():
+    if not f:
         raise HTTPException(404)
-    if not C.is_allowed_path(f["path"]):
+    p = resolve_file_path(f.get("path"), f.get("name"))
+    if not p.exists():
+        raise HTTPException(404)
+    if not C.is_allowed_path(p):
         raise HTTPException(403, "File path is outside allowed roots")
-    return FileResponse(f["path"], filename=f["name"])
+    return FileResponse(p, filename=f["name"])
 
 
 @app.post("/api/files/{file_id}/process")
@@ -1457,7 +1504,7 @@ def api_file_level_contents(file_id: int, level: int):
 
     if is_video:
         rec = db.q1("SELECT * FROM recordings WHERE file_id=?", (file_id,))
-        pdir = Path(rec["packet_dir"]) if (rec and rec.get("packet_dir")) else None
+        pdir = resolve_packet_dir(rec.get("packet_dir"), file_id) if rec else None
         td = {}
         if rec and rec.get("tiers"):
             td = json.loads(rec["tiers"]) if isinstance(rec["tiers"], str) else rec["tiers"]
@@ -1705,14 +1752,14 @@ def api_file_level_download(file_id: int, level: int):
             zf.writestr("manifest.json", mnf_bytes, compress_type=zipfile.ZIP_DEFLATED)
         elif f["kind"] == "video":
             rec = db.q1("SELECT packet_dir FROM recordings WHERE file_id=?", (file_id,))
-            pdir = Path(rec["packet_dir"]) if (rec and rec.get("packet_dir")) else None
+            pdir = resolve_packet_dir(rec.get("packet_dir"), file_id) if rec else None
             if not pdir or not pdir.exists():
                 raise HTTPException(404, "Packet directory not found")
 
             _ensure_links_json(file_id, pdir)
 
             if level == 1:
-                orig_p = Path(f["path"])
+                orig_p = resolve_file_path(f.get("path"), f.get("name"))
                 if orig_p.exists() and C.is_allowed_path(orig_p):
                     zf.write(orig_p, f["name"], compress_type=zipfile.ZIP_STORED)
             elif level == 2:
@@ -1850,7 +1897,7 @@ def api_file_integrity(file_id: int, level: int = Query(4, ge=1, le=5)):
         transcript_sha = None
         audio_sha = None
         if rec and rec.get("packet_dir"):
-            pdir = Path(rec["packet_dir"])
+            pdir = resolve_packet_dir(rec.get("packet_dir"), file_id)
             tpath = pdir / "transcript.txt"
             if tpath.exists():
                 transcript_sha = sha256_file(tpath)

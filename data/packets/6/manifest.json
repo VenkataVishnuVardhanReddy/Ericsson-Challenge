@@ -4,7 +4,7 @@
   "created": "2026-11-13T17:38:42",
   "source": {
     "name": "Tech Concept Hack - Intoduction-20230329_153503-Meeting Recording.mp4",
-    "path": "C:\\Users\\Vishnu\\Downloads\\Hackthon\\sample_data\\Ericsson_Challenge_Dataset\\SharePoint_Response_C2L\\Tech Concept Hack - Intoduction-20230329_153503-Meeting Recording.mp4",
+    "path": "sample_data/Ericsson_Challenge_Dataset/SharePoint_Response_C2L/Tech Concept Hack - Intoduction-20230329_153503-Meeting Recording.mp4",
     "sha256": "e970fee4cdc008b078ca0de5ec092f540bfe3bb2926172b20a01f8ed7ca37b79",
     "bytes": 1223051782
   },
@@ -292,7 +292,7 @@
           693.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "d18786f1d23d0e0d95786db3fb3ee9c62423728dfec9534b5a363b549f71d946"
@@ -310,7 +310,7 @@
           727.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "b0ca08de79380d2828a386af82aaf9304c15785f149bbcab3d5e625711f309dc"
@@ -352,7 +352,7 @@
           729.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "c433fda31abb1027475015f3ed66ab5944cb5ce6a29ba1546797302b6cb7f30a"
@@ -394,7 +394,7 @@
           749.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "1dc33eff06ebcb9c663a017bb24e66c451a5fe7933b0ced50904a8ea52faa08b"
@@ -436,7 +436,7 @@
           926.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "ea3f40c2cfc7ee26a14b55125161ac73e9345637a8697dec5eff892cf8034519"
@@ -861,7 +861,7 @@
           2038.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "4aa1532ddfb932076ba8cc8ccfe15682e136064efde8ec43bc57fe5248344a56"
@@ -1128,7 +1128,7 @@
           2301.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "468dd423478f3653fcfc499dbf9c288db6ac7b9ff3a67a7aa24badb0cb1d677b"
@@ -1184,7 +1184,7 @@
           2317.0
         ]
       ],
-      "title": "米",
+      "title": "\u7c73",
       "is_slide": false,
       "source_slide": null,
       "sha256_webp": "0ff9b21bc93d5fb53dc38336cfa91e33e9bc39e2376aef46f0fa5b115f864017"
@@ -1366,7 +1366,7 @@
           2479.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "1740864d6a570de573302cf43d4482235977f56d90f8024b112947c0830ea144"
@@ -1816,7 +1816,7 @@
           5078.0
         ]
       ],
-      "title": "。",
+      "title": "\u3002",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "23e075147fdaacbbf29143c42fc474382ef359eb26f86b2f62cbb63cc1245406"
@@ -1830,7 +1830,7 @@
           5085.0
         ]
       ],
-      "title": "。",
+      "title": "\u3002",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "cf787522a61ddd38ff8b8d4782a1abfa3ac8181975b6371d11d3aa3ea5e90b80"
@@ -2242,7 +2242,7 @@
           6409.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": {
         "deck": "C2L_Presentation_Hackathon_RevB.pdf",
@@ -2555,7 +2555,7 @@
           8795.0
         ]
       ],
-      "title": "三",
+      "title": "\u4e09",
       "is_slide": true,
       "source_slide": null,
       "sha256_webp": "d4866e00df6a4751e3f9aef422168cab156c5b78729302832cc7d7ac9a8ecabe"
