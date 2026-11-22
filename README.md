@@ -259,3 +259,10 @@ python scripts/verify_levels.py
 - **Backend:** FastAPI, Python 3.11, SQLite (FTS5 + WAL mode), RapidOCR, Faster-Whisper (int8 CPU), ImageHash, OpenCV, PyMuPDF.
 - **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 3, Lucide Icons.
 - **Architecture Standard:** Monochromatic, high-contrast, accessibility-compliant enterprise design system.
+
+## Team
+Built at the Ericsson Build Hackathon 2026 – 1st place, Ericsson Data Storage Optimization challenge (SEK 5,000) and 3rd overall.
+
+- **Venkata Vishnu Vardhan Reddy Gurram** – lead developer – [GitHub](https://github.com/VenkataVishnuVardhanReddy)
+- **Jyothi Madhurya Nalam** – parts of the AI/ML pipeline, some backend & storage, pitch & presentation – [GitHub](https://github.com/JyothiMadhurya)
+- **Ayyapa Mitta** – presenation and Verifying Results suggesting approaches 
